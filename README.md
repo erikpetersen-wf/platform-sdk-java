@@ -30,3 +30,5 @@ Applications
 Teams:
 =================
 [OmniCorp](https://github.com/Workiva/OmniCorp/)
+
+[Messaging](https://github.com/Workiva/messaging)
