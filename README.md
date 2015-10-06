@@ -19,16 +19,20 @@ Services
 
 [Server Scaling](https://github.com/Workiva/bolt)
 
-
-Applications
+Application Platforms and Frameworks
 -------------
 [H5 Application Platform](https://github.com/workiva/H5ClientPlatform)
 
 [UI Platform](https://github.com/Workiva/w-ui-platform)
 
+Business Platforms
+---------------------
+[Rich Content Platform](https://github.com/workiva/content)
+
 
 Teams:
 =================
+
 [OmniCorp](https://github.com/Workiva/OmniCorp/)
 
 [Messaging](https://github.com/Workiva/messaging)
