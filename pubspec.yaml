@@ -1,0 +1,7 @@
+name: workiva_platform
+version: 0.0.1
+description:
+dependencies:
+  json_schema:
+      git:
+        url: git@github.com:patefacio/json_schema.git
