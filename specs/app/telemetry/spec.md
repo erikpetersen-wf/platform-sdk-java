@@ -1,6 +1,6 @@
-#Application Telemetry Specification (Dart , C)
+#Application Telemetry Specification (Dart , C#)
  
-###Status: In progress
+###Status: draft
 
 As our gen2 application frameworks are built out and we move to a unified compositional architecture, telemetry will be critical to ensuring our developers and stakeholders can maintain healthy and performant next-gen systems. 
 
@@ -12,7 +12,7 @@ This spec is closely related to the existing [Gen2 Telemetry Specification](http
 Telemetry data is expected to originate from:
 
 - Dart-based (javascript) browser applications involving both authenticated and unauthenticated users from both trusted and untrusted networks.
-- Dart-based server applications involving both authenticated and unauthenticated users from only trusted networks.
+- Dart-based server applications involving only authenticated  users from only trusted networks.
 
 While having a holistic view of an application and its interactions with other services/users is desirable, we must also balance the performance impact this may have on the browser/network connections and by extension, the user.  This requires we support batching telemetry data and bulk-sending them.
 
@@ -145,13 +145,12 @@ A time_series datatype is used when you want to simply inject an arbitrary metri
 
 ```json
 "time_series": {
-
-     # metric indicating the execution time of a kittyhawk test
      "kittyhawk.test.execution_time": {
         "units": "s",
-  "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 317},
+        "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 317},
              {"timestamp": "2000-01-01T00:00:01Z", "value": 713}],
-  "sample_rate": 0.5
+        "sample_rate": 0.5
+    }
 }
 ```
 
@@ -172,7 +171,6 @@ A counter datatype is used when you want to send a countable metric into the eco
 "counters": {
 
 
-    # counter to measure how many times a function was called
     "editor.refresh": {
        "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 1}], 
        "metadata": {"account_id": "00012345"}
@@ -203,26 +201,18 @@ These percentiles would be calculated by the client application (eg. dropwizard 
 ```json
   "gauges": {
 
-    # specific metadata for these stats
     "metadata": {
       "path": "/foo/bar",
       "account_id": "00012345"
     },
-
-    # 50th percentile/media of query execution time, calculated in the client
-    # SDK, by something like dropwizard metrics.
     "sox.query.time.50percentile": {
        "units": "ms",
        "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 111}]
     },
-
-
-    # 95th percentile/media of execution time
     "something.interesting.95percentile": {
        "units": "ms",
        "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 221}]
     },
-    # 99th percentile/media of execution time
     "something.interesting.99percentile": {
        "units": "ms",
        "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 331}]
@@ -236,14 +226,10 @@ These percentiles would be calculated by the client application (eg. dropwizard 
 These percentiles would be calculated by a client application (eg. dropwizard metrics).
 ```json
 "gauges": {
-
-
     "document.validations.perHour": {
        "units": "hour^-1",
        "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 100}]
     },
-
-
     "document.validations.perDay": {
        "units": "day^-1",
        "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 1211}]
