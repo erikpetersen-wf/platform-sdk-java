@@ -46,9 +46,9 @@ It accepts json encoded log messages of the format:
    "level": "info",
    "context": {
      "correlationId": "Value as defined in CorrelationId section",
-     "accountResourceId": "some opaque value here",
-     "userResourceId": "opaque token",
-     "userIpAddress": "",
+     "company_id": "numerical identifier",
+     "wf_user_id": "numerical identifier",
+     "ip": "",
      "sessionId": ""
    },
    "metadata": {
@@ -72,9 +72,9 @@ It accepts json encoded log messages of the format:
      "level": "info",
      "context": {
        "correlationId": "Value as defined in CorrelationId section",
-       "accountResourceId": "some opaque value here",
-       "userResourceId": "opaque token",
-       "userIpAddress": "",
+       "company_id": "some opaque value here",
+       "wf_user_id": "opaque token",
+       "ip": "",
        "sessionId": ""
      },
      "metadata": {
@@ -111,8 +111,8 @@ name | No | string | The name of the logger if applicable.
 level | Yes | string | The level at which this data was logged at. Supported values are "debug", "info", "warning", "error", "critical".
 context | No | strict map | key => value map of workiva specific metadata. The keys and their corresponding values are tightly controlled in this format. Keys are not required. If any value is "null", "None", "nil", or empty etc. (language contextual) then they must be omitted from this map. Only keys specified in this document must be allowed in this map.
 context.correlationId | No | string | See the "CorrelationId" section of this document.
-context.accountId | No | string | If the account id is available, it must be supplied here.
-context.userId | No | string | If the user id is available, it must be supplied here.
+context.company_id | No | string | If the account id is available, it must be supplied here.
+context.wf_user_id | No | string | If the user id is available, it must be supplied here.
 context.sessionId | No | string | Must be the hashed version of the session id. See OMNI/InfoSec for the specifications of this.
 context.membershipId | No | string | If the membership id is available, it must be supplied here.
 context.documentId | No | string | If the document id is available, it must be supplied here.

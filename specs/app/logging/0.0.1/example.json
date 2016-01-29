@@ -12,9 +12,9 @@
     "level": "info",
     "context": {
       "correlationId": "Value as defined in CorrelationId section",
-      "accountResourceId": "some opaque value here",
-      "userResourceId": "opaque token",
-      "userIpAddress": "",
+      "company_id": "some opaque value here",
+      "wf_user_id": "opaque token",
+      "ip": "",
       "sessionId": ""
     },
     "metadata": {
@@ -38,9 +38,9 @@
       "level": "info",
       "context": {
         "correlationId": "Value as defined in CorrelationId section",
-        "accountResourceId": "some opaque value here",
-        "userResourceId": "opaque token",
-        "userIpAddress": "",
+        "company_id": "some opaque value here",
+        "wf_user_id": "opaque token",
+        "ip": "",
         "sessionId": ""
       },
       "metadata": {
