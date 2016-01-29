@@ -1,0 +1,269 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://jsonschema.net",
+  "type": "object",
+  "properties": {
+    "version": {
+      "id": "http://jsonschema.net/version",
+      "type": "string"
+    },
+    "timestamp": {
+      "id": "http://jsonschema.net/timestamp",
+      "type": "string"
+    },
+    "type": {
+      "id": "http://jsonschema.net/type",
+      "type": "string"
+    },
+    "client": {
+      "id": "http://jsonschema.net/client",
+      "type": "string"
+    },
+    "metadata": {
+      "id": "http://jsonschema.net/metadata",
+      "type": "object",
+      "properties": {
+        "path": {
+          "id": "http://jsonschema.net/metadata/path",
+          "type": "string"
+        },
+        "host": {
+          "id": "http://jsonschema.net/metadata/host",
+          "type": "string"
+        },
+        "service": {
+          "id": "http://jsonschema.net/metadata/service",
+          "type": "string"
+        },
+        "correlationId": {
+          "id": "http://jsonschema.net/metadata/correlationId",
+          "type": "string"
+        },
+        "accountId": {
+          "id": "http://jsonschema.net/metadata/accountId",
+          "type": "string"
+        },
+        "documentId": {
+          "id": "http://jsonschema.net/metadata/documentId",
+          "type": "string"
+        },
+        "userId": {
+          "id": "http://jsonschema.net/metadata/userId",
+          "type": "string"
+        },
+        "anything_else": {
+          "id": "http://jsonschema.net/metadata/anything_else",
+          "type": "string"
+        }
+      }
+    },
+    "time_series": {
+      "id": "http://jsonschema.net/time_series",
+      "type": "object",
+      "properties": {
+        "rpc_total_count": {
+          "id": "http://jsonschema.net/time_series/rpc_total_count",
+          "type": "object",
+          "properties": {
+            "values": {
+              "id": "http://jsonschema.net/time_series/rpc_total_count/values",
+              "type": "array",
+              "items": [
+                {
+                  "id": "http://jsonschema.net/time_series/rpc_total_count/values/0",
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "id": "http://jsonschema.net/time_series/rpc_total_count/values/0/timestamp",
+                      "type": "string"
+                    },
+                    "value": {
+                      "id": "http://jsonschema.net/time_series/rpc_total_count/values/0/value",
+                      "type": "integer"
+                    }
+                  }
+                },
+                {
+                  "id": "http://jsonschema.net/time_series/rpc_total_count/values/1",
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "id": "http://jsonschema.net/time_series/rpc_total_count/values/1/timestamp",
+                      "type": "string"
+                    },
+                    "value": {
+                      "id": "http://jsonschema.net/time_series/rpc_total_count/values/1/value",
+                      "type": "integer"
+                    }
+                  }
+                }
+              ]
+            },
+            "metadata": {
+              "id": "http://jsonschema.net/time_series/rpc_total_count/metadata",
+              "type": "object",
+              "properties": {
+                "rpc": {
+                  "id": "http://jsonschema.net/time_series/rpc_total_count/metadata/rpc",
+                  "type": "string"
+                }
+              }
+            },
+            "sample_rate": {
+              "id": "http://jsonschema.net/time_series/rpc_total_count/sample_rate",
+              "type": "number"
+            }
+          }
+        },
+        "exec_time": {
+          "id": "http://jsonschema.net/time_series/exec_time",
+          "type": "object",
+          "properties": {
+            "units": {
+              "id": "http://jsonschema.net/time_series/exec_time/units",
+              "type": "string"
+            },
+            "values": {
+              "id": "http://jsonschema.net/time_series/exec_time/values",
+              "type": "array",
+              "items": [
+                {
+                  "id": "http://jsonschema.net/time_series/exec_time/values/0",
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "id": "http://jsonschema.net/time_series/exec_time/values/0/timestamp",
+                      "type": "string"
+                    },
+                    "value": {
+                      "id": "http://jsonschema.net/time_series/exec_time/values/0/value",
+                      "type": "integer"
+                    }
+                  }
+                },
+                {
+                  "id": "http://jsonschema.net/time_series/exec_time/values/1",
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "id": "http://jsonschema.net/time_series/exec_time/values/1/timestamp",
+                      "type": "string"
+                    },
+                    "value": {
+                      "id": "http://jsonschema.net/time_series/exec_time/values/1/value",
+                      "type": "integer"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "counters": {
+      "id": "http://jsonschema.net/counters",
+      "type": "object",
+      "properties": {
+        "status_code.200": {
+          "id": "http://jsonschema.net/counters/status_code.200",
+          "type": "object",
+          "properties": {
+            "values": {
+              "id": "http://jsonschema.net/counters/status_code.200/values",
+              "type": "array",
+              "items": {
+                "id": "http://jsonschema.net/counters/status_code.200/values/0",
+                "type": "object",
+                "properties": {
+                  "timestamp": {
+                    "id": "http://jsonschema.net/counters/status_code.200/values/0/timestamp",
+                    "type": "string"
+                  },
+                  "value": {
+                    "id": "http://jsonschema.net/counters/status_code.200/values/0/value",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "metadata": {
+              "id": "http://jsonschema.net/counters/status_code.200/metadata",
+              "type": "object",
+              "properties": {
+                "http": {
+                  "id": "http://jsonschema.net/counters/status_code.200/metadata/http",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "read.ops": {
+          "id": "http://jsonschema.net/counters/read.ops",
+          "type": "object",
+          "properties": {
+            "values": {
+              "id": "http://jsonschema.net/counters/read.ops/values",
+              "type": "array",
+              "items": {
+                "id": "http://jsonschema.net/counters/read.ops/values/0",
+                "type": "object",
+                "properties": {
+                  "timestamp": {
+                    "id": "http://jsonschema.net/counters/read.ops/values/0/timestamp",
+                    "type": "string"
+                  },
+                  "value": {
+                    "id": "http://jsonschema.net/counters/read.ops/values/0/value",
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "gauges": {
+      "id": "http://jsonschema.net/gauges",
+      "type": "object",
+      "properties": {
+        "read.iops": {
+          "id": "http://jsonschema.net/gauges/read.iops",
+          "type": "object",
+          "properties": {
+            "values": {
+              "id": "http://jsonschema.net/gauges/read.iops/values",
+              "type": "array",
+              "items": {
+                "id": "http://jsonschema.net/gauges/read.iops/values/0",
+                "type": "object",
+                "properties": {
+                  "timestamp": {
+                    "id": "http://jsonschema.net/gauges/read.iops/values/0/timestamp",
+                    "type": "string"
+                  },
+                  "value": {
+                    "id": "http://jsonschema.net/gauges/read.iops/values/0/value",
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "version",
+    "timestamp",
+    "type",
+    "client",
+    "metadata",
+    "time_series",
+    "counters",
+    "gauges"
+  ]
+}
