@@ -32,16 +32,16 @@ It accepts json encoded telemetry data of the format:
   "version": "0.9.0",
   "timestamp": "2000-01-01T00:00:00.123456Z",
   "type": "telemetry",
-  "client": "app_intelligence_java==1.2.3",
+  "client": "user analytics viewer==1.2.3",
   "metadata": {
-    "path": "/foo/bar",
+    "path": "/uav",
     "host": "wk-dev",
-    "service": "bigdata_fe",
+    "service": "ie::bigdata_fe, not necessarily used in browser-applications",
     "correlationId": "1234",
     "accountId": "1234",
     "documentId": "1234",
     "userId": "1234",
-    "anything_else": "you_want_to_create_a_dimension_for"
+    "anything_else": "all other metadata"
   },
   "time_series": {
     "rpc_total_count": {
