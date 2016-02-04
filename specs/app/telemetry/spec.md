@@ -18,7 +18,7 @@ While having a holistic view of an application and its interactions with other s
 
 ###Authenticated vs Non-Authenticated
 
-There are use cases for both authenticated and unauthenticated telemetry.  We expect the frequency of telemetry to be higher for authenticated users than for unauthenticated users.  One concern with allowing unauthenticated logging is the potential for DOS types of attacks.  To mitigate this risk, we can rate-limit telemetry for unauthenticated users based on headers.
+There are use cases for both authenticated and unauthenticated telemetry.  We expect the frequency of telemetry to be higher for authenticated users than for unauthenticated users.  One concern with allowing unauthenticated telemetry is the potential for DOS types of attacks.  To mitigate this risk, we can rate-limit telemetry for unauthenticated users based on headers.
 
 ###Browser Client telemetry
 
@@ -114,9 +114,9 @@ It accepts json encoded telemetry data of the format:
 field | required | description
 ----- | -------- | ----------- 
 | version | yes | semver compatible version string
-timestamp | yes | RFC3339 compatible string. Precision not greater than microsecond. For instance, golang can produce nanosecond timestamps that are not compatible with other languages parsing libraries. The top level timestamp corresponds to the time the log entry was written.
+timestamp | yes | RFC3339 compatible string. Precision not greater than microsecond. For instance, golang can produce nanosecond timestamps that are not compatible with other languages' parsing libraries. The top level timestamp corresponds to the time the telemetry entry was written.
 type | yes | only the value “telemetry” is allowed
-client | no | a string representing the client/SDK used to generate the log. useful to help track down message errors.
+client | no | a string representing the client/SDK used to generate the telemetry. Useful to help track down message errors.
 metadata | no | dictionary of key/value pairs which to apply as custom tags/dimensions to the telemetry. 
 time_series | no | dictionary of time series data. See description below.
 counters | no | dictionary of counter data. See description below.
@@ -164,7 +164,7 @@ field | required | description
 units | no | units of the measurement, as a string
 values | yes | a list of value dictionaries. See above description.
 
-if there are multiple entries for a given key, these should be considered separate count events for the same key, and downstream aggregation should add them.
+If there are multiple entries for a given key, these should be considered separate count events for the same key, and downstream aggregation should add them.
  
 A counter datatype is used when you want to send a countable metric into the ecosystem and want downstream pipelines to maintain that counter value, or associated derived values like rates.
 ```json
@@ -178,8 +178,10 @@ A counter datatype is used when you want to send a countable metric into the eco
 }
 ```
 **NOTE**: Counters may have units or be unitless.
-**NOTE**: when developing an SDK, it might make sense to also update counters inside the application prior to sending downstream.
-**TODO**: in-app aggregation of counters potentially affects downstream rate calculations. make note of this somehow.
+
+**NOTE**: When developing an SDK, it might make sense to also update counters inside the application prior to sending downstream.
+
+**TODO**: In-app aggregation of counters potentially affects downstream rate calculations. Todo: make note of this somehow.
 
 ###Gauge
 A gauge is an instantaneous measurement of a value.
@@ -253,6 +255,7 @@ Single Message
 ```
 
 **NOTE**: You cannot have more than a single stopwatch event for a single key in a single message
+
 Multiple Messages
 ```json
 "gauges": {

@@ -5,11 +5,13 @@
   "properties": {
     "version": {
       "id": "http://jsonschema.net/version",
-      "type": "string"
+      "type": "string",
+      "pattern": "([0-9]+)\\.([0-9]+)\\.([0-9])"
     },
     "timestamp": {
       "id": "http://jsonschema.net/timestamp",
-      "type": "string"
+      "type": "string",
+      "format" : "date-time"
     },
     "type": {
       "id": "http://jsonschema.net/type",
@@ -50,10 +52,6 @@
         "userId": {
           "id": "http://jsonschema.net/metadata/userId",
           "type": "string"
-        },
-        "anything_else": {
-          "id": "http://jsonschema.net/metadata/anything_else",
-          "type": "string"
         }
       }
     },
@@ -75,7 +73,8 @@
                   "properties": {
                     "timestamp": {
                       "id": "http://jsonschema.net/time_series/rpc_total_count/values/0/timestamp",
-                      "type": "string"
+                      "type": "string",
+                      "format" : "date-time"
                     },
                     "value": {
                       "id": "http://jsonschema.net/time_series/rpc_total_count/values/0/value",
@@ -89,7 +88,8 @@
                   "properties": {
                     "timestamp": {
                       "id": "http://jsonschema.net/time_series/rpc_total_count/values/1/timestamp",
-                      "type": "string"
+                      "type": "string",
+                      "format" : "date-time"
                     },
                     "value": {
                       "id": "http://jsonschema.net/time_series/rpc_total_count/values/1/value",
@@ -133,7 +133,8 @@
                   "properties": {
                     "timestamp": {
                       "id": "http://jsonschema.net/time_series/exec_time/values/0/timestamp",
-                      "type": "string"
+                      "type": "string",
+                      "format" : "date-time"
                     },
                     "value": {
                       "id": "http://jsonschema.net/time_series/exec_time/values/0/value",
@@ -147,7 +148,8 @@
                   "properties": {
                     "timestamp": {
                       "id": "http://jsonschema.net/time_series/exec_time/values/1/timestamp",
-                      "type": "string"
+                      "type": "string",
+                      "format" : "date-time"
                     },
                     "value": {
                       "id": "http://jsonschema.net/time_series/exec_time/values/1/value",
@@ -261,9 +263,6 @@
     "timestamp",
     "type",
     "client",
-    "metadata",
-    "time_series",
-    "counters",
-    "gauges"
+    "metadata"
   ]
 }
