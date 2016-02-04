@@ -29,11 +29,13 @@ Business Platforms
 ---------------------
 [Rich Content Platform](https://github.com/workiva/content)
 
-Platform Specs (in Google Drive)
+Platform Specs
 ---
 [platform-specs](https://drive.google.com/drive/folders/0B5BHXAruc8vBNDJlX29XajEwNGc) folder
 
 [Application Logging Spec](https://github.com/Workiva/platform/blob/master/specs/app/logging/0.0.1/spec.md)
+
+[Application Telemetry Spec](https://github.com/Workiva/platform/blob/master/specs/app/telemetry/0.0.1/spec.md)
 
 [Gen2 Telemetry Specification](https://drive.google.com/open?id=1g0QUF0kRRKRzODOP0-W2feL_6QjQxSLl-r5cnZXaUTc)
 
