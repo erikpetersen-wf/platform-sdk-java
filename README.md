@@ -33,7 +33,7 @@ Platform Specs
 ---
 [platform-specs](https://drive.google.com/drive/folders/0B5BHXAruc8vBNDJlX29XajEwNGc) folder
 
-[Application Logging Spec](https://github.com/Workiva/platform/blob/master/specs/app/logging/0.0.1/spec.md)
+[Application Logging Spec](https://github.com/Workiva/platform/blob/master/specs/app/logging/1.0.0/spec.md)
 
 [Application Telemetry Spec](https://github.com/Workiva/platform/blob/master/specs/app/telemetry/0.0.1/spec.md)
 
