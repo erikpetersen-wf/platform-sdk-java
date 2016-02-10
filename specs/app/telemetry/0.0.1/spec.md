@@ -163,25 +163,28 @@ field | required | description
 ----- | -------- | -----------
 units | no | units of the measurement, as a string
 values | yes | a list of value dictionaries. See above description.
-
-If there are multiple entries for a given key, these should be considered separate count events for the same key, and downstream aggregation should add them.
  
 A counter datatype is used when you want to send a countable metric into the ecosystem and want downstream pipelines to maintain that counter value, or associated derived values like rates.
 ```json
 "counters": {
-
-
     "editor.refresh": {
        "values": [{"timestamp": "2000-01-01T00:00:00Z", "value": 1}], 
        "metadata": {"account_id": "00012345"}
     }
 }
 ```
-**NOTE**: Counters may have units or be unitless.
 
-**NOTE**: When developing an SDK, it might make sense to also update counters inside the application prior to sending downstream.
+####Notes
 
-**TODO**: In-app aggregation of counters potentially affects downstream rate calculations. Todo: make note of this somehow.
+1. Although we currently support a list of values, there will only be one item listed.
+    Then, why use a list?
+    1. The list is being used to allow an easier path for future extension.
+    2. It is more consistent with the other metric types for a list to be used.
+    If there are multiple entries for a given key, these should be considered separate count events for the same key, and downstream aggregation should add them.
+2. Counters may have units or be unitless.
+3. When developing an SDK, it might make sense to also update counters inside the application prior to sending downstream.
+4. In-app aggregation of counters potentially affects downstream rate calculations. Todo: make note of this somehow.
+5. The timestamp on a counter's value is the timestamp at the time the counter is reported.
 
 ###Gauge
 A gauge is an instantaneous measurement of a value.
