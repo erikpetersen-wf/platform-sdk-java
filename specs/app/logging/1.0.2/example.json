@@ -1,0 +1,46 @@
+{
+  "entries":[
+    {
+      "version":"1.0",
+      "timestamp":"2016-08-25T17:46:58.609761Z",
+      "message":"route path=/ startingFrom=null forceReload=false",
+      "level":"debug",
+      "metadata":{
+        "logger":"route",
+        "clientId":"c8cdce75-7485-447e-ad74-47a783821b1f",
+        "source":"Client_Web",
+        "browser_string":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.104 (Dart) Safari/537.36",
+        "screen_resolution":"1440 x 900",
+        "viewport":"1058 x 828",
+        "orientation":"Landscape",
+        "flash_version":"unknown",
+        "host":"localhost",
+        "app_name":"w_comments"
+      },
+      "context":{
+
+      }
+    },
+    {
+      "version":"1.0",
+      "timestamp":"2016-08-25T17:46:58.629717Z",
+      "message":"Instance of 'LogEntry'",
+      "level":"debug",
+      "metadata":{
+        "logger":"app-intelligence",
+        "clientId":"c8cdce75-7485-447e-ad74-47a783821b1f",
+        "source":"Client_Web",
+        "browser_string":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.104 (Dart) Safari/537.36",
+        "screen_resolution":"1440 x 900",
+        "viewport":"1058 x 828",
+        "orientation":"Landscape",
+        "flash_version":"unknown",
+        "host":"localhost",
+        "app_name":"w_comments"
+      },
+      "context":{
+
+      }
+    }
+  ]
+}
