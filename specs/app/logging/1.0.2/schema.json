@@ -26,7 +26,8 @@
                 "message": {
                   "type": "string"
                 }
-              }
+              },
+              "additionalProperties":false
             },
             "message": {
               "type": "string"
