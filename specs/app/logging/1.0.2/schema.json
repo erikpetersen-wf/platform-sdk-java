@@ -39,7 +39,30 @@
             },
             "context": {
               "type": "object",
-              "properties": {}
+              "properties": {
+                "accountResourceId" : {
+                  "type": "string"
+                },
+                "correlationId" : {
+                  "type": "string"
+                },
+                "documentId" : {
+                  "type": "string"
+                },
+                "membershipId" : {
+                  "type": "string"
+                },
+                "sessionId" : {
+                  "type": "string"
+                },
+                "sectionId" : {
+                  "type": "string"
+                },
+                "userResourceId" :{
+                  "type": "string"
+                }
+              },
+              "additionalProperties":false
             },
             "metadata": {
               "type": "object",
