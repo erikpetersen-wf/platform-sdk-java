@@ -104,10 +104,10 @@ name | No | string | The name of the logger if applicable.
 level | Yes | string | The level at which this data was logged at. Supported values are "debug", "info", "warning", "error", "critical".
 context | No | strict map | key => value map of workiva specific metadata. The keys and their corresponding values are tightly controlled in this format. Keys are not required. If any value is "null", "None", "nil", or empty etc. (language contextual) then they must be omitted from this map. Only keys specified in this document must be allowed in this map.
 context.correlationId | No | string | See the "CorrelationId" section of this document.
-context.accountResourceId | No | string | If the accountResourceId is available, it must be supplied here.
-context.userResourceId | No | string | If the userResourceId is available, it must be supplied here.
+context.accountId | No | string | If the account id is available, it must be supplied here.
+context.userId | No | string | If the user id is available, it must be supplied here.
 context.sessionId | No | string | Must be the hashed version of the session id. See OMNI/InfoSec for the specifications of this.
-context.membershipResourceId | No | string | If the membershipResourceId id is available, it must be supplied here.
+context.membershipId | No | string | If the membership id is available, it must be supplied here.
 context.documentId | No | string | If the document id is available, it must be supplied here.
 context.sectionId | No | string | If the section id is available, it must be supplied here.
 metadata | No | map | key => value map of useful information related to the logging message.
