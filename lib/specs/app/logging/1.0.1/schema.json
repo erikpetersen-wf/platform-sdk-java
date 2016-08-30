@@ -1,21 +1,17 @@
 {
-  "id": "http://workiva.com/app_logging_0_0_1",
+  "version":"1.0.1",
   "type": "object",
   "properties": {
     "reportedItems": {
-      "id": "http://workiva.com//reportedItems",
       "type": "array",
       "items": [
         {
-          "id": "http://workiva.com//reportedItems/0",
           "type": "object",
           "properties": {
             "version": {
-              "id": "http://workiva.com//reportedItems/0/version",
               "type": "string"
             },
             "timestamp": {
-              "id": "http://workiva.com//reportedItems/0/timestamp",
               "type": "string"
             },
             "exception": {
@@ -58,24 +54,31 @@
               "id": "http://workiva.com//reportedItems/0/metadata",
               "type": "object",
               "properties": {
-              }
-            },
-            "app": {
-              "id": "http://workiva.com//reportedItems/0/app",
-              "type": "object",
-              "properties": {
-                "id": {
-                  "id": "http://workiva.com//reportedItems/0/app/id",
-                  "type": "string"
+                "app": {
+                  "id": "http://workiva.com//reportedItems/0/metadata/0/app",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "id": "http://workiva.com//reportedItems/0/metadata/0/app/id",
+                      "type": "string"
+                    },
+                    "name": {
+                      "id": "http://workiva.com//reportedItems/0/metadata/0/app/name",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ]
                 },
-                "name": {
-                  "id": "http://workiva.com//reportedItems/0/app/name",
+                "userResourceId": {
+                  "id": "http://workiva.com//reportedItems/0/metadata/userResourceId",
                   "type": "string"
                 }
               },
               "required": [
-                "id",
-                "name"
+                "app"
               ]
             }
           },
