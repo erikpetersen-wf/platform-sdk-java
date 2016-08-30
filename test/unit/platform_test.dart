@@ -13,9 +13,9 @@ main() async {
       for (var fileOrDir in contents) {
         if (fileOrDir is Directory) {
           String version = fileOrDir.path.split('/').last;
-          Map stuff = await getLoggingSchema(version);
-          expect(stuff, isNotNull);
-          expect(stuff['version'], equals(version));
+          Map schema = await getLoggingSchema(version);
+          expect(schema, isNotNull);
+          expect(schema['version'], equals(version));
         }
       }
     });
@@ -27,9 +27,9 @@ main() async {
       for (var fileOrDir in contents) {
         if (fileOrDir is Directory) {
           String version = fileOrDir.path.split('/').last;
-          Map stuff = await getTelemetrySchema(version);
-          expect(stuff, isNotNull);
-          expect(stuff['version'], equals(version));
+          Map schema = await getTelemetrySchema(version);
+          expect(schema, isNotNull);
+          expect(schema['version'], equals(version));
         }
       }
     });
