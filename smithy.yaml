@@ -10,10 +10,10 @@ script:
   - pub get
   - pub run dart_dev format --check
   - pub run dart_dev analyze
-  - xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev test --integration
-  - xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev coverage --integration --no-html
+  - xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev test
+  - xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev coverage --no-html
   - pub run dart_dev docs --no-open
-  - cd doc/api && tar -zcvf api.tar.gz * && cd ../..
+  - cd doc/api && tar -zcf api.tar.gz * && cd ../..
   - tar czvf platform.pub.tgz LICENSE README.md pubspec.yaml lib/
 
 after_script:

@@ -12,10 +12,10 @@ main() async {
       List contents = dir.listSync();
       for (var fileOrDir in contents) {
         if (fileOrDir is Directory) {
-          String version = fileOrDir.path.split("/").last;
+          String version = fileOrDir.path.split('/').last;
           Map stuff = await getLoggingSchema(version);
           expect(stuff, isNotNull);
-          expect(stuff["version"], equals(version));
+          expect(stuff['version'], equals(version));
         }
       }
     });
@@ -26,10 +26,10 @@ main() async {
       List contents = dir.listSync();
       for (var fileOrDir in contents) {
         if (fileOrDir is Directory) {
-          String version = fileOrDir.path.split("/").last;
+          String version = fileOrDir.path.split('/').last;
           Map stuff = await getTelemetrySchema(version);
           expect(stuff, isNotNull);
-          expect(stuff["version"], equals(version));
+          expect(stuff['version'], equals(version));
         }
       }
     });

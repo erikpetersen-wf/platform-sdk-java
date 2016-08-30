@@ -6,13 +6,13 @@ authors:
 
 homepage: https://github.com/Workiva/platform
 environment:
-sdk: ">=1.13.2"
+sdk: '>=1.13.2'
 
 dependencies:
-  resource : "^1.1.0"
+  resource : '^1.1.0'
 
 dev_dependencies:
   analyzer: '^0.27.3'
-  dart_dev: "^1.0.3"
-  dart_style: "^0.2.1"
-  test: "^0.12.0"
+  dart_dev: '^1.0.3'
+  dart_style: '^0.2.1'
+  test: '^0.12.0'

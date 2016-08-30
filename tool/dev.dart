@@ -2,15 +2,12 @@ library tool.dev;
 
 import 'package:dart_dev/dart_dev.dart' show dev, config;
 
-main(args) async {
+main(List<String> args) async {
   // Define the entry points for static analysis.
   config.analyze
-    ..entryPoints = ['lib/', 'test/', 'tool/']
+    ..entryPoints = ['lib/', 'test/unit/', 'tool/']
     ..strong = true
     ..fatalWarnings = true;
-
-  // Configure whether or not the HTML coverage report should be generated.
-  config.coverage.html = true;
 
   // Configure the port on which examples should be served.
   config.examples.port = 9000;
@@ -22,8 +19,8 @@ main(args) async {
   // Define the location of your test suites.
   config.test
     ..unitTests = ['test/unit/']
-    ..platforms = ['vm', 'content-shell'];
+    ..platforms = ['vm'];
 
   // Execute the dart_dev tooling.
-  await dev(args as List<String>) as List<String>;
+  await dev(args);
 }
