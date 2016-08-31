@@ -1,0 +1,28 @@
+project: dart
+language: dart
+
+env:
+  - CODECOV_TOKEN='bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB'
+
+runner_image: docker.webfilings.org/devops/smithy-runner-dart1.17.1:3.3.3
+
+script:
+  - pub get
+  - pub run dart_dev format --check
+  - pub run dart_dev analyze
+  - xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev test
+  - xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev coverage --no-html
+  - pub run dart_dev docs --no-open
+  - cd doc/api && tar -zcf api.tar.gz * && cd ../..
+  - tar czvf platform.pub.tgz LICENSE README.md pubspec.yaml lib/
+
+after_script:
+  - curl https://codecov.workiva.net/bash > ./codecov.sh
+  - chmod a+x ./codecov.sh
+  - ./codecov.sh -u https://codecov.workiva.net -t $CODECOV_TOKEN -r Workiva/platform -f coverage/coverage.lcov
+
+artifacts:
+  documentation:
+    - ./doc/api/api.tar.gz
+  pub:
+    - ./platform.pub.tgz
