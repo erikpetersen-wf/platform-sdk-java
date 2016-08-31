@@ -14,6 +14,7 @@ script:
   - xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev coverage --no-html
   - pub run dart_dev docs --no-open
   - cd doc/api && tar -zcf api.tar.gz * && cd ../..
+  - tar czvf platform.pub.tgz LICENSE README.md pubspec.yaml lib/
 
 after_script:
   - curl https://codecov.workiva.net/bash > ./codecov.sh
