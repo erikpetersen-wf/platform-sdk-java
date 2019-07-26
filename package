@@ -6,7 +6,32 @@ print('Welcome to the Workiva Platform!')
 
 print('Building HELM Artifacts...')
 # TODO: append liveness and readyness checks if not present
+
+defaultLivenessProbe = """
+readinessProbe:
+  httpGet:
+    path: /_wk/ready
+    port: {{PORT}}
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+"""
+
+for (dirpath, dirnames, filenames) in os.walk('/build/'):
+    for filename in filenames:
+        if filename == 'values.yaml':
+            file = os.sep.join([dirpath, filename])
+            with open(file) as data:
+                found = False
+                for line in data.readlines():
+                    if line.startswith('readinessProbe:'):
+                        found = True
+                if not found:
+                    data.append(defaultLivenessProbe)
+
 os.system('helm package *')
 print('DONE!')
 
-print('Your Service is now ready for Deployment through Release Pipeliens')
+print('Your Service is now ready for Deployment through Release Pipelines')
