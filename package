@@ -1,0 +1,12 @@
+#! /usr/bin/python
+
+import os
+
+print('Welcome to the Workiva Platform!')
+
+print('Building HELM Artifacts...')
+# TODO: append liveness and readyness checks if not present
+os.system('helm package *')
+print('DONE!')
+
+print('Your Service is now ready for Deployment through Release Pipeliens')
