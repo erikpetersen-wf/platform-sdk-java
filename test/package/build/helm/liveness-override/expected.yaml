@@ -1,0 +1,7 @@
+---
+# This template contains a readinessProbe.  Do not add another!
+
+readinessProbe:
+  httpGet:
+    path: /status
+    port: 8675309

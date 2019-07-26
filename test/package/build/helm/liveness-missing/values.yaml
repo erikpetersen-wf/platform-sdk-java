@@ -1,0 +1,14 @@
+---
+# This template contains no readinessProbe.  Need to add one!
+
+# The readinessProbe defines when your service is considered ready for traffic.
+# See: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+readinessProbe:
+  httpGet:
+    path: /_wk/ready
+    port: {{PORT}}
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3

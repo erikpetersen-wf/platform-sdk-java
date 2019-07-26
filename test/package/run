@@ -1,0 +1,12 @@
+#! /bin/sh
+
+set -e # fail on error
+set -x # be verbose
+
+cp build/helm/liveness-missing/original.yaml build/helm/liveness-missing/values.yaml
+cp build/helm/liveness-override/original.yaml build/helm/liveness-override/values.yaml
+
+../../package
+
+diff build/helm/liveness-missing/values.yaml build/helm/liveness-missing/expected.yaml
+diff build/helm/liveness-override/values.yaml build/helm/liveness-override/expected.yaml
