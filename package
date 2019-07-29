@@ -5,9 +5,9 @@ import os
 print('Welcome to the Workiva Platform!')
 
 print('Building HELM Artifacts...')
-# TODO: append liveness and readyness checks if not present
+# TODO: append liveness checks if not present
 
-defaultLivenessProbe = """
+defaultReadinessProbe = """
 # The readinessProbe defines when your service is considered ready for traffic.
 # See: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
 readinessProbe:
@@ -32,7 +32,7 @@ for (dirpath, dirnames, filenames) in os.walk('build/'):
                         found = True
             if not found:
                 with open(file, 'a') as data:
-                    data.write(defaultLivenessProbe)
+                    data.write(defaultReadinessProbe)
 
 os.system('helm package *')
 print('DONE!')
