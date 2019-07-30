@@ -9,9 +9,9 @@ import (
 
 // Main ...
 func Main() {
-	installHealthChecker(http.DefaultServeMux)
+	installReadyEndpoint(http.DefaultServeMux)
 
-	port := "8080"
+	port := "8888"
 	if s := os.Getenv("PORT"); s != "" {
 		port = s
 	}
@@ -21,7 +21,7 @@ func Main() {
 	}
 }
 
-func installHealthChecker(mux *http.ServeMux) {
+func installReadyEndpoint(mux *http.ServeMux) {
 	// If no health check handler has been installed by this point, add a trivial one.
 	const healthPath = "/_wk/ready"
 	hreq := &http.Request{
