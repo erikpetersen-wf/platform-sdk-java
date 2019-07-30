@@ -16,7 +16,7 @@ RUN apt-get install -y wget && \
 
 WORKDIR /build/
 RUN helm init --client-only
-ADD package /usr/bin/local
+ADD package /usr/local/bin
 
 # # USAGE
 # FROM drydock.workiva.com/Workiva/platform:0.0.1 as builder
