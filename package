@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 
 import os
 
@@ -21,7 +21,7 @@ readinessProbe:
   failureThreshold: 3
 """
 
-for (dirpath, dirnames, filenames) in os.walk('build/'):
+for (dirpath, dirnames, filenames) in os.walk('.'):
     for filename in filenames:
         if filename == 'values.yaml':
             file = os.sep.join([dirpath, filename])

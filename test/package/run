@@ -3,10 +3,10 @@
 set -e # fail on error
 set -x # be verbose
 
-cp build/helm/readiness-missing/original.yaml build/helm/readiness-missing/values.yaml
-cp build/helm/readiness-override/original.yaml build/helm/readiness-override/values.yaml
+cp helm/readiness-missing/original.yaml helm/readiness-missing/values.yaml
+cp helm/readiness-override/original.yaml helm/readiness-override/values.yaml
 
 ../../package
 
-diff build/helm/readiness-missing/values.yaml build/helm/readiness-missing/expected.yaml
-diff build/helm/readiness-override/values.yaml build/helm/readiness-override/expected.yaml
+diff helm/readiness-missing/values.yaml helm/readiness-missing/expected.yaml
+diff helm/readiness-override/values.yaml helm/readiness-override/expected.yaml
