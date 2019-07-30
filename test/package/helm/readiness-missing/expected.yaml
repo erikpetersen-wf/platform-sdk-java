@@ -6,7 +6,7 @@
 readinessProbe:
   httpGet:
     path: /_wk/ready
-    port: {{PORT}}
+    port: 2222
   initialDelaySeconds: 5
   periodSeconds: 10
   timeoutSeconds: 10

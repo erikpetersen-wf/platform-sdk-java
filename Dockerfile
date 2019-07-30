@@ -21,5 +21,6 @@ ADD package /usr/local/bin
 # # USAGE
 # FROM drydock.workiva.com/Workiva/platform:0.0.1 as builder
 # ADD helm /build/
+# ADD Dockerfile /build/
 # RUN package
 # ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
