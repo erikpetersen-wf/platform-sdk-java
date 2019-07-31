@@ -22,9 +22,9 @@ scripts:
   - go2xunit -input=out/go.log -output=out/go-xunit.xml
   - bash <(curl -s https://codecov.workiva.net/bash) -t $CODECOV_TOKEN -r Workiva/platform -f out/cover.cov -F go-unit -C $SKYNET_BUILD_COMMIT_HASH
 artifacts:
-  - ${SOURCE}/out
+  - /go/src/github.com/Workiva/platform/out
 test-reports:
-  - ${SOURCE}/out
+  - /go/src/github.com/Workiva/platform/out
 size: small
 timeout: moderate
 ---
