@@ -9,7 +9,10 @@ import (
 
 // Main ...
 func Main() {
-	installReadyEndpoint(http.DefaultServeMux)
+	installDefaultEndpoint(http.DefaultServeMux, "/_wk/ready", func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "ok", http.StatusOK)
+	})
+	installDefaultEndpoint(http.DefaultServeMux, "/_wk/alive", livenessCheck)
 
 	port := "8888"
 	if s := os.Getenv("PORT"); s != "" {
@@ -21,18 +24,15 @@ func Main() {
 	}
 }
 
-func installReadyEndpoint(mux *http.ServeMux) {
-	// If no health check handler has been installed by this point, add a trivial one.
-	const healthPath = "/_wk/ready"
+// installDefaultEndpoint adds a default handler if one has not already been added.
+func installDefaultEndpoint(mux *http.ServeMux, path string, handler http.HandlerFunc) {
 	hreq := &http.Request{
 		Method: "GET",
 		URL: &url.URL{
-			Path: healthPath,
+			Path: path,
 		},
 	}
-	if _, pat := mux.Handler(hreq); pat != healthPath {
-		mux.HandleFunc(healthPath, func(w http.ResponseWriter, r *http.Request) {
-			http.Error(w, "ok", http.StatusOK)
-		})
+	if _, pat := mux.Handler(hreq); pat != path {
+		mux.HandleFunc(path, handler)
 	}
 }
