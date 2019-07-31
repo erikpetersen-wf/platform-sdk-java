@@ -1,4 +1,4 @@
-FROM debian:stretch-slim as helm_artifact
+FROM debian:stretch-slim
 
 # get updates for security requirements
 RUN apt update && \
