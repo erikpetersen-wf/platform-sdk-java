@@ -11,7 +11,7 @@ env:
   - CODECOV_TOKEN=bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB
   - SOURCE=/go/src/github.com/Workiva/platform
 scripts:
-  - go install github.com/tebeka/go2xunit/...
+  - go get github.com/tebeka/go2xunit
   - rm -rf ${SOURCE}
   - mkdir -p ${SOURCE}
   - cp -r ./ ${SOURCE}
