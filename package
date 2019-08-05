@@ -24,13 +24,13 @@ print('Building HELM Artifacts...')
 
 # TODO: append liveness checks if not present
 
-defaultReadinessProbe = """
 # The readinessProbe defines when your service is considered ready for traffic.
 # See: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+defaultReadinessProbe = """
 readinessProbe:
   httpGet:
     path: /_wk/ready
-    port: %d
+    port: {port}
   initialDelaySeconds: 5
   periodSeconds: 10
   timeoutSeconds: 10
@@ -38,13 +38,25 @@ readinessProbe:
   failureThreshold: 3
 """
 
+# Used to determine when to restart a Container.
+# See: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+defaultLivenessProbe = """
+livenessProbe:
+  httpGet:
+    path: /_wk/alive
+    port: {port}
+  initialDelaySeconds: 5
+  periodSeconds: 10
+"""
+
 for dirpath, _, filenames in os.walk('.'):
     if 'values.yaml' not in filenames:
         continue
     file = os.sep.join([dirpath, 'values.yaml'])
-    found = any([l.startswith('readinessProbe:') for l in open(file).readlines()])
-    if not found:
-        open(file, 'a').write(defaultReadinessProbe % port)
+    if not any([l.startswith('readinessProbe:') for l in open(file).readlines()]):
+        open(file, 'a').write(defaultReadinessProbe.format(port=port))
+    if not any([l.startswith('livenessProbe:') for l in open(file).readlines()]):
+        open(file, 'a').write(defaultLivenessProbe.format(port=port))
 
 os.system('helm package *')
 print('DONE!')
