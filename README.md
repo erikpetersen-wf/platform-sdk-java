@@ -11,6 +11,7 @@ As such, this repo serves as a "jumping off point" for engineers at Workiva look
 Below, is a list of various components necessary to build software at Workiva.
 
 * Write
+  * Setup Environment: https://dev.webfilings.org/
   * Language SDKs
     * [Go](platform.go) (TODO: link to the developer docs)
     * Java (TODO)
@@ -31,7 +32,7 @@ Below, is a list of various components necessary to build software at Workiva.
 * Deploy
   * Release Pipelines
 * Monitor
-  * New Relic
+  * [New Relic](https://insights.newrelic.com/accounts/2361833/dashboards/949872)
 
 <!-- ## [Start Here](https://dev.webfilings.org/)
 
