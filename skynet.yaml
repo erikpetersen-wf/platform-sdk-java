@@ -1,0 +1,38 @@
+name: go-unit
+image: golang:1.12
+contact: Nate Woods (nate.woods@workiva.com)
+description: Run go unit tests and report to codecov
+run:
+  source: smithy
+  on-promotion: true
+  on-pull-request: true
+  when-branch-name-is: master
+env:
+  - CODECOV_TOKEN=bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB
+  - SOURCE=/go/src/github.com/Workiva/platform
+scripts:
+  - go get github.com/tebeka/go2xunit
+  - rm -rf ${SOURCE}
+  - mkdir -p ${SOURCE}
+  - cp -r ./ ${SOURCE}
+  - cd ${SOURCE}
+  - mkdir -p out
+  - go fmt ./...
+  - go test -v ./... -coverprofile=out/cover.cov | tee out/go.log
+  - go2xunit -input=out/go.log -output=out/go-xunit.xml
+  - bash <(curl -s https://codecov.workiva.net/bash) -t $CODECOV_TOKEN -r Workiva/platform -f out/cover.cov -F go-unit -C $SKYNET_BUILD_COMMIT_HASH
+artifacts:
+  - /go/src/github.com/Workiva/platform/out
+test-reports:
+  - /go/src/github.com/Workiva/platform/out
+size: small
+timeout: moderate
+---
+name: build-integration
+image: python:3
+contact: Nate Woods (nate.woods@workiva.com)
+description: Run builder and ensure results are as expected!
+scripts:
+  - cd test/package && ./run
+size: small
+timeout: moderate
