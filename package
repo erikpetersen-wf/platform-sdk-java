@@ -8,7 +8,7 @@ print('Welcome to the Workiva Platform!')
 ports = [
     int(p)
     for l in open('Dockerfile').readlines()
-    for p in l[7:].strip().split() # len('EXPOSE ')
+    for p in l[len('EXPOSE '):].strip().split()
     if l.startswith('EXPOSE')
 ]
 port = None

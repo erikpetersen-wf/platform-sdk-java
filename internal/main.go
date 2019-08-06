@@ -42,7 +42,7 @@ func installDefaultEndpoint(mux *http.ServeMux, path string, handler http.Handle
 	}
 }
 
-// Restart triggers a restart on the controling infrastructure.
+// Restart triggers a restart on the controlling infrastructure.
 func Restart() {
 	shouldRestart.Store(true)
 }

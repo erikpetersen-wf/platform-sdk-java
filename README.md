@@ -17,20 +17,20 @@ Below, is a list of various components necessary to build software at Workiva.
     * Java (TODO)
     * Dart (TODO)
     * Python (TODO)
-  * Security Guidelines
-  * StyleGuides
+  * Security Guidelines (TODO)
+  * StyleGuides (TODO)
 * Test
-  * Test Eng Stuff
-  * Skynet Stuff
-  * Signals Stuff
+  * Test Eng Stuff (TODO)
+  * Skynet Stuff (TODO)
+  * Signals Stuff (TODO)
 * Package
   * [Packager](package)
   * [Aviary](https://dev.workiva.net/docs/teams/information-security/aviary)
 * Provision
-  * CloudFormation Stuff
-  * MARV Stuff
+  * CloudFormation Stuff (TODO)
+  * MARV Stuff (TODO)
 * Deploy
-  * Release Pipelines
+  * Release Pipelines (TODO)
 * Monitor
   * [New Relic](https://insights.newrelic.com/accounts/2361833/dashboards/949872)
 
