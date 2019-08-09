@@ -1,0 +1,12 @@
+#! /bin/sh
+
+set -e # fail on error
+set -x # be verbose
+
+cp helm/readiness-missing/original.yaml helm/readiness-missing/values.yaml
+cp helm/readiness-override/original.yaml helm/readiness-override/values.yaml
+
+../../package
+
+diff helm/readiness-missing/values.yaml helm/readiness-missing/expected.yaml
+diff helm/readiness-override/values.yaml helm/readiness-override/expected.yaml

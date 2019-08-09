@@ -1,4 +1,40 @@
-## [Start Here](https://dev.webfilings.org/)
+# Software Development Platform
+
+Welcome to the Workiva Software Development Platform!
+
+![Software Development Lifecycle](docs/sdlc.png)
+
+We provide the tools to help you write, test, package, provision, deploy and monitor software at Workiva.
+
+As with any Software Development Platform, not all things can be in one location or managed together in a single repo.
+As such, this repo serves as a "jumping off point" for engineers at Workiva looking to build their software with the highest quality standards.
+Below, is a list of various components necessary to build software at Workiva.
+
+* Write
+  * Setup Environment: https://dev.webfilings.org/
+  * Language SDKs
+    * [Go](platform.go) (TODO: link to the developer docs)
+    * Java (TODO)
+    * Dart (TODO)
+    * Python (TODO)
+  * Security Guidelines (TODO)
+  * StyleGuides (TODO)
+* Test
+  * Test Eng Stuff (TODO)
+  * Skynet Stuff (TODO)
+  * Signals Stuff (TODO)
+* Package
+  * [Packager](package)
+  * [Aviary](https://dev.workiva.net/docs/teams/information-security/aviary)
+* Provision
+  * CloudFormation Stuff (TODO)
+  * MARV Stuff (TODO)
+* Deploy
+  * Release Pipelines (TODO)
+* Monitor
+  * [New Relic](https://insights.newrelic.com/accounts/2361833/dashboards/949872)
+
+<!-- ## [Start Here](https://dev.webfilings.org/)
 
 Platform
 ================
@@ -48,4 +84,4 @@ Teams:
 
 [OmniCorp](https://github.com/Workiva/OmniCorp/)
 
-[Messaging](https://github.com/Workiva/messaging)
+[Messaging](https://github.com/Workiva/messaging) -->
