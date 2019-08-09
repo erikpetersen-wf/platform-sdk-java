@@ -7,16 +7,12 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"time"
 )
 
 var testServerReference = make(chan *http.Server, 32) // max servers per container
 
 // Main performs the main content loop for serving traffic.
 func Main(ctx context.Context) {
-
-	// pre-generate the shutdown context so connections can be shedded gracefully.
-	shutdownContext, cancelShutdown := context.WithTimeout(context.Background(), time.Minute)
 
 	// Attach default handlers if they don't already exist
 	installDefaultEndpoint(http.DefaultServeMux, "/_wk/ready", func(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +21,6 @@ func Main(ctx context.Context) {
 	installDefaultEndpoint(http.DefaultServeMux, "/_wk/alive", func(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-ctx.Done():
-			cancelShutdown() // if k8s hit this, we need to kill connections FAST
 			http.Error(w, ctx.Err().Error(), http.StatusTeapot)
 		default:
 			http.Error(w, `ok`, http.StatusOK)
@@ -38,10 +33,10 @@ func Main(ctx context.Context) {
 		Addr:    ":" + coercePort(ctx),
 	}
 
-	// Monitor the outer context for shutdown events
+	// Monitor the outer context for shutdown events and shed connections.
 	go func() {
 		<-ctx.Done()
-		s.Shutdown(shutdownContext)
+		s.Shutdown(context.Background()) // try to shutdown until k8s kills us.
 	}()
 
 	// ListenAndServe forever!
