@@ -107,7 +107,7 @@ func TestCoercePort(t *testing.T) {
 	for _, test := range cases {
 		t.Run(test.out, func(in interface{}, out string) func(*testing.T) {
 			return func(ts *testing.T) {
-				ctx := context.WithValue(context.Background(), `port`, in)
+				ctx := context.WithValue(context.Background(), PORT, in)
 				assertEqual(t, out, coercePort(ctx))
 			}
 		}(test.in, test.out))

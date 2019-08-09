@@ -11,6 +11,13 @@ import (
 
 var testServerReference = make(chan *http.Server, 32) // max servers per container
 
+type contextValues uint8
+
+// Various context variables
+const (
+	PORT = contextValues(iota)
+)
+
 // Main performs the main content loop for serving traffic.
 func Main(ctx context.Context) {
 
@@ -59,7 +66,7 @@ func coercePort(ctx context.Context) string {
 	if s := os.Getenv(`PORT`); s != `` {
 		port = s
 	}
-	switch p := ctx.Value(`port`).(type) {
+	switch p := ctx.Value(PORT).(type) {
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
 		port = fmt.Sprintf(`%d`, p)
 	case string:

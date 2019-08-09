@@ -17,3 +17,8 @@ import (
 // If your container enters an un-recoverable state, cancel the context.
 // This will cause the container to restart.
 func Main(ctx context.Context) { internal.Main(ctx) }
+
+// WithPort allows you to attach a default serving port to a given context.
+func WithPort(ctx context.Context, port int) context.Context {
+	return context.WithValue(ctx, internal.PORT, port)
+}

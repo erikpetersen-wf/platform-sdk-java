@@ -10,7 +10,6 @@ import (
 
 func ExampleMain() {
 	ctx, die := context.WithCancel(context.Background())
-	ctx = context.WithValue(ctx, `port`, 6070)
 
 	// bind all your HTTP Handlers!!!
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -20,5 +19,5 @@ func ExampleMain() {
 		die()
 	})
 
-	platform.Main(ctx)
+	platform.Main(platform.WithPort(ctx, 6070))
 }
