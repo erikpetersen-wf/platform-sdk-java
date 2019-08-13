@@ -86,7 +86,6 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 	if err := marshal(w, data); err != nil {
 		log.Printf(`check: could not serialize response: %v`, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
 }
 
@@ -111,4 +110,5 @@ type availability struct {
 	meta   jsonapi.Meta
 }
 
+// Implements jsonapi.Metable
 func (a *availability) JSONAPIMeta() *jsonapi.Meta { return &a.meta }
