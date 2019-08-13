@@ -21,8 +21,8 @@ func ExampleDependency() {
 
 const fixture1 = `{
 	"data": {
-		"id": "2019-08-12T15:50:13-05:00",
 		"type": "availability",
+		"id": "2019-08-12T15:50:13-05:00",
 		"attributes": {
 			"status": "UNAVAILABLE"
 		},
@@ -33,17 +33,14 @@ const fixture1 = `{
 	},
 	"meta": {
 		"name": "testbox"
-	},
-	"jsonapi": {
-		"version": "1.1"
 	}
 }
 `
 
 const fixture2 = `{
 	"data": {
-		"id": "2019-08-12T15:50:13-05:00",
 		"type": "availability",
+		"id": "2019-08-12T15:50:13-05:00",
 		"attributes": {
 			"status": "OK"
 		},
@@ -54,9 +51,6 @@ const fixture2 = `{
 	},
 	"meta": {
 		"name": "testbox"
-	},
-	"jsonapi": {
-		"version": "1.1"
 	}
 }
 `

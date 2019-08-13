@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Workiva/platform/internal/api"
+	"github.com/google/jsonapi"
 )
 
 var (
@@ -50,9 +50,10 @@ func init() {
 }
 
 func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
-	meta := api.Meta{}
-	data := availability{
+	data := &availability{
+		ID:     timeNow().Format(time.RFC3339),
 		Status: `OK`,
+		meta:   jsonapi.Meta{},
 	}
 
 	// create a duplicate map of status (faster than calling the fns)
@@ -71,7 +72,7 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 			status = err.Error()
 			unavailable = true
 		}
-		meta[name] = status
+		data.meta[name] = status
 	}
 
 	// set overall status
@@ -79,32 +80,35 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 		data.Status = `UNAVAILABLE`
 	}
 
-	// construct jsonAPI object
-	doc := api.Document{
-		JSONAPI: api.Details,
-		Data: api.Resource{
-			ID:    timeNow().Format(time.RFC3339),
-			Type:  `availability`,
-			Attrs: data,
-			Meta:  meta,
-		},
-		Meta: api.Meta{
-			`name`: hostname,
-		},
-	}
-
 	// serialize and write
-	w.Header().Set(`content-type`, `application/vnd.api+json`)
-	h := json.NewEncoder(w)
-	h.SetIndent(``, "\t")
-	if err := h.Encode(doc); err != nil {
+	w.Header().Set(`content-type`, jsonapi.MediaType)
+	w.WriteHeader(http.StatusOK)
+	if err := marshal(w, data); err != nil {
 		log.Printf(`check: could not serialize response: %v`, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
+// duplicate of jsonapi.MarshalPayload with indentation and meta injection.
+func marshal(w http.ResponseWriter, models interface{}) error {
+	payload, err := jsonapi.Marshal(models)
+	if err != nil {
+		return err
+	}
+	payload.(*jsonapi.OnePayload).Meta = &jsonapi.Meta{
+		`name`: hostname,
+	}
+	m := json.NewEncoder(w)
+	m.SetIndent(``, "\t")
+	return m.Encode(payload)
+}
+
 // availibility is the defines the service availability resource.
 type availability struct {
-	Status string `json:"status"`
+	ID     string `jsonapi:"primary,availability"`
+	Status string `jsonapi:"attr,status"`
+	meta   jsonapi.Meta
 }
+
+func (a *availability) JSONAPIMeta() *jsonapi.Meta { return &a.meta }

@@ -1,0 +1,4 @@
+github.com/google/jsonapi v0.0.0-20170708005851-46d3ced04344 h1:G5TmuUtIYeR0scfa8ZQ06cfHeAAfVeFlIG8TVOCfuAA=
+github.com/google/jsonapi v0.0.0-20170708005851-46d3ced04344/go.mod h1:XSx4m2SziAqk9DXY9nz659easTq4q6TyrpYd9tHSm0g=
+github.com/google/jsonapi v0.0.0-20181016150055-d0428f63eb51 h1:k+U8IQj6kj659R+Ahq6YsK03GdUo8qQdTsq5HBzfQwM=
+github.com/google/jsonapi v0.0.0-20181016150055-d0428f63eb51/go.mod h1:XSx4m2SziAqk9DXY9nz659easTq4q6TyrpYd9tHSm0g=
