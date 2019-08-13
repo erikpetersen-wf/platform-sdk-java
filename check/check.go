@@ -7,6 +7,8 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/Workiva/platform/internal/api"
 )
 
 var (
@@ -48,14 +50,9 @@ func init() {
 }
 
 func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
-	data := wrap{
-		Type: `availability`,
-		ID:   hostname + `-` + timeNow().Format(`2006-01-02-15-04-05-MST`),
-		Attrs: internal{
-			Status:  `OK`,
-			Name:    `TODO`,
-			Details: make(map[string]string),
-		},
+	meta := api.Meta{}
+	data := availability{
+		Status: `OK`,
 	}
 
 	// create a duplicate map of status (faster than calling the fns)
@@ -74,37 +71,40 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 			status = err.Error()
 			unavailable = true
 		}
-		data.Attrs.Details[name] = status
+		meta[name] = status
 	}
 
 	// set overall status
 	if unavailable {
-		data.Attrs.Status = `UNAVAILABLE`
+		data.Status = `UNAVAILABLE`
+	}
+
+	// construct jsonAPI object
+	doc := api.Document{
+		JSONAPI: api.Details,
+		Data: api.Resource{
+			ID:    timeNow().Format(time.RFC3339),
+			Type:  `availability`,
+			Attrs: data,
+			Meta:  meta,
+		},
+		Meta: api.Meta{
+			`name`: hostname,
+		},
 	}
 
 	// serialize and write
 	w.Header().Set(`content-type`, `application/vnd.api+json`)
 	h := json.NewEncoder(w)
 	h.SetIndent(``, "\t")
-	if err := h.Encode(jsonapiWrapper{Data: data}); err != nil {
+	if err := h.Encode(doc); err != nil {
 		log.Printf(`check: could not serialize response: %v`, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
-type jsonapiWrapper struct {
-	Data interface{} `json:"data,omitempty"`
-}
-
-type wrap struct {
-	Type  string   `json:"type"`
-	ID    string   `json:"id"`
-	Attrs internal `json:"attributes"`
-}
-
-type internal struct {
-	Status  string            `json:"status"`
-	Name    string            `json:"name"`
-	Details map[string]string `json:"details"`
+// availibility is the defines the service availability resource.
+type availability struct {
+	Status string `json:"status"`
 }
