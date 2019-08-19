@@ -17,7 +17,7 @@ RUN apt-get install -y wget python3 && \
 WORKDIR /build/
 RUN helm init --client-only
 ADD package /usr/local/bin
-RUN chown nobody:nobody /build/
+RUN chown nobody:nogroup /build/
 USER nobody
 
 # steps for consuming builds to use
