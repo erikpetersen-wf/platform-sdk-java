@@ -15,10 +15,10 @@ RUN apt-get install -y wget python3 && \
     rm -rf helm-v2.9.1-linux-amd64.tar.gz linux-amd64
 
 WORKDIR /build/
+ENV HELM_HOME=/build/
 RUN helm init --client-only
 ADD package /usr/local/bin
 RUN chown nobody:nogroup /build/
-ENV HELM_HOME=/build/
 USER nobody
 
 # steps for consuming builds to use
