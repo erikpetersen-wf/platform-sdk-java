@@ -18,6 +18,7 @@ WORKDIR /build/
 RUN helm init --client-only
 ADD package /usr/local/bin
 RUN chown nobody:nogroup /build/
+ENV HELM_HOME=/build/
 USER nobody
 
 # steps for consuming builds to use
