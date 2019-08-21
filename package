@@ -65,13 +65,12 @@ for name in dirs:
     # HELM_HOME Directories need to be skipped
     if name in ['plugins', 'cache', 'starters', 'repository']:
         continue
-    os.system(f'helm package {name}/*')
+    os.system('helm package {name}/*'.format(name=name))
 
 
 # ONCE WE FIX ONBUILD, THE ABOVE CAN CONVERT TO THE FOLLOWING
 # os.system('helm package helm/*')
 
 print('DONE!')
-
 
 print('Your Service is now ready for Deployment through Release Pipelines')
