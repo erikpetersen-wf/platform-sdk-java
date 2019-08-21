@@ -65,7 +65,7 @@ for name in dirs:
     # HELM_HOME Directories need to be skipped
     if name in ['plugins', 'cache', 'starters', 'repository']:
         continue
-    os.system('helm package {name}/*'.format(name=name))
+    os.system('helm package {name}'.format(name=name))
 
 
 # ONCE WE FIX ONBUILD, THE ABOVE CAN CONVERT TO THE FOLLOWING
