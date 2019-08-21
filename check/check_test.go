@@ -16,7 +16,7 @@ func ExampleRegister() {
 
 const fixture1 = `{
 	"data": {
-		"type": "availability",
+		"type": "status",
 		"id": "2019-08-12T15:50:13-05:00",
 		"attributes": {
 			"status": "FAILED"
@@ -34,7 +34,7 @@ const fixture1 = `{
 
 const fixture2 = `{
 	"data": {
-		"type": "availability",
+		"type": "status",
 		"id": "2019-08-12T15:50:13-05:00",
 		"attributes": {
 			"status": "OK"
@@ -60,7 +60,7 @@ func TestDependency(t *testing.T) {
 	timeNow = func() time.Time {
 		return time.Date(2019, 8, 12, 3+12, 50, 13, 0, time.FixedZone(`CDT`, -5*60*60))
 	}
-	r := httptest.NewRequest(http.MethodGet, `/_wk/available`, nil)
+	r := httptest.NewRequest(http.MethodGet, `/_wk/status`, nil)
 
 	// Test 0
 	w := httptest.NewRecorder()

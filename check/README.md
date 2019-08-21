@@ -2,7 +2,7 @@
 
 The `check` package provides the ability for a service to "self report" its status.
 Additionally, it enables service owners to report the status of their internal dependencies.
-This package adds the handler `/_wk/available` to your service to check these values.
+This package adds the handler `/_wk/status` to your service to check these values.
 
 NO ACTION IS PERFORMED ON YOUR SERVICE BASED ON THIS DATA.
 

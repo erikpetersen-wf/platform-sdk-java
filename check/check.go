@@ -57,7 +57,7 @@ func Debounce(fn func() error, dt time.Duration) func() error {
 }
 
 func init() {
-	http.HandleFunc(`/_wk/available`, serviceCheckHandler)
+	http.HandleFunc(`/_wk/status`, serviceCheckHandler)
 	if name, err := os.Hostname(); err == nil {
 		hostname = name
 	}
@@ -129,7 +129,7 @@ type availability struct {
 	// ID is the timestamp of the given event.
 	// This is NON-Standard JSON:API.
 	// But these documents are not designed to be re-requested by identifier.
-	ID string `jsonapi:"primary,availability"`
+	ID string `jsonapi:"primary,status"`
 
 	// The resulting status of all the registerd checks.
 	// If any one check fails, this reports a `FAILED`.
