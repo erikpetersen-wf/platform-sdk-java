@@ -131,7 +131,7 @@ type availability struct {
 	// But these documents are not designed to be re-requested by identifier.
 	ID string `jsonapi:"primary,status"`
 
-	// The resulting status of all the registerd checks.
+	// The resulting status of all the registered checks.
 	// If any one check fails, this reports a `FAILED`.
 	// Otherwise, this reports `PASSED`.
 	Status string `jsonapi:"attr,status"`
