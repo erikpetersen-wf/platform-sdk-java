@@ -8,13 +8,8 @@ import (
 	"time"
 )
 
-var (
-	InternalCheck = Dependency
-	Component     = Dependency
-)
-
-func ExampleDependency() {
-	InternalCheck("sqs", func() error {
+func ExampleRegister() {
+	Register("sqs", func() error {
 		return errors.New("how do I test this?")
 	})
 }
@@ -57,8 +52,8 @@ const fixture2 = `{
 
 func TestDependency(t *testing.T) {
 	err := errors.New(`why?`)
-	Dependency(`hello`, func() error { return nil })
-	Dependency(`goodbye`, func() error { return err })
+	Register(`hello`, func() error { return nil })
+	Register(`goodbye`, func() error { return err })
 
 	// overrides
 	hostname = `testbox`
@@ -104,8 +99,8 @@ func TestDependencyPanic(t *testing.T) {
 			t.Fatalf(`Unexpected panic string: %q`, m)
 		}
 	}()
-	Dependency(`no`, nil)
-	Dependency(`no`, nil)
+	Register(`no`, nil)
+	Register(`no`, nil)
 	t.Fatal(`should have panic-ed`)
 }
 

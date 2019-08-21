@@ -18,8 +18,16 @@ var (
 	hostname = `unknown`
 )
 
-// Dependency provides the ability for consumers to register a service that it depends on
-func Dependency(name string, fn func() error) {
+// Standard names shared between services.
+// Just because the name exists, does not mean you need to register a check for it.
+const (
+	NameS3   = `s3`
+	NameNats = `nats`
+	NameSQS  = `sqs`
+)
+
+// Register provides the ability for consumers to register status check function.
+func Register(name string, fn func() error) {
 	lock.Lock()
 	defer lock.Unlock()
 	if _, ok := checks[name]; ok {
