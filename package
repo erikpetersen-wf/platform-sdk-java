@@ -66,6 +66,11 @@ for name in dirs:
     if name in ['plugins', 'cache', 'starters', 'repository']:
         continue
     os.system(f'helm package {name}/*')
+
+
+# ONCE WE FIX ONBUILD, THE ABOVE CAN CONVERT TO THE FOLLOWING
+# os.system('helm package helm/*')
+
 print('DONE!')
 
 
