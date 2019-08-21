@@ -9,7 +9,7 @@ import (
 )
 
 func ExampleRegister() {
-	Register("sqs", func() error {
+	Register(`customInternalServiceAttribute`, func() error {
 		return errors.New("how do I test this?")
 	})
 }
@@ -50,7 +50,7 @@ const fixture2 = `{
 }
 `
 
-func TestDependency(t *testing.T) {
+func TestRegister(t *testing.T) {
 	err := errors.New(`why?`)
 	Register(`hello`, func() error { return nil })
 	Register(`goodbye`, func() error { return err })
@@ -85,7 +85,7 @@ func TestDependency(t *testing.T) {
 	}
 }
 
-func TestDependencyPanic(t *testing.T) {
+func TestRegisterPanic(t *testing.T) {
 	defer func() {
 		r := recover()
 		if r == nil {
