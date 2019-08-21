@@ -22,7 +22,7 @@ RUN chown -R nobody:nogroup /build/
 USER nobody
 
 # steps for consuming builds to use
-ONBUILD ADD helm /build/
+ONBUILD ADD helm /build/helm/
 ONBUILD ADD Dockerfile /build/
 ONBUILD RUN package
 
