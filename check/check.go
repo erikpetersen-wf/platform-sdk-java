@@ -21,22 +21,28 @@ var (
 // Standard names shared between services.
 // Just because the name exists, does not mean you need to register a check for it.
 const (
-	NameS3   = `s3`
+	NameDB   = `db`
+	NameHTTP = `http`
 	NameNats = `nats`
+	NameS3   = `s3`
 	NameSQS  = `sqs`
 )
 
 // Register provides the ability for consumers to register status check function.
-func Register(name string, fn func() error) {
+// Checkers that are registered are immediatly called when a status check is requested.
+// If your checker is unable to handle that kind of load, wrap it in a Debounce call.
+func Register(name string, checker func() error) {
 	lock.Lock()
 	defer lock.Unlock()
 	if _, ok := checks[name]; ok {
 		panic(`check.Dependency: "` + name + `" already registered`)
 	}
-	checks[name] = fn
+	checks[name] = checker
 }
 
 // Debounce wraps a checker and debounce it's invocations.
+//
+// Usage: check.Debounce(funcToDebounce, time.Second)
 func Debounce(fn func() error, dt time.Duration) func() error {
 	next := timeNow().Add(dt)
 	value := fn()
@@ -51,7 +57,7 @@ func Debounce(fn func() error, dt time.Duration) func() error {
 }
 
 func init() {
-	http.HandleFunc(`/_wk/availability`, serviceCheckHandler)
+	http.HandleFunc(`/_wk/available`, serviceCheckHandler)
 	if name, err := os.Hostname(); err == nil {
 		hostname = name
 	}
@@ -75,7 +81,7 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 	// ask each status whats up
 	var unavailable bool
 	for name, fn := range dupe {
-		status := `PASSED`
+		status := statusPassed
 		if err := fn(); err != nil {
 			status = err.Error()
 			unavailable = true
@@ -85,7 +91,7 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 
 	// set overall status
 	if unavailable {
-		data.Status = `UNAVAILABLE`
+		data.Status = statusFailed
 	}
 
 	// serialize and write
@@ -111,11 +117,30 @@ func marshal(w http.ResponseWriter, models interface{}) error {
 	return m.Encode(payload)
 }
 
+// Possible top level status responses
+const (
+	statusPassed = `PASSED`
+	statusFailed = `FAILED`
+)
+
 // availibility is the defines the service availability resource.
 type availability struct {
-	ID     string `jsonapi:"primary,availability"`
+
+	// ID is the timestamp of the given event.
+	// This is NON-Standard JSON:API.
+	// But these documents are not designed to be re-requested by identifier.
+	ID string `jsonapi:"primary,availability"`
+
+	// The resulting status of all the registerd checks.
+	// If any one check fails, this reports a `FAILED`.
+	// Otherwise, this reports `PASSED`.
 	Status string `jsonapi:"attr,status"`
-	meta   jsonapi.Meta
+
+	// Registered checks will be different as teams implement different checks.
+	// Keeping with JSON:API, they should not be defined as attributes of a document.
+	// Instead they are represented as metadata of a particular document.
+	// https://jsonapi.org/format/1.1/#document-resource-objects
+	meta jsonapi.Meta
 }
 
 // Implements jsonapi.Metable

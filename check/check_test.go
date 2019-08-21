@@ -19,7 +19,7 @@ const fixture1 = `{
 		"type": "availability",
 		"id": "2019-08-12T15:50:13-05:00",
 		"attributes": {
-			"status": "UNAVAILABLE"
+			"status": "FAILED"
 		},
 		"meta": {
 			"goodbye": "why?",
@@ -60,7 +60,7 @@ func TestDependency(t *testing.T) {
 	timeNow = func() time.Time {
 		return time.Date(2019, 8, 12, 3+12, 50, 13, 0, time.FixedZone(`CDT`, -5*60*60))
 	}
-	r := httptest.NewRequest(http.MethodGet, `/_wk/availability`, nil)
+	r := httptest.NewRequest(http.MethodGet, `/_wk/available`, nil)
 
 	// Test 0
 	w := httptest.NewRecorder()
