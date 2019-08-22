@@ -29,9 +29,11 @@ size: small
 timeout: moderate
 ---
 name: build-integration
-image: python:3
+image: docker:19
 contact: Nate Woods (nate.woods@workiva.com)
 description: Run builder and ensure results are as expected!
+requires:
+  Workiva/platform: docker
 scripts:
   - cd test/package && ./run
 size: small

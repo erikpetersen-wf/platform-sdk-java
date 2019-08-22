@@ -6,7 +6,19 @@ set -x # be verbose
 cp helm/readiness-missing/original.yaml helm/readiness-missing/values.yaml
 cp helm/readiness-override/original.yaml helm/readiness-override/values.yaml
 
-../../package
+# set IMAGE=drydock-prod.workiva.net/workiva/platform:v0
+
+IMAGE="${SKYNET_APPLICATION_PLATFORM:-drydock-prod.workiva.net/workiva/platform:v0}"
+# IMAGE=${IMAGE/\./[\.]/g}
+echo $IMAGE
+
+sed "s~IMAGE~${IMAGE}~g" Dockerfile.orig > Dockerfile
+cat Dockerfile
+
+docker build . | tee output.log  # Simulate Workiva-Build
 
 diff helm/readiness-missing/values.yaml helm/readiness-missing/expected.yaml
 diff helm/readiness-override/values.yaml helm/readiness-override/expected.yaml
+diff output.log expected.log
+
+# TODO: verify BUILD_ARTIFACTS_HELM_CHARTS gave the correct value
