@@ -29,7 +29,7 @@ size: small
 timeout: moderate
 ---
 name: build-integration
-image: docker:19
+image: drydock.workiva.net/workiva/skynet-images:docker_runner-latest
 contact: Nate Woods (nate.woods@workiva.com)
 description: Run builder and ensure results are as expected!
 requires:
