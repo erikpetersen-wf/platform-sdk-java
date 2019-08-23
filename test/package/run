@@ -3,10 +3,14 @@
 set -e # fail on error
 set -x # be verbose
 
-cp helm/readiness-missing/original.yaml helm/readiness-missing/values.yaml
-cp helm/readiness-override/original.yaml helm/readiness-override/values.yaml
+# Inject the proper image into the Dockerfile for building
+IMAGE="${SKYNET_APPLICATION_PLATFORM:-drydock-prod.workiva.net/workiva/platform:v0.0.4}"
+echo $IMAGE
+sed "s~IMAGE~${IMAGE}~g" Dockerfile.orig > Dockerfile
+cat Dockerfile
 
-../../package
+# Simulate Workiva-Build (contains checks against expected values)
+docker build . | tee output.log
 
-diff helm/readiness-missing/values.yaml helm/readiness-missing/expected.yaml
-diff helm/readiness-override/values.yaml helm/readiness-override/expected.yaml
+# Verify we properly detect first exposed port as the probe port
+grep -q "Using 2222 for readiness probe" output.log
