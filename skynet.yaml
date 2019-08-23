@@ -10,6 +10,7 @@ run:
 env:
   - CODECOV_TOKEN=bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB
   - SOURCE=/go/src/github.com/Workiva/platform
+  - GO111MODULE=on
 scripts:
   - go get github.com/tebeka/go2xunit
   - rm -rf ${SOURCE}
