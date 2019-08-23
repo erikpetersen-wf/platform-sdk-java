@@ -6,6 +6,9 @@ Welcome to the Workiva Software Development Platform!
 
 We provide the tools to help you write, test, package, provision, deploy and monitor software at Workiva.
 
+
+## Platform Components
+
 As with any Software Development Platform, not all things can be in one location or managed together in a single repo.
 As such, this repo serves as a "jumping off point" for engineers at Workiva looking to build their software with the highest quality standards.
 Below, is a list of various components necessary to build software at Workiva.
@@ -33,6 +36,23 @@ Below, is a list of various components necessary to build software at Workiva.
   * Release Pipelines (TODO)
 * Monitor
   * [New Relic](https://insights.newrelic.com/accounts/2361833/dashboards/949872)
+
+
+## Architecture Decision Records
+
+* [Whats an ADR?](adr/readme.md)
+* [Whats with the `platform.Main` context?](adr/platform_main_context.md)
+* [Why does `check.Register` update a `status`?](adr/check_naming.md)
+
+If you still have questions, below is a list of other ways to reach us.
+
+
+## How to reach us!
+
+* Slack: `#support-sapi-platform`
+* Guild: `Services Guild` (every other Monday)
+* Stakeholders: `Service & API Platform Stakeholders` (every other Wednesday)
+
 
 <!-- ## [Start Here](https://dev.webfilings.org/)
 
