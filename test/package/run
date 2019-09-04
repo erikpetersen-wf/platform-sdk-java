@@ -4,7 +4,7 @@ set -e # fail on error
 set -x # be verbose
 
 # Inject the proper image into the Dockerfile for building
-IMAGE="${SKYNET_APPLICATION_PLATFORM:-drydock-prod.workiva.net/workiva/platform:v0.0.4}"
+IMAGE="${SKYNET_APPLICATION_PLATFORM:-drydock-prod.workiva.net/workiva/platform:v0}"
 echo $IMAGE
 sed "s~IMAGE~${IMAGE}~g" Dockerfile.orig > Dockerfile
 cat Dockerfile
