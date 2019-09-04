@@ -31,7 +31,7 @@ readinessProbe:
   httpGet:
     path: /_wk/ready
     port: {port}
-  initialDelaySeconds: 5
+  initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 10
   successThreshold: 1
@@ -45,7 +45,7 @@ livenessProbe:
   httpGet:
     path: /_wk/alive
     port: {port}
-  initialDelaySeconds: 5
+  initialDelaySeconds: 10
   periodSeconds: 10
 """
 
