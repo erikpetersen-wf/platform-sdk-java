@@ -32,7 +32,7 @@ RUN mvn -B clean && mvn -B verify
 # Publish Artifacts
 # ARG BUILD_ARTIFACTS_AUDIT=/audit/**/*
 ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/target/platform-*.jar
-ARG BUILD_ARTIFACTS_TEST_REPORTS=/build/libs/java/target/surefire-reports/TEST-*.xml
+# ARG BUILD_ARTIFACTS_TEST_REPORTS=/build/libs/java/target/surefire-reports/TEST-*.xml
 
 FROM debian:stretch-slim
 
