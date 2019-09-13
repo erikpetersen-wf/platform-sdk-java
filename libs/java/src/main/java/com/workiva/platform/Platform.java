@@ -10,42 +10,56 @@ import java.util.concurrent.Callable;
 public class Platform {
 
   public static void main(String[] args) {
-    builder().port(8090).readiness(() -> someCheckFunction()).start();
+    //    builder().port(8090).readiness(() -> someCheckFunction(), "health").start();
+    builder().start();
   }
 
   public static Builder builder() {
     return new Builder();
   }
 
-  static Map someCheckFunction() throws Exception {
+  static Map defaultCheck() throws Exception {
     Map map = new HashMap();
-    map.put("status", "bad");
+    map.put("status", "OK");
     return map;
   }
 
-  private static class Builder {
+  public static class Builder {
 
-    private int port;
-    private Callable function;
+    private int port = 8090;
+    private Callable readinessFunction = Platform::defaultCheck;
+    private String readinessPath = "health";
+    private Callable livenessFunction = Platform::defaultCheck;
+    private String livenessPath = "health";
 
     Builder() {}
 
-    Builder port(int port) {
+    public Builder port(int port) {
       this.port = port;
       return this;
     }
 
-    Builder readiness(Callable function) {
-      this.function = function;
+    public Builder readiness(Callable function, String path) {
+      this.readinessFunction = function;
+      this.readinessPath = path;
       return this;
     }
 
-    void start() {
+    public Builder liveness(Callable function, String path) {
+      this.livenessFunction = function;
+      this.livenessPath = path;
+      return this;
+    }
+
+    public void start() {
       Undertow.builder()
           .addHttpListener(port, "localhost")
           .setHandler(
               Handlers.path()
-                  .addExactPath("_wk/ready", new EndpointHandler(() -> function.call())))
+                  .addExactPath(readinessPath, new EndpointHandler(() -> readinessFunction.call())))
+          .setHandler(
+              Handlers.path()
+                  .addExactPath(livenessPath, new EndpointHandler(() -> livenessFunction.call())))
           .build()
           .start();
     }
