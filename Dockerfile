@@ -1,31 +1,3 @@
-FROM debian:stretch-slim
-
-# get updates for security requirements
-RUN apt update && \
-    apt full-upgrade -y && \
-    apt autoremove -y && \
-    apt clean all
-
-# Install and verify HELM
-RUN apt-get install -y wget python3 && \
-    wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz && \
-    echo "56ae2d5d08c68d6e7400d462d6ed10c929effac929fedce18d2636a9b4e166ba helm-v2.9.1-linux-amd64.tar.gz" | sha256sum -c && \
-    tar xf helm-v2.9.1-linux-amd64.tar.gz && \
-    cp linux-amd64/helm /usr/local/bin && \
-    rm -rf helm-v2.9.1-linux-amd64.tar.gz linux-amd64
-
-WORKDIR /build/
-RUN helm init --client-only
-ADD package /usr/local/bin
-
-# # USAGE
-# FROM drydock.workiva.com/Workiva/platform:latest-release as builder
-# ADD helm /build/
-# ADD Dockerfile /build/
-# RUN package
-# ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
-
-
 #! STAGE - Client Library - Java - Cache Depencencies
 FROM maven:3.6-jdk-8-alpine as java_lib_dependencies
 
@@ -61,3 +33,30 @@ RUN mvn -B clean && mvn -B verify
 # ARG BUILD_ARTIFACTS_AUDIT=/audit/**/*
 ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/target/platform.jar
 ARG BUILD_ARTIFACTS_TEST_REPORTS=/build/libs/java/target/surefire-reports/TEST-*.xml
+
+FROM debian:stretch-slim
+
+# get updates for security requirements
+RUN apt update && \
+    apt full-upgrade -y && \
+    apt autoremove -y && \
+    apt clean all
+
+# Install and verify HELM
+RUN apt-get install -y wget python3 && \
+    wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz && \
+    echo "56ae2d5d08c68d6e7400d462d6ed10c929effac929fedce18d2636a9b4e166ba helm-v2.9.1-linux-amd64.tar.gz" | sha256sum -c && \
+    tar xf helm-v2.9.1-linux-amd64.tar.gz && \
+    cp linux-amd64/helm /usr/local/bin && \
+    rm -rf helm-v2.9.1-linux-amd64.tar.gz linux-amd64
+
+WORKDIR /build/
+RUN helm init --client-only
+ADD package /usr/local/bin
+
+# # USAGE
+# FROM drydock.workiva.com/Workiva/platform:latest-release as builder
+# ADD helm /build/
+# ADD Dockerfile /build/
+# RUN package
+# ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
