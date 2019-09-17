@@ -6,6 +6,35 @@ import (
 	"github.com/Workiva/platform/internal"
 )
 
+// Field is a pre-defined name that can be shared throughout Workiva.
+type Field string
+
+// Common field declarations across Workiva.
+const (
+	FieldUserID         = Field(`userId`)
+	FieldUserRID        = Field(`userResourceId`)
+	FieldMembershipID   = Field(`membershipId`)
+	FieldMembershipRID  = Field(`membershipResourceId`)
+	FieldAccountID      = Field(`accountId`)
+	FieldOrganizationID = Field(`organizationId`)
+	FieldWorkspaceID    = Field(`workspaceId`)
+	FieldWorkspaceRID   = Field(`workspaceResourceId`)
+	FieldCMD            = Field(`cmd`)
+	FieldPID            = Field(`pid`)
+)
+
+// these field keys are restricted and are reserved for Splunk to populate.
+var restricted = map[string]bool{
+	`host`:          true,
+	`index`:         true,
+	`linecount`:     true,
+	`punct`:         true,
+	`source`:        true,
+	`sorucetype`:    true,
+	`splunk_server`: true,
+	`timestamp`:     true,
+}
+
 // Debugf formats its arguments according to the format, analogous to fmt.Printf,
 // and records the text as a log message at Debug level. The message will be associated
 // with the request linked with the provided context.
