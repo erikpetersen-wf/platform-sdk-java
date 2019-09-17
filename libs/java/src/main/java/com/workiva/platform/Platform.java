@@ -2,6 +2,8 @@ package com.workiva.platform;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +12,8 @@ import java.util.concurrent.Callable;
 public class Platform {
 
   public static void main(String[] args) {
-    //    builder().port(8090).readiness(() -> someCheckFunction(), "health").start();
-    builder().start();
+    //    builder().port(8090).readiness(() -> defaultCheck(), "health").start();
+    //    builder().start();
   }
 
   public static Builder builder() {
@@ -52,6 +54,7 @@ public class Platform {
     }
 
     public void start() {
+      final Logger log = LoggerFactory.getLogger(Platform.class);
       Undertow.builder()
           .addHttpListener(port, "localhost")
           .setHandler(
@@ -62,6 +65,7 @@ public class Platform {
                   .addExactPath(livenessPath, new EndpointHandler(() -> livenessFunction.call())))
           .build()
           .start();
+      log.info("Started liveness/readiness probes.");
     }
   }
 }
