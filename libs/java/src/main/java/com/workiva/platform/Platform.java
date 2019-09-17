@@ -56,7 +56,7 @@ public class Platform {
     public void start() {
       final Logger log = LoggerFactory.getLogger(Platform.class);
       Undertow.builder()
-          .addHttpListener(port, "localhost")
+          .addHttpListener(port, "0.0.0.0")
           .setHandler(
               Handlers.path()
                   .addExactPath(readinessPath, new EndpointHandler(() -> readinessFunction.call())))
