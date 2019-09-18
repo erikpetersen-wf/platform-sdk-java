@@ -11,10 +11,10 @@ import java.util.concurrent.Callable;
 
 public class Platform {
 
-  //  public static void main(String[] args) {
+//    public static void main(String[] args) {
   //    //    builder().port(8090).readiness(() -> defaultCheck(), "health").start();
-  //    //    builder().start();
-  //  }
+          builder().start();
+//    }
 
   public static Builder builder() {
     return new Builder();
@@ -59,10 +59,8 @@ public class Platform {
           .addHttpListener(port, "0.0.0.0")
           .setHandler(
               Handlers.path()
+                  .addExactPath(livenessPath, new EndpointHandler(() -> livenessFunction.call()))
                   .addExactPath(readinessPath, new EndpointHandler(() -> readinessFunction.call())))
-          .setHandler(
-              Handlers.path()
-                  .addExactPath(livenessPath, new EndpointHandler(() -> livenessFunction.call())))
           .build()
           .start();
       log.info("Started liveness/readiness probes.");
