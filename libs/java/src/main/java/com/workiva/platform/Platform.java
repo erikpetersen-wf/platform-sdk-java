@@ -11,10 +11,10 @@ import java.util.concurrent.Callable;
 
 public class Platform {
 
-  public static void main(String[] args) {
-    //    builder().port(8090).readiness(() -> defaultCheck(), "health").start();
-    //    builder().start();
-  }
+  //  public static void main(String[] args) {
+  //    //    builder().port(8090).readiness(() -> defaultCheck(), "health").start();
+  //    //    builder().start();
+  //  }
 
   public static Builder builder() {
     return new Builder();
@@ -28,11 +28,11 @@ public class Platform {
 
   public static class Builder {
 
-    private int port = 8090;
+    private int port = 8888;
     private Callable readinessFunction = Platform::defaultCheck;
-    private String readinessPath = "health";
+    private String readinessPath = "_wk/ready";
     private Callable livenessFunction = Platform::defaultCheck;
-    private String livenessPath = "health";
+    private String livenessPath = "_wk/alive";
 
     Builder() {}
 
@@ -66,6 +66,8 @@ public class Platform {
           .build()
           .start();
       log.info("Started liveness/readiness probes.");
+      log.info(
+          "Liveness route: {}, Readiness route: {} on port: {}", livenessPath, readinessPath, port);
     }
   }
 }
