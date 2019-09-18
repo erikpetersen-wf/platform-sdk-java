@@ -11,10 +11,10 @@ import java.util.concurrent.Callable;
 
 public class Platform {
 
-//    public static void main(String[] args) {
+  //    public static void main(String[] args) {
   //    //    builder().port(8090).readiness(() -> defaultCheck(), "health").start();
-//          builder().start();
-//    }
+  //          builder().start();
+  //    }
 
   public static Builder builder() {
     return new Builder();
