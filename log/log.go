@@ -6,21 +6,18 @@ import (
 	"github.com/Workiva/platform/internal"
 )
 
-// Field is a pre-defined name that can be shared throughout Workiva.
-type Field string
-
 // Common field declarations across Workiva.
 const (
-	FieldUserID         = Field(`userId`)
-	FieldUserRID        = Field(`userResourceId`)
-	FieldMembershipID   = Field(`membershipId`)
-	FieldMembershipRID  = Field(`membershipResourceId`)
-	FieldAccountID      = Field(`accountId`)
-	FieldOrganizationID = Field(`organizationId`)
-	FieldWorkspaceID    = Field(`workspaceId`)
-	FieldWorkspaceRID   = Field(`workspaceResourceId`)
-	FieldCMD            = Field(`cmd`)
-	FieldPID            = Field(`pid`)
+	FieldUserID         = `userId`
+	FieldUserRID        = `userResourceId`
+	FieldMembershipID   = `membershipId`
+	FieldMembershipRID  = `membershipResourceId`
+	FieldAccountID      = `accountId`
+	FieldOrganizationID = `organizationId`
+	FieldWorkspaceID    = `workspaceId`
+	FieldWorkspaceRID   = `workspaceResourceId`
+	FieldCMD            = `cmd`
+	FieldPID            = `pid`
 )
 
 // these field keys are restricted and are reserved for Splunk to populate.
@@ -35,29 +32,87 @@ var restricted = map[string]bool{
 	`timestamp`:     true,
 }
 
-// Debugf formats its arguments according to the format, analogous to fmt.Printf,
-// and records the text as a log message at Debug level. The message will be associated
-// with the request linked with the provided context.
-func Debugf(ctx context.Context, format string, args ...interface{}) {
-	internal.Logf(ctx, 0, format, args...)
+// Logger ...
+type Logger func(level int, msg string, meta map[string]string)
+
+// New ...
+func New(ctx context.Context) Logger {
+	return func(level int, msg string, meta map[string]string) {
+		// TODO: do we validate restricted fields here?
+		internal.Log(ctx, level, msg, meta)
+	}
 }
 
-// Infof is like Debugf, but at Info level.
-func Infof(ctx context.Context, format string, args ...interface{}) {
-	internal.Logf(ctx, 1, format, args...)
+// Debug is fine level logging information. For example technical details,
+// information that someone will use to debug a technical issue.
+func (l Logger) Debug(msg string) { l(0, msg, nil) }
+
+// Info is high level logging information. For example, basic information about
+// a process.
+func (l Logger) Info(msg string) { l(1, msg, nil) }
+
+// Warning conveys information about potential issues, something may not be
+// right, but is easily recoverable.
+func (l Logger) Warning(msg string) { l(2, msg, nil) }
+
+// Error logs emitted when something with the application goes wrong. This is
+// usually for exceptions.
+func (l Logger) Error(msg string) { l(3, msg, nil) }
+
+// Critical error, an issue that has wider impact outside the application. This
+// usually useful for indicating problems with structural integrity of the
+// infrastructure and application.
+func (l Logger) Critical(msg string) { l(4, msg, nil) }
+
+// WithMeta ...
+func (l Logger) WithMeta(meta map[string]string) Logger {
+	c := make(map[string]string, len(meta))
+	for k, v := range meta {
+		c[k] = v
+	}
+	return func(level int, msg string, meta map[string]string) {
+		scope := c
+		if meta != nil {
+			// have to make a new map to merge old meta with new meta
+			scope = make(map[string]string, len(meta)+len(c))
+			for k, v := range c {
+				scope[k] = v
+			}
+			for k, v := range meta {
+				scope[k] = v
+			}
+		}
+		l(level, msg, scope)
+	}
 }
 
-// Warningf is like Debugf, but at Warning level.
-func Warningf(ctx context.Context, format string, args ...interface{}) {
-	internal.Logf(ctx, 2, format, args...)
+// Debug is fine level logging information. For example technical details,
+// information that someone will use to debug a technical issue.
+func Debug(ctx context.Context, msg string, meta map[string]string) {
+	internal.Log(ctx, 0, msg, meta)
 }
 
-// Errorf is like Debugf, but at Error level.
-func Errorf(ctx context.Context, format string, args ...interface{}) {
-	internal.Logf(ctx, 3, format, args...)
+// Info is high level logging information. For example, basic information about
+// a process.
+func Info(ctx context.Context, msg string, meta map[string]string) {
+	internal.Log(ctx, 1, msg, meta)
 }
 
-// Criticalf is like Debugf, but at Critical level.
-func Criticalf(ctx context.Context, format string, args ...interface{}) {
-	internal.Logf(ctx, 4, format, args...)
+// Warning conveys information about potential issues, something may not be
+// right, but is easily recoverable.
+func Warning(ctx context.Context, msg string, meta map[string]string) {
+	internal.Log(ctx, 2, msg, meta)
+}
+
+// Error logs emitted when something with the application goes wrong. This is
+// usually for exceptions.
+func Error(ctx context.Context, msg string, meta map[string]string) {
+	internal.Log(ctx, 3, msg, meta)
+}
+
+// Critical error, an issue that has wider impact outside the application. This
+// usually useful for indicating problems with structural integrity of the
+// infrastructure and application.
+func Critical(ctx context.Context, msg string, meta map[string]string) {
+	internal.Log(ctx, 4, msg, meta)
 }

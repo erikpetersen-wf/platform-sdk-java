@@ -2,8 +2,8 @@ package internal
 
 import "context"
 
-// Logf ...
-func Logf(ctx context.Context, level int, format string, args ...interface{}) {
+// Log ...
+func Log(ctx context.Context, level int, msg string, meta map[string]string) {
 	panic(`todo`)
 
 	// TODO: send log to sidecar service for bubbling standards
