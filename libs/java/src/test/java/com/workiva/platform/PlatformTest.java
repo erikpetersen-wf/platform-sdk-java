@@ -14,6 +14,10 @@ public class PlatformTest {
 
   final CloseableHttpClient httpClient = HttpClients.createDefault();
 
+  static Object customFunction() throws Exception {
+    throw new Exception();
+  }
+
   @Test
   public void TestDefaultReadiness() {
     try (Platform platform = Platform.builder().start()) {
@@ -39,9 +43,26 @@ public class PlatformTest {
   }
 
   @Test
+  public void TestCustomFunctionAndPath() {
+    try (Platform platform =
+        Platform.builder().function(() -> customFunction()).path("_custom/path").start()) {
+      HttpGet httpGet = new HttpGet("http://localhost:8888/_custom/path");
+      HttpResponse httpFrugalResp = httpClient.execute(httpGet);
+      int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
+      Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
+    } catch (Exception ex) {
+      Assert.fail();
+    }
+  }
+
+  @Test
   public void TestCustomReadiness() {
     try (Platform platform =
-        Platform.builder().port(8889).readiness(() -> customFunction(), "_custom/ready").start()) {
+        Platform.builder()
+            .port(8889)
+            .readinessFunction(() -> customFunction())
+            .readinessPath("_custom/ready")
+            .start()) {
       HttpGet httpGet = new HttpGet("http://localhost:8889/_custom/ready");
       HttpResponse httpFrugalResp = httpClient.execute(httpGet);
       int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
@@ -51,14 +72,14 @@ public class PlatformTest {
     }
   }
 
-  static Object customFunction() throws Exception {
-    throw new Exception();
-  }
-
   @Test
   public void TestCustomLiveness() {
     try (Platform platform =
-        Platform.builder().port(8887).readiness(() -> customFunction(), "_custom/alive").start()) {
+        Platform.builder()
+            .port(8887)
+            .livenessFunction(() -> customFunction())
+            .livenessPath("_custom/alive")
+            .start()) {
       HttpGet httpGet = new HttpGet("http://localhost:8887/_custom/alive");
       HttpResponse httpFrugalResp = httpClient.execute(httpGet);
       int statusCode = httpFrugalResp.getStatusLine().getStatusCode();

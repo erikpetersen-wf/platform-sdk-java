@@ -47,15 +47,35 @@ public class Platform implements AutoCloseable {
       return this;
     }
 
-    public Builder readiness(Callable function, String path) {
+    public Builder function(Callable function) {
       this.readinessFunction = function;
+      this.livenessFunction = function;
+      return this;
+    }
+
+    public Builder path(String path) {
+      this.readinessPath = path;
+      this.livenessPath = path;
+      return this;
+    }
+
+    public Builder readinessPath(String path) {
       this.readinessPath = path;
       return this;
     }
 
-    public Builder liveness(Callable function, String path) {
-      this.livenessFunction = function;
+    public Builder readinessFunction(Callable function) {
+      this.readinessFunction = function;
+      return this;
+    }
+
+    public Builder livenessPath(String path) {
       this.livenessPath = path;
+      return this;
+    }
+
+    public Builder livenessFunction(Callable function) {
+      this.livenessFunction = function;
       return this;
     }
 
