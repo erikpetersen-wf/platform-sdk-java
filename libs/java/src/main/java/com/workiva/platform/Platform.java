@@ -9,7 +9,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class Platform {
+public class Platform implements AutoCloseable {
+
+  Platform(Undertow httpServer) {
+    this.httpServer = httpServer;
+  }
+
+  final Undertow httpServer;
+
+  @Override
+  public void close() {
+    this.httpServer.stop();
+  }
 
   public static Builder builder() {
     return new Builder();
@@ -48,19 +59,24 @@ public class Platform {
       return this;
     }
 
-    public void start() {
+    public Platform start() {
       final Logger log = LoggerFactory.getLogger(Platform.class);
-      Undertow.builder()
-          .addHttpListener(port, "0.0.0.0")
-          .setHandler(
-              Handlers.path()
-                  .addExactPath(livenessPath, new EndpointHandler(() -> livenessFunction.call()))
-                  .addExactPath(readinessPath, new EndpointHandler(() -> readinessFunction.call())))
-          .build()
-          .start();
+      Undertow httpServer =
+          Undertow.builder()
+              .addHttpListener(port, "0.0.0.0")
+              .setHandler(
+                  Handlers.path()
+                      .addExactPath(
+                          livenessPath, new EndpointHandler(() -> livenessFunction.call()))
+                      .addExactPath(
+                          readinessPath, new EndpointHandler(() -> readinessFunction.call())))
+              .build();
+      httpServer.start();
       log.info("Started liveness/readiness probes.");
       log.info(
           "Liveness route: {}, Readiness route: {} on port: {}", livenessPath, readinessPath, port);
+
+      return new Platform(httpServer);
     }
   }
 }
