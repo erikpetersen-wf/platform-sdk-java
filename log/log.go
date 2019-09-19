@@ -4,7 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 
 	appintel "github.com/Workiva/app_intelligence_go"
 	"github.com/Workiva/messaging-sdk/lib/go/sdk"
@@ -28,6 +28,9 @@ const (
 // currently based on logrus' logger, but subject to change in the future.
 func New(ctx context.Context) logrus.FieldLogger {
 	log := logrus.StandardLogger()
+
+	// future: update to ship logs across Call
+	// https://github.com/Workiva/platform/pull/26
 
 	// Add app-intelligence if we have are considered "safe".
 	if !sdk.IamUnsafe() {
