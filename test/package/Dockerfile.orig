@@ -1,0 +1,13 @@
+FROM IMAGE as platform
+ADD helm /build/
+ADD Dockerfile /build/
+RUN package
+ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
+
+# Fake Consumer Dockerfile
+EXPOSE 2222
+EXPOSE 80 443 8080 8123 8124
+
+# Validate the Modifications
+RUN diff readiness-missing/values.yaml readiness-missing/expected.yaml
+RUN diff readiness-override/values.yaml readiness-override/expected.yaml
