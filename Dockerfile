@@ -25,7 +25,7 @@ USER nobody
 ONBUILD ADD helm /build/helm/
 ONBUILD ADD Dockerfile /build/
 ONBUILD RUN package
+ONBUILD RUN ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
 # # USAGE
 # FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
-# ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
