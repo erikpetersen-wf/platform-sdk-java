@@ -15,9 +15,10 @@ Below, is a list of various components necessary to build software at Workiva.
 
 * Write
   * Setup Environment: https://dev.webfilings.org/
+  * [Build Phase](#build)
   * Language SDKs
     * [Go](platform.go) (TODO: link to the developer docs)
-    * Java (TODO)
+    * [Java](lib/src/java) ([documentation](#java))
     * Dart (TODO)
     * Python (TODO)
   * Security Guidelines (TODO)
@@ -37,12 +38,70 @@ Below, is a list of various components necessary to build software at Workiva.
 * Monitor
   * [New Relic](https://insights.newrelic.com/accounts/2361833/dashboards/949872)
 
+## Build
+The build phase is integrated through your service by adding these lines to your `Dockerfile`.
+
+```Dockerfile
+FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
+ADD ./server/helm/ /build/
+ADD workivabuild.Dockerfile /build/Dockerfile
+RUN package
+```
+
+This build phase will execute the code in [platform](package).  It will look for a `livenessProbe` and `readinessProbe` definition in your Helm chart.  If it does not find one it will append it to your Helm chart as a build artifact.  If the probes are appended to your chart via as part of the build, the paths will be `_wk/ready` and `_wk/alive`.  The build phase will search your `Dockerfile` for an `EXPOSE` command and use that as the port.  If it does not find an `EXPOSE` command we will default to port `8888`.
+
+## Java
+### Adding the dependency
+```xml
+<dependency>
+    <groupId>com.workiva.platform</groupId>
+    <artifactId>platform</artifactId>
+    <version>0.0.10</version>
+</dependency>
+```
+### Running the platform
+Running `Platform.builder().start()` will setup an HTTP server with the following routes for your service:
+* Readiness probe running at `_wk/ready` on port `8888`.
+* Liveness probe running at `_wk/alive` on port `8888`.
+
+### Override defaults
+The port and the functions that are run can all be overridden if necessary.
+
+#### Port
+Global Override
+```java
+Platform.builder().port(9999).start();
+```
+
+Individual Override
+```java
+Platform.builder().livenessPort(9999).start();
+```
+```java
+Platform.builder().readinessPort(9999).start();
+```
+
+#### Function
+Global Override
+```java
+Platform.builder().function(() -> myFunction())).start();
+```
+
+Individual Override
+```java
+Platform.builder().livenessFunction(() -> myLivenessFunction()).start();
+```
+```java
+Platform.builder().readinessFunction(() -> myReadinessFunction()).start();
+```
+
+If your function returns successfully, the probe will return a `200`.  If your function returns an exception, the probe will return a `503`. 
 
 ## Architecture Decision Records
 
-* [Whats an ADR?](adr/readme.md)
-* [Whats with the `platform.Main` context?](adr/platform_main_context.md)
-* [Why does `check.Register` update a `status`?](adr/check_naming.md)
+* [Whats an ADR?](docs/adr/readme.md)
+* [Whats with the `platform.Main` context?](docs/adr/platform_main_context.md)
+* [Why does `check.Register` update a `status`?](docs/adr/check_naming.md)
 
 If you still have questions, below is a list of other ways to reach us.
 
