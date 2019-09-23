@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+/**
+ *  Stands up an HTTP server for liveness/readiness probes.
+ */
 public class Platform implements AutoCloseable {
 
   Platform(Undertow httpServer) {
