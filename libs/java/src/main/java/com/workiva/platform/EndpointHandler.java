@@ -20,7 +20,6 @@ public class EndpointHandler implements HttpHandler {
   @Override
   public void handleRequest(HttpServerExchange exchange) {
     exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-    exchange.getPathParameters(); // always null
 
     Object result = null;
     try {
