@@ -4,8 +4,9 @@ import os
 
 
 # Use an indicator file to determine if this script has run before
-INDICATOR_FILE_NAME = "packaged-48e34541-f296-4611-9073-74a403af39bd.txt"
+INDICATOR_FILE_NAME = 'packaged-48e34541-f296-4611-9073-74a403af39bd.txt'
 if os.path.exists(INDICATOR_FILE_NAME):
+    print('Package has already been executed... Skipping second packaging!')
     raise SystemExit()
 
 
@@ -71,6 +72,7 @@ print('DONE!')
 
 # Touch a file to make sure the script doesn't run again!
 with open(INDICATOR_FILE_NAME, 'a'):
+    print('Adding marker so a future package command may be skipped!')
     os.utime(INDICATOR_FILE_NAME, None)
 
 
