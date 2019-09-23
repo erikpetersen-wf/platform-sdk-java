@@ -18,8 +18,8 @@ WORKDIR /build/
 ENV HELM_HOME=/build/
 RUN helm init --client-only
 ADD package /usr/local/bin
-RUN chown -R nobody:nogroup /build/
-USER nobody
+# RUN chown -R nobody:nogroup /build/
+# USER nobody
 
 # steps for consuming builds to use
 ONBUILD ADD helm /build/helm/
