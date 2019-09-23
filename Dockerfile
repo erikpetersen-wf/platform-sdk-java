@@ -17,8 +17,6 @@ COPY ./libs/java/pom.xml ./libs/java/pom.xml
 RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
 
 #! STAGE - Client Library - Java - Produce Library
-FROM java_lib_dependencies as build_java_lib
-
 WORKDIR /build
 COPY ./libs/java ./libs/java
 
