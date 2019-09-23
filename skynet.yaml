@@ -10,6 +10,7 @@ run:
 env:
   - CODECOV_TOKEN=bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB
   - SOURCE=/go/src/github.com/Workiva/platform
+  - GO111MODULE=on
 scripts:
   - go get github.com/tebeka/go2xunit
   - rm -rf ${SOURCE}
@@ -29,9 +30,11 @@ size: small
 timeout: moderate
 ---
 name: build-integration
-image: python:3
+image: drydock.workiva.net/workiva/skynet-images:docker_runner-latest
 contact: Nate Woods (nate.woods@workiva.com)
 description: Run builder and ensure results are as expected!
+requires:
+  Workiva/platform: docker
 scripts:
   - cd test/package && ./run
 size: small
