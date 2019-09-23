@@ -56,36 +56,33 @@ public class PlatformTest {
   }
 
   @Test
-  public void TestCustomReadiness() {
+  public void TestCustomReadiness() throws Exception {
     try (Platform platform =
         Platform.builder()
             .port(8889)
-            .readinessFunction(() -> customFunction())
+            .readinessFunction(PlatformTest::customFunction)
             .readinessPath("_custom/ready")
             .start()) {
       HttpGet httpGet = new HttpGet("http://localhost:8889/_custom/ready");
       HttpResponse httpFrugalResp = httpClient.execute(httpGet);
       int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
       Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
-    } catch (Exception ex) {
-      Assert.fail();
     }
   }
 
   @Test
-  public void TestCustomLiveness() {
+  public void TestCustomLiveness() throws Exception {
     try (Platform platform =
         Platform.builder()
             .port(8887)
-            .livenessFunction(() -> customFunction())
+            .livenessFunction(PlatformTest::customFunction)
+            .livenessPath("_custom/alive")
             .livenessPath("_custom/alive")
             .start()) {
       HttpGet httpGet = new HttpGet("http://localhost:8887/_custom/alive");
       HttpResponse httpFrugalResp = httpClient.execute(httpGet);
       int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
       Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
-    } catch (Exception ex) {
-      Assert.fail();
     }
   }
 }
