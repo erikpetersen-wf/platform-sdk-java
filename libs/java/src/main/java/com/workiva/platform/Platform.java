@@ -18,7 +18,7 @@ public class Platform implements AutoCloseable {
     this.httpServer = httpServer;
   }
 
-  final Undertow httpServer;
+  final private Undertow httpServer;
 
   @Override
   public void close() {
