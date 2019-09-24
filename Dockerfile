@@ -52,9 +52,11 @@ WORKDIR /build/
 RUN helm init --client-only
 ADD package /usr/local/bin
 
+# steps for consuming builds to use
+ONBUILD ADD helm /build/helm/
+ONBUILD ADD Dockerfile /build/
+ONBUILD RUN package
+ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
+
 # # USAGE
-# FROM drydock.workiva.com/Workiva/platform:latest-release as builder
-# ADD helm /build/
-# ADD Dockerfile /build/
-# RUN package
-# ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
+# FROM drydock-prod.workiva.net/workiva/platform:v0 as platform

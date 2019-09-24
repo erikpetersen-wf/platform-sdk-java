@@ -113,6 +113,20 @@ If you still have questions, below is a list of other ways to reach us.
 * Stakeholders: `Service & API Platform Stakeholders` (every other Wednesday)
 
 
+## Builder
+
+The platform now has a builder to help with various HELM (future: and cloudformation) asset generation.
+
+To use this builder, add the following to the top of your Dockerfile:
+
+```
+FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
+```
+
+If you already have the platform builder in your repo, you can remove any `ADD`, `RUN` and `ARG` commands after it, and leave it for the platform `ONBUILD` commands to handle.
+
+Pinning to `v0` allows us to push full platform level changes across all Workiva during the bi-weekly security rebuild updates now required by FEDRAMP Moderate without needing to make PRs into all platform repos.  This also gives us the flex-ability to change how this works completely and bump to `v1`.
+
 <!-- ## [Start Here](https://dev.webfilings.org/)
 
 Platform

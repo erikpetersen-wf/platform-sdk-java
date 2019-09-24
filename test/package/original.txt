@@ -9,5 +9,7 @@ EXPOSE 2222
 EXPOSE 80 443 8080 8123 8124
 
 # Validate the Modifications
-RUN diff readiness-missing/values.yaml readiness-missing/expected.yaml
-RUN diff readiness-override/values.yaml readiness-override/expected.yaml
+RUN apt install tree
+RUN tree
+RUN diff helm/readiness-missing/values.yaml helm/readiness-missing/expected.yaml
+RUN diff helm/readiness-override/values.yaml helm/readiness-override/expected.yaml

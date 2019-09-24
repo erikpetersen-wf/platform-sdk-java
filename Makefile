@@ -20,3 +20,8 @@ gen-docker-no-tests:
 		--build-arg SKIP_TESTS=true \
 		-f Dockerfile \
 		-t drydock.workiva.net/workiva/platform:latest-release .
+
+test:
+	docker build -t package:test .
+	SKYNET_APPLICATION_PLATFORM=platform:test ./test/package/run
+.PHONY: test
