@@ -8,6 +8,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.net.ConnectException;
+
 public class PlatformTest {
 
   final CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -19,71 +22,76 @@ public class PlatformTest {
     return status;
   }
 
-  @Test
-  public void TestDefaultReadiness() {
-    try (Platform platform = Platform.builder().start()) {
-      HttpGet httpGet = new HttpGet("http://localhost:8888/_wk/ready");
-      HttpResponse httpFrugalResp = httpClient.execute(httpGet);
-      int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
-      Assert.assertEquals(statusCode, StatusCodes.OK);
+  private HttpResponse makeHttpRequest(Platform platform, String path) {
+    HttpResponse httpFrugalResp = null;
+    try (Platform closeablePlatform = platform) {
+      HttpGet httpGet = new HttpGet(path);
+      httpFrugalResp = httpClient.execute(httpGet);
     } catch (Exception ex) {
       Assert.fail();
     }
+
+    return httpFrugalResp;
+  }
+
+  @Test
+  public void TestDefaultReadiness() {
+    Platform platform = Platform.builder().start();
+    HttpResponse httpFrugalResp = makeHttpRequest(platform, "http://localhost:8888/_wk/ready");
+    int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
+    Assert.assertEquals(statusCode, StatusCodes.OK);
   }
 
   @Test
   public void TestDefaultLiveness() {
-    try (Platform platform = Platform.builder().start()) {
-      HttpGet httpGet = new HttpGet("http://localhost:8888/_wk/alive");
-      HttpResponse httpFrugalResp = httpClient.execute(httpGet);
-      int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
-      Assert.assertEquals(statusCode, StatusCodes.OK);
-    } catch (Exception ex) {
-      Assert.fail();
-    }
+    Platform platform = Platform.builder().start();
+    HttpResponse httpFrugalResp = makeHttpRequest(platform, "http://localhost:8888/_wk/alive");
+    int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
+    Assert.assertEquals(statusCode, StatusCodes.OK);
+  }
+
+  @Test(expected = ConnectException.class)
+  public void TestHttpServerCloses() throws IOException {
+    Platform platform = Platform.builder().start();
+    makeHttpRequest(platform, "http://localhost:8888/_wk/ready");
+
+    HttpGet httpGet = new HttpGet("http://localhost:8888/_wk/ready");
+    httpClient.execute(httpGet);
   }
 
   @Test
   public void TestCustomFunctionAndPath() {
-    try (Platform platform =
-        Platform.builder().function(() -> customFunction()).path("_custom/path").start()) {
-      HttpGet httpGet = new HttpGet("http://localhost:8888/_custom/path");
-      HttpResponse httpFrugalResp = httpClient.execute(httpGet);
-      int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
-      Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
-    } catch (Exception ex) {
-      Assert.fail();
-    }
+    Platform platform =
+        Platform.builder().function(PlatformTest::customFunction).path("_custom/path").start();
+    HttpResponse httpFrugalResp = makeHttpRequest(platform, "http://localhost:8888/_custom/path");
+    int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
+    Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
   }
 
   @Test
   public void TestCustomReadiness() throws Exception {
-    try (Platform platform =
+    Platform platform =
         Platform.builder()
             .port(8889)
             .readinessFunction(PlatformTest::customFunction)
             .readinessPath("_custom/ready")
-            .start()) {
-      HttpGet httpGet = new HttpGet("http://localhost:8889/_custom/ready");
-      HttpResponse httpFrugalResp = httpClient.execute(httpGet);
-      int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
-      Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
-    }
+            .start();
+    HttpResponse httpFrugalResp = makeHttpRequest(platform, "http://localhost:8889/_custom/ready");
+    int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
+    Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
   }
 
   @Test
   public void TestCustomLiveness() throws Exception {
-    try (Platform platform =
+    Platform platform =
         Platform.builder()
             .port(8887)
             .livenessFunction(PlatformTest::customFunction)
             .livenessPath("_custom/alive")
             .livenessPath("_custom/alive")
-            .start()) {
-      HttpGet httpGet = new HttpGet("http://localhost:8887/_custom/alive");
-      HttpResponse httpFrugalResp = httpClient.execute(httpGet);
-      int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
-      Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
-    }
+            .start();
+    HttpResponse httpFrugalResp = makeHttpRequest(platform, "http://localhost:8887/_custom/alive");
+    int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
+    Assert.assertEquals(statusCode, StatusCodes.SERVICE_UNAVAILABLE);
   }
 }
