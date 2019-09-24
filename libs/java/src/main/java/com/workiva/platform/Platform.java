@@ -5,8 +5,6 @@ import io.undertow.Undertow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 /** Stands up an HTTP server for liveness/readiness probes. */
@@ -27,10 +25,11 @@ public class Platform implements AutoCloseable {
     return new Builder();
   }
 
-  static Map defaultCheck() throws Exception {
-    Map map = new HashMap();
-    map.put("status", "OK");
-    return map;
+  static HealthStatus defaultCheck() throws Exception {
+    HealthStatus status = new HealthStatus();
+    status.ok();
+
+    return status;
   }
 
   public static class Builder {

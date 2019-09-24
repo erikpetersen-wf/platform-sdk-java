@@ -7,15 +7,16 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
-@Category(UnitTests.class)
 public class PlatformTest {
 
   final CloseableHttpClient httpClient = HttpClients.createDefault();
 
-  static Object customFunction() throws Exception {
-    throw new Exception();
+  static HealthStatus customFunction() {
+    HealthStatus status = new HealthStatus();
+    status.notOk("some exception");
+
+    return status;
   }
 
   @Test

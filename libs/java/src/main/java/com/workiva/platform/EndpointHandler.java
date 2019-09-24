@@ -21,16 +21,18 @@ public class EndpointHandler implements HttpHandler {
   public void handleRequest(HttpServerExchange exchange) {
     exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
 
-    Object result = null;
+    HealthStatus result = null;
     try {
-      result = callable.call();
+      result = (HealthStatus) callable.call();
     } catch (Exception e) {
       exchange.setStatusCode(StatusCodes.SERVICE_UNAVAILABLE);
     }
 
     Gson gson = new Gson();
     String json = gson.toJson(result);
-    exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+    boolean pass = result.isOk();
+
+    exchange.setStatusCode(pass ? StatusCodes.OK : StatusCodes.SERVICE_UNAVAILABLE);
     exchange.putAttachment(Result.KEY, json);
     exchange.getResponseSender().send(json);
   }
