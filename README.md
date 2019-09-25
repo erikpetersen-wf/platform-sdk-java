@@ -15,9 +15,10 @@ Below, is a list of various components necessary to build software at Workiva.
 
 * Write
   * Setup Environment: https://dev.webfilings.org/
+  * [Builder](#builder)
   * Language SDKs
     * [Go](platform.go) (TODO: link to the developer docs)
-    * Java (TODO)
+    * [Java](lib/src/java) ([documentation](#java))
     * Dart (TODO)
     * Python (TODO)
   * Security Guidelines (TODO)
@@ -37,12 +38,96 @@ Below, is a list of various components necessary to build software at Workiva.
 * Monitor
   * [New Relic](https://insights.newrelic.com/accounts/2361833/dashboards/949872)
 
+## Builder
+
+The platform now has a builder to help with various Helm (future: and cloudformation) asset generation.
+
+To use this builder, add the following to the top of your `Dockerfile`:
+
+```
+FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
+```
+
+If you already have the platform builder in your repo, you can remove any `ADD`, `RUN` and `ARG` commands after it, and leave it for the platform `ONBUILD` commands to handle.
+
+Pinning to `v0` allows us to push full platform level changes across all Workiva during the bi-weekly security rebuild updates now required by FEDRAMP Moderate without needing to make PRs into all platform repos.  This also gives us the flexibility to change how this works completely and bump to `v1`.
+
+This build phase will execute the code in [platform](package).  It will look for a `livenessProbe` and `readinessProbe` definition in your Helm chart.  If it does not find one it will append it to your Helm chart as a build artifact.  The appended probes will use default paths of `_wk/ready` and `_wk/alive`.  The build phase will search your `Dockerfile` for an `EXPOSE` command and use that as the port.  If it does not find an `EXPOSE` command the port will default to `8888`.
+
+*Note*: This assumes your `helm` folder exists at the root of your repository and that your `Dockerfile` is named as such (ie: not `workivabuild.Dockerfile` or anything non-standard).
+
+## Java
+### Adding the dependency
+```xml
+<dependency>
+    <groupId>com.workiva.platform</groupId>
+    <artifactId>platform</artifactId>
+    <version>0.0.10</version>
+</dependency>
+```
+### Running the platform
+Running `Platform.builder().start()` will setup an HTTP server with the following routes for your service:
+* Readiness probe running at `_wk/ready` on port `8888`.
+* Liveness probe running at `_wk/alive` on port `8888`.
+
+### Override defaults
+The port and the functions that are run can all be overridden if necessary.
+
+#### Port
+Global Override
+```java
+Platform.builder().port(9999).start();
+```
+
+Individual Override
+```java
+Platform.builder().livenessPort(9999).start();
+```
+```java
+Platform.builder().readinessPort(9999).start();
+```
+
+#### Function
+Global Override
+```java
+Platform.builder().function(() -> myFunction())).start();
+```
+
+Individual Override
+```java
+Platform.builder().livenessFunction(() -> myLivenessFunction()).start();
+```
+```java
+Platform.builder().readinessFunction(() -> myReadinessFunction()).start();
+```
+
+Alternatively you can provide a reference to the function like `readinessFunction(PackageName::myReadinessFunction)`.
+
+**Note:** Any overridden functions and/or ports must be manually reflected in your Helm chart.  The builder does not currently support replacing the defaults with any overrides you define in code. 
+
+### Building a custom function
+
+In order to report the status of your readiness/liveness probes, we need to return a status code of 200 or 503.
+
+We accomplish this by requiring functions used for readiness/liveness probes return a [HealthStatus](libs/java/src/main/java/com/workiva/platform/HealthStatus.java) object. Here is the [function](libs/java/src/main/java/com/workiva/platform/Platform.java#L28) that is used by default.  Here is a [function](https://github.com/Workiva/ale-service/blob/master/server/src/main/java/com/workiva/ale/service/controllers/FrugalController.java#L418) that a consuming service uses to override the default.  Notice how they catch and handle exceptions in that example.
+
+#### How to use `HealthStatus`
+
+The platform SDK will call the `isOk()` method and if it returns `true` the server will return a 200 status code.  Otherwise, we will return a 503.  Call the `ok() ` function or use the default constructor to build a `HealthStatus` object that will return a 200.
+    
+In order for the platform SDK to return a 503, call the `notOk("reason")` method.  If your custom function throws an uncaught exception, we will wrap that in a failing `HealthStatus` object with the reason set to the `getMessage()` of the exception.
+       
+### Running the example
+       
+If you want to see the default liveness/readiness probe in action, go [here](libs/java/src/example/java/Main.java) and run the `main` method.  Navigate to `http://localhost:8888/_wk/ready` or `http://localhost:8888/_wk/alive` to see the response for yourself.
+       
+Feel free to modify the builder to override functions and/or ports to your hearts content. 
 
 ## Architecture Decision Records
 
-* [Whats an ADR?](adr/readme.md)
-* [Whats with the `platform.Main` context?](adr/platform_main_context.md)
-* [Why does `check.Register` update a `status`?](adr/check_naming.md)
+* [Whats an ADR?](docs/adr/readme.md)
+* [Whats with the `platform.Main` context?](docs/adr/platform_main_context.md)
+* [Why does `check.Register` update a `status`?](docs/adr/check_naming.md)
 
 If you still have questions, below is a list of other ways to reach us.
 
@@ -52,21 +137,6 @@ If you still have questions, below is a list of other ways to reach us.
 * Slack: `#support-sapi-platform`
 * Guild: `Services Guild` (every other Monday)
 * Stakeholders: `Service & API Platform Stakeholders` (every other Wednesday)
-
-
-## Builder
-
-The platform now has a builder to help with various HELM (future: and cloudformation) asset generation.
-
-To use this builder, add the following to the top of your Dockerfile:
-
-```
-FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
-```
-
-If you already have the platform builder in your repo, you can remove any `ADD`, `RUN` and `ARG` commands after it, and leave it for the platform `ONBUILD` commands to handle.
-
-Pinning to `v0` allows us to push full platform level changes across all Workiva during the bi-weekly security rebuild updates now required by FEDRAMP Moderate without needing to make PRs into all platform repos.  This also gives us the flex-ability to change how this works completely and bump to `v1`.
 
 <!-- ## [Start Here](https://dev.webfilings.org/)
 
