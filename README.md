@@ -95,7 +95,27 @@ Platform.builder().livenessFunction(() -> myLivenessFunction()).start();
 Platform.builder().readinessFunction(() -> myReadinessFunction()).start();
 ```
 
-If your function returns successfully, the probe will return a `200`.  If your function returns an exception, the probe will return a `503`. 
+Alternatively you can provide a reference to the function like `readinessFunction(PackageName::myReadinessFunction)`.
+
+**Note:** Any overridden functions and/or ports must be manually reflected in your Helm chart.  The builder does not currently support replacing the defaults with any overrides you define in code. 
+
+### Building a custom function
+
+In order to report the status of your readiness/liveness probes, we need to return a status code of 200 or 503.
+
+We accomplish this by requiring functions used for readiness/liveness probes return a [HealthStatus](libs/java/src/main/com/workiva/platform/HealthStatus.java) object. Here is the [function](libs/java/src/main/com/workiva/platform/Platform.java#L28) that is used by default.  Here is a [function](https://github.com/Workiva/ale-service/blob/master/server/src/main/java/com/workiva/ale/service/controllers/FrugalController.java#L418) that a consuming service uses to override the default.  Notice how they catch and handle exceptions in that example.
+
+#### How to use `HealthStatus`
+
+The platform SDK will call the `isOk()` method and if it returns `true` the server will return a 200 status code.  Otherwise, we will return a 503.  Call the `ok() ` function or use the default constructor to build a `HealthStatus` object that will return a 200.
+    
+In order for the platform SDK to return a 503, call the `notOk("reason")` method.  If your custom function throws an uncaught exception, we will wrap that in a failing `HealthStatus` object with the reason set to the `getMessage()` of the exception.
+       
+### Running the example
+       
+If you want to see the default liveness/readiness probe in action, go [here](libs/java/src/example/java/Main.java) and run the `main` method.  Navigate to `http://localhost:8888/_wk/ready` or `http://localhost:8888/_wk/alive` to see the response for yourself.
+       
+Feel free to modify the builder to override functions and/or ports to your hearts content. 
 
 ## Architecture Decision Records
 
