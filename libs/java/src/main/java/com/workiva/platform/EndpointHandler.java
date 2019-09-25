@@ -26,8 +26,11 @@ public class EndpointHandler implements HttpHandler {
     try {
       result = (HealthStatus) callable.call();
     } catch (Exception e) {
+      result = new HealthStatus(false);
+      result.notOk(e.getMessage());
+      String json = gson.toJson(result);
+
       exchange.setStatusCode(StatusCodes.SERVICE_UNAVAILABLE);
-      String json = gson.toJson(e.getMessage());
       exchange.getResponseSender().send(json);
       return;
     }
