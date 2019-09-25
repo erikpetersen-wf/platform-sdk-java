@@ -31,7 +31,7 @@ public class EndpointHandler implements HttpHandler {
       exchange.getResponseSender().send(json);
       return;
     }
-    
+
     String json = gson.toJson(result);
     boolean pass = result.isOk();
 
