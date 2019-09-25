@@ -15,7 +15,7 @@ Below, is a list of various components necessary to build software at Workiva.
 
 * Write
   * Setup Environment: https://dev.webfilings.org/
-  * [Build Phase](#build)
+  * [Builder](#builder)
   * Language SDKs
     * [Go](platform.go) (TODO: link to the developer docs)
     * [Java](lib/src/java) ([documentation](#java))
@@ -38,17 +38,23 @@ Below, is a list of various components necessary to build software at Workiva.
 * Monitor
   * [New Relic](https://insights.newrelic.com/accounts/2361833/dashboards/949872)
 
-## Build
-The build phase is integrated through your service by adding these lines to your `Dockerfile`.
+## Builder
 
-```Dockerfile
+The platform now has a builder to help with various Helm (future: and cloudformation) asset generation.
+
+To use this builder, add the following to the top of your `Dockerfile`:
+
+```
 FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
-ADD ./server/helm/ /build/
-ADD workivabuild.Dockerfile /build/Dockerfile
-RUN package
 ```
 
-This build phase will execute the code in [platform](package).  It will look for a `livenessProbe` and `readinessProbe` definition in your Helm chart.  If it does not find one it will append it to your Helm chart as a build artifact.  If the probes are appended to your chart via as part of the build, the paths will be `_wk/ready` and `_wk/alive`.  The build phase will search your `Dockerfile` for an `EXPOSE` command and use that as the port.  If it does not find an `EXPOSE` command we will default to port `8888`.
+If you already have the platform builder in your repo, you can remove any `ADD`, `RUN` and `ARG` commands after it, and leave it for the platform `ONBUILD` commands to handle.
+
+Pinning to `v0` allows us to push full platform level changes across all Workiva during the bi-weekly security rebuild updates now required by FEDRAMP Moderate without needing to make PRs into all platform repos.  This also gives us the flexibility to change how this works completely and bump to `v1`.
+
+This build phase will execute the code in [platform](package).  It will look for a `livenessProbe` and `readinessProbe` definition in your Helm chart.  If it does not find one it will append it to your Helm chart as a build artifact.  The appended probes will use default paths of `_wk/ready` and `_wk/alive`.  The build phase will search your `Dockerfile` for an `EXPOSE` command and use that as the port.  If it does not find an `EXPOSE` command the port will default to `8888`.
+
+*Note*: This assumes your `helm` folder exists at the root of your repository and that you `Dockerfile` is named as such (ie: not `workivabuild.Dockerfile` or anything non-standard).
 
 ## Java
 ### Adding the dependency
@@ -131,21 +137,6 @@ If you still have questions, below is a list of other ways to reach us.
 * Slack: `#support-sapi-platform`
 * Guild: `Services Guild` (every other Monday)
 * Stakeholders: `Service & API Platform Stakeholders` (every other Wednesday)
-
-
-## Builder
-
-The platform now has a builder to help with various HELM (future: and cloudformation) asset generation.
-
-To use this builder, add the following to the top of your Dockerfile:
-
-```
-FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
-```
-
-If you already have the platform builder in your repo, you can remove any `ADD`, `RUN` and `ARG` commands after it, and leave it for the platform `ONBUILD` commands to handle.
-
-Pinning to `v0` allows us to push full platform level changes across all Workiva during the bi-weekly security rebuild updates now required by FEDRAMP Moderate without needing to make PRs into all platform repos.  This also gives us the flex-ability to change how this works completely and bump to `v1`.
 
 <!-- ## [Start Here](https://dev.webfilings.org/)
 
