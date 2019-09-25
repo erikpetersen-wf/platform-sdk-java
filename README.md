@@ -54,7 +54,7 @@ Pinning to `v0` allows us to push full platform level changes across all Workiva
 
 This build phase will execute the code in [platform](package).  It will look for a `livenessProbe` and `readinessProbe` definition in your Helm chart.  If it does not find one it will append it to your Helm chart as a build artifact.  The appended probes will use default paths of `_wk/ready` and `_wk/alive`.  The build phase will search your `Dockerfile` for an `EXPOSE` command and use that as the port.  If it does not find an `EXPOSE` command the port will default to `8888`.
 
-*Note*: This assumes your `helm` folder exists at the root of your repository and that you `Dockerfile` is named as such (ie: not `workivabuild.Dockerfile` or anything non-standard).
+*Note*: This assumes your `helm` folder exists at the root of your repository and that your `Dockerfile` is named as such (ie: not `workivabuild.Dockerfile` or anything non-standard).
 
 ## Java
 ### Adding the dependency
