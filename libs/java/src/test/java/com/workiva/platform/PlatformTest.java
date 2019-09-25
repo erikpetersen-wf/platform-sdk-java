@@ -17,7 +17,7 @@ public class PlatformTest {
 
   final CloseableHttpClient httpClient = HttpClients.createDefault();
 
-  private static HealthStatus customFunction() {
+  private static HealthStatus notOkHealthCheck() {
     HealthStatus status = new HealthStatus();
     status.notOk("some exception");
 
@@ -98,7 +98,7 @@ public class PlatformTest {
   @Test
   public void TestCustomFunctionAndPath() {
     Platform platform =
-        Platform.builder().function(PlatformTest::customFunction).path("_custom/path").start();
+        Platform.builder().function(PlatformTest::notOkHealthCheck).path("_custom/path").start();
     HttpResponse httpFrugalResp = makeHttpRequest(platform, "http://localhost:8888/_custom/path");
 
     int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
@@ -114,7 +114,7 @@ public class PlatformTest {
     Platform platform =
         Platform.builder()
             .port(8889)
-            .readinessFunction(PlatformTest::customFunction)
+            .readinessFunction(PlatformTest::notOkHealthCheck)
             .readinessPath("_custom/ready")
             .start();
     HttpResponse httpFrugalResp = makeHttpRequest(platform, "http://localhost:8889/_custom/ready");
@@ -132,7 +132,7 @@ public class PlatformTest {
     Platform platform =
         Platform.builder()
             .port(8887)
-            .livenessFunction(PlatformTest::customFunction)
+            .livenessFunction(PlatformTest::notOkHealthCheck)
             .livenessPath("_custom/alive")
             .livenessPath("_custom/alive")
             .start();
