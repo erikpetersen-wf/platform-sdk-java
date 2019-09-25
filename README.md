@@ -103,7 +103,7 @@ Alternatively you can provide a reference to the function like `readinessFunctio
 
 In order to report the status of your readiness/liveness probes, we need to return a status code of 200 or 503.
 
-We accomplish this by requiring functions used for readiness/liveness probes return a [HealthStatus](libs/java/src/main/com/workiva/platform/HealthStatus.java) object. Here is the [function](libs/java/src/main/com/workiva/platform/Platform.java#L28) that is used by default.  Here is a [function](https://github.com/Workiva/ale-service/blob/master/server/src/main/java/com/workiva/ale/service/controllers/FrugalController.java#L418) that a consuming service uses to override the default.  Notice how they catch and handle exceptions in that example.
+We accomplish this by requiring functions used for readiness/liveness probes return a [HealthStatus](libs/java/src/main/java/com/workiva/platform/HealthStatus.java) object. Here is the [function](libs/java/src/main/java/com/workiva/platform/Platform.java#L28) that is used by default.  Here is a [function](https://github.com/Workiva/ale-service/blob/master/server/src/main/java/com/workiva/ale/service/controllers/FrugalController.java#L418) that a consuming service uses to override the default.  Notice how they catch and handle exceptions in that example.
 
 #### How to use `HealthStatus`
 
