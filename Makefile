@@ -9,7 +9,6 @@ gen-docker:
 		--build-arg GIT_SSH_KEY \
 		--build-arg ARTIFACTORY_PRO_USER \
 		--build-arg ARTIFACTORY_PRO_PASS \
-		-f Dockerfile \
 		-t drydock.workiva.net/workiva/platform:latest-release .
 
 gen-docker-no-tests:
@@ -18,7 +17,6 @@ gen-docker-no-tests:
 		--build-arg ARTIFACTORY_PRO_USER \
 		--build-arg ARTIFACTORY_PRO_PASS \
 		--build-arg SKIP_TESTS=true \
-		-f Dockerfile \
 		-t drydock.workiva.net/workiva/platform:latest-release .
 
 test:
