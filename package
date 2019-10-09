@@ -3,77 +3,110 @@
 import os
 
 
-# Use an indicator file to determine if this script has run before
-INDICATOR_FILE_NAME = 'packaged-48e34541-f296-4611-9073-74a403af39bd.txt'
-if os.path.exists(INDICATOR_FILE_NAME):
-    print('Package has already been executed... Skipping second packaging!')
-    raise SystemExit()
+def detect_if_we_have_run_package_before():
+    """
+    Using a marker file, determine if we have previously ran the package script.
+    """
+    INDICATOR_FILE_NAME = 'packaged-48e34541-f296-4611-9073-74a403af39bd.txt'
+    if os.path.exists(INDICATOR_FILE_NAME):
+        print('Package has already been executed... Skipping second packaging!')
+        raise SystemExit()
+
+    # Touch a file to make sure the script doesn't run again!
+    with open(INDICATOR_FILE_NAME, 'a'):
+        print('Adding marker so a future package command may be skipped!')
+        os.utime(INDICATOR_FILE_NAME, None)
 
 
-print('Welcome to the Workiva Platform!')
+def parse_expected_http_port(filename='Dockerfile'):
+    """
+    Process input Dockerfile and derive the port of the http server.
+    This is then used by the default liveness and readiness probes.
 
-# TODO: look for a Dockerfile parser that enables access to EXPOSEd ports
-ports = [
-    int(p)
-    for l in open('Dockerfile').readlines()
-    for p in l[len('EXPOSE '):].strip().split()
-    if l.startswith('EXPOSE')
-]
-port = None
-if not len(ports):
-    print('No PORT Detected in Dockerfile: Using 8888')
-    port = 8888
-else:
-    print('Found exposed ports: %s; Using %d for readiness probe' % (ports, ports[0]))
-    port = ports[0]
-
-
-print('Building HELM Artifacts...')
-
-# TODO: append liveness checks if not present
-
-# The readinessProbe defines when your service is considered ready for traffic.
-# See: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
-defaultReadinessProbe = """
-readinessProbe:
-  httpGet:
-    path: /_wk/ready
-    port: {port}
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
-"""
-
-# Used to determine when to restart a Container.
-# See: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
-defaultLivenessProbe = """
-livenessProbe:
-  httpGet:
-    path: /_wk/alive
-    port: {port}
-  initialDelaySeconds: 10
-  periodSeconds: 10
-"""
-
-for dirpath, _, filenames in os.walk('.'):
-    if 'values.yaml' not in filenames:
-        continue
-    file = os.sep.join([dirpath, 'values.yaml'])
-    if not any([l.startswith('readinessProbe:') for l in open(file).readlines()]):
-        open(file, 'a').write(defaultReadinessProbe.format(port=port))
-    if not any([l.startswith('livenessProbe:') for l in open(file).readlines()]):
-        open(file, 'a').write(defaultLivenessProbe.format(port=port))
-
-os.system('helm package helm/*')
-print('DONE!')
+    TODO: look for a Dockerfile parser that enables access to EXPOSEd ports.
+    """
+    ports = [
+        int(p)
+        for l in open('Dockerfile').readlines()
+        for p in l[len('EXPOSE '):].strip().split()
+        if l.startswith('EXPOSE')
+    ]
+    port = None
+    if not len(ports):
+        print('No PORT Detected in Dockerfile: Using 8888')
+        port = 8888
+    else:
+        print('Found exposed ports: %s; Using %d for readiness probe' % (ports, ports[0]))
+        port = ports[0]
+    return port
 
 
-# Touch a file to make sure the script doesn't run again!
-with open(INDICATOR_FILE_NAME, 'a'):
-    print('Adding marker so a future package command may be skipped!')
-    os.utime(INDICATOR_FILE_NAME, None)
+def append_default_probes(port):
+    """
+    Append liveness checks if not present.
+
+    See: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+    """
+    defaults = {
+        # The readinessProbe defines when your service is ready for traffic.
+        'readinessProbe': {
+            'httpGet': {
+                'path': '/_wk/ready',
+                'port': port,
+            },
+            'initialDelaySeconds': 10,
+            'periodSeconds': 10,
+            'timeoutSeconds': 10,
+            'successThreshold': 1,
+            'failureThreshold': 3,
+        },
+        # ...
+        'livenessProbe': {
+            'httpGet': {
+                'path': '/_wk/ready',
+                'port': port,
+            },
+            'initialDelaySeconds': 10,
+            'periodSeconds': 10,
+        }
+    }
+
+    for dirpath, _, filenames in os.walk('.'):
+        if 'values.yaml' not in filenames:
+            continue
+        file = os.sep.join([dirpath, 'values.yaml'])
+
+        # Load the existing values.yaml
+        values = None
+        with open(file) as f:
+            values = yaml.load(f)
+
+        # Append default top-level keys
+        for key, value in defaults.iteritems():
+            if key not in values:
+                values[key] = value
+
+        # Dump updated file back to os
+        with open(file, 'w') as f:
+            yaml.dump(values, f)
 
 
-print('Your Service is now ready for Deployment through Release Pipelines')
+def package_helm_charts():
+    """ Do the real helm packaging ;) """
+    os.system('helm package helm/*')
+
+
+def main():
+    """ Apply Workiva defaults to infrastructure stuff. """
+    detect_if_we_have_run_package_before()
+    print('Welcome to the Workiva Platform!')
+    port = parse_expected_http_port()
+    print('Building HELM Artifacts...')
+    append_default_probes(port)
+    package_helm_charts()
+    print('DONE!')
+    print('Your Service is now ready for Deployment through Release Pipelines')
+
+
+if __name__ == '__main__':
+    main()
