@@ -36,9 +36,9 @@ test: ## Run integration tests
 .PHONY: test
 
 unit: ## Run unit tests
-	yapf --recursive --parallel --diff skynet
+	yapf --recursive --parallel --diff package
 	flake8
 	pydocstyle
-	mypy skynet
+	mypy package
 	py.test -s -v
 .PHONY: unit

@@ -32,7 +32,18 @@ RUN mvn -B clean && mvn -B verify
 ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/target/platform-*.jar
 # ARG BUILD_ARTIFACTS_TEST_REPORTS=/build/libs/java/target/surefire-reports/TEST-*.xml
 
-FROM debian:stretch-slim
+
+# Python Tests
+FROM debian:stable-slim
+RUN apt-get install -y python3 pip3
+ADD requirements.txt requirements_dev.txt Makefile /
+RUN pip install -r requirements_dev.txt
+ADD package /
+RUN make unit
+
+
+# Produced Builder!
+FROM debian:stable-slim
 
 # get updates for security requirements
 RUN apt update && \
@@ -51,6 +62,7 @@ RUN apt-get install -y wget python3 && \
 WORKDIR /build/
 RUN helm init --client-only
 ADD package /usr/local/bin
+RUN pip install -r requirements.txt
 
 # steps for consuming builds to use
 ONBUILD ADD helm /build/helm/
@@ -59,4 +71,4 @@ ONBUILD RUN package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
 # # USAGE
-# FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
+# FROM drydock-prod.workiva.net/workiva/platform:v0

@@ -3,14 +3,13 @@
 import os
 
 
-
 def detect_if_we_have_run_package_before():
     """
     Using a marker file, determine if we have previously ran the package script.
     """
     INDICATOR_FILE_NAME = 'packaged-48e34541-f296-4611-9073-74a403af39bd.txt'
     if os.path.exists(INDICATOR_FILE_NAME):
-        print('Package has already been executed... Skipping second packaging!')
+        print('Package has already ran... Skipping second packaging!')
         raise SystemExit()
 
     # Touch a file to make sure the script doesn't run again!
@@ -27,17 +26,16 @@ def parse_expected_http_port(filename='Dockerfile'):
     TODO: look for a Dockerfile parser that enables access to EXPOSEd ports.
     """
     ports = [
-        int(p)
-        for l in open('Dockerfile').readlines()
-        for p in l[len('EXPOSE '):].strip().split()
-        if l.startswith('EXPOSE')
+        int(p) for l in open('Dockerfile').readlines()
+        for p in l[len('EXPOSE '):].strip().split() if l.startswith('EXPOSE')
     ]
     port = None
     if not len(ports):
         print('No PORT Detected in Dockerfile: Using 8888')
         port = 8888
     else:
-        print('Found exposed ports: %s; Using %d for readiness probe' % (ports, ports[0]))
+        m = f'Found exposed ports: {ports}; Using {ports[0]} for readiness probe'
+        print(m)
         port = ports[0]
     return port
 
