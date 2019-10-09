@@ -27,7 +27,18 @@ gen-docker-no-tests: ## Build docker image w/o tests
 		--build-arg SKIP_TESTS=true \
 		-t drydock.workiva.net/workiva/platform:latest-release .
 
-test: ## Run tests
+deps: ## Install dependencies
+	pip install -r requirements_dev.txt
+
+test: ## Run integration tests
 	docker build -t package:test .
 	SKYNET_APPLICATION_PLATFORM=platform:test ./test/package/run
 .PHONY: test
+
+unit: ## Run unit tests
+	yapf --recursive --parallel --diff skynet
+	flake8
+	pydocstyle
+	mypy skynet
+	py.test -s -v
+.PHONY: unit

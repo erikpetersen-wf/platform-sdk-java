@@ -3,6 +3,7 @@
 import os
 
 
+
 def detect_if_we_have_run_package_before():
     """
     Using a marker file, determine if we have previously ran the package script.
@@ -45,7 +46,7 @@ def append_default_probes(port):
     """
     Append liveness checks if not present.
 
-    See: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+    See: https://k8s.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
     """
     defaults = {
         # The readinessProbe defines when your service is ready for traffic.
@@ -91,19 +92,14 @@ def append_default_probes(port):
             yaml.dump(values, f)
 
 
-def package_helm_charts():
-    """ Do the real helm packaging ;) """
-    os.system('helm package helm/*')
-
-
 def main():
     """ Apply Workiva defaults to infrastructure stuff. """
     detect_if_we_have_run_package_before()
     print('Welcome to the Workiva Platform!')
-    port = parse_expected_http_port()
     print('Building HELM Artifacts...')
+    port = parse_expected_http_port()
     append_default_probes(port)
-    package_helm_charts()
+    sh.helm.package('helm/*')
     print('DONE!')
     print('Your Service is now ready for Deployment through Release Pipelines')
 
