@@ -1,19 +1,15 @@
----
-# This template contains no readinessProbe.  Need to add one!
-
-readinessProbe:
-  httpGet:
-    path: /_wk/ready
-    port: 2222
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
-
 livenessProbe:
   httpGet:
     path: /_wk/alive
     port: 2222
   initialDelaySeconds: 10
   periodSeconds: 10
+readinessProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /_wk/ready
+    port: 2222
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 10

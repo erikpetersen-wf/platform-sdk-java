@@ -10,6 +10,7 @@ function runTest {
   IMAGE="${SKYNET_APPLICATION_PLATFORM:-drydock-prod.workiva.net/workiva/platform:v0}"
   echo $IMAGE
   sed "s~IMAGE~${IMAGE}~g" $1.txt > Dockerfile
+  cat trailer.txt >> Dockerfile
   cat Dockerfile
   cp Dockerfile $1.Dockerfile
 
