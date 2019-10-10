@@ -1,44 +1,46 @@
-# #! STAGE - Client Library - Java - Cache Depencencies
-# FROM maven:3.6-jdk-8-alpine as java_lib_dependencies
-#
-# WORKDIR /build
-# ENV MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-# ENV CODECOV_TOKEN='bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB'
-# RUN apk add --update bash git perl wget
-#
-# # Setup Maven Authentication
-# RUN mkdir -p /root/.m2
-# ARG ARTIFACTORY_PRO_USER
-# ARG ARTIFACTORY_PRO_PASS
-# COPY ./workivabuild.settings.xml /root/.m2/settings.xml
-#
-# # Cache Wrapper Dependencies
-# COPY ./libs/java/pom.xml ./libs/java/pom.xml
-# RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
-#
-# #! STAGE - Client Library - Java - Produce Library
-# WORKDIR /build
-# COPY ./libs/java ./libs/java
-#
-# WORKDIR /build/libs/java
-# # Linter Steps
-# RUN mvn -B fmt:check -q
-# RUN mvn -B checkstyle:checkstyle -q
-# # Run Unit-Tests & Build
-# RUN mvn -B clean && mvn -B verify
-#
-# # Publish Artifacts
-# # ARG BUILD_ARTIFACTS_AUDIT=/audit/**/*
-# ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/target/platform-*.jar
-# # ARG BUILD_ARTIFACTS_TEST_REPORTS=/build/libs/java/target/surefire-reports/TEST-*.xml
-#
-#
-# # Python Tests
-# FROM python:3.7-alpine
-# ADD requirements.txt requirements_dev.txt Makefile /
-# RUN pip install -r requirements_dev.txt
-# ADD package /
-# RUN make unit
+#! STAGE - Client Library - Java - Cache Depencencies
+FROM maven:3.6-jdk-8-alpine as java_lib_dependencies
+
+WORKDIR /build
+ENV MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+ENV CODECOV_TOKEN='bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB'
+RUN apk add --update bash git perl wget
+
+# Setup Maven Authentication
+RUN mkdir -p /root/.m2
+ARG ARTIFACTORY_PRO_USER
+ARG ARTIFACTORY_PRO_PASS
+COPY ./workivabuild.settings.xml /root/.m2/settings.xml
+
+# Cache Wrapper Dependencies
+COPY ./libs/java/pom.xml ./libs/java/pom.xml
+RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
+
+#! STAGE - Client Library - Java - Produce Library
+WORKDIR /build
+COPY ./libs/java ./libs/java
+
+WORKDIR /build/libs/java
+# Linter Steps
+# TODO: move to skynet ;)
+RUN mvn -B fmt:check -q
+RUN mvn -B checkstyle:checkstyle -q
+# Run Unit-Tests & Build
+RUN mvn -B clean && mvn -B verify
+
+# Publish Artifacts
+# ARG BUILD_ARTIFACTS_AUDIT=/audit/**/*
+ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/target/platform-*.jar
+# ARG BUILD_ARTIFACTS_TEST_REPORTS=/build/libs/java/target/surefire-reports/TEST-*.xml
+
+
+#! STAGE - Platform Python Tests - Python 3 - Verify the Python code
+# TODO: move to skynet ;)
+FROM python:3.7-alpine
+ADD requirements.txt requirements_dev.txt Makefile /
+RUN pip install -r requirements_dev.txt
+ADD package /
+RUN make unit
 
 
 #! STAGE - Platform Builder - Python 3 - Help customers package their application
