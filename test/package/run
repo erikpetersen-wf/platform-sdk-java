@@ -18,7 +18,7 @@ function runTest {
   docker build --no-cache . | tee $1.log
 
   # Verify we properly detect first exposed port as the probe port
-  grep -q "Using 2222 for readiness probe" $1.log
+  grep -q "Using 2222 for probe" $1.log
 }
 
 runTest original

@@ -7,7 +7,7 @@ import yaml
 
 def detect_if_we_have_run_package_before():
     """
-    Using a marker file, determine if we have previously ran the package script.
+    Using a marker file, have we previously ran the package script?
     """
     INDICATOR_FILE_NAME = 'packaged-48e34541-f296-4611-9073-74a403af39bd.txt'
     if os.path.exists(INDICATOR_FILE_NAME):
@@ -36,7 +36,7 @@ def parse_expected_http_port(filename='Dockerfile'):
         print('No PORT Detected in Dockerfile: Using 8888')
         port = 8888
     else:
-        m = f'Found exposed ports: {ports}; Using {ports[0]} for readiness probe'
+        m = f'Found exposed ports: {ports}; Using {ports[0]} for probes'
         print(m)
         port = ports[0]
     return port
@@ -46,7 +46,7 @@ def append_default_probes(port):
     """
     Append liveness checks if not present.
 
-    See: https://k8s.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+    See: https://k8s.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/ # noqa
     """
     defaults = {
         # The readinessProbe defines when your service is ready for traffic.

@@ -45,7 +45,7 @@ init-py: requirements_dev.txt ## Initialize Python environment
 
 check-py: init-py ## Run Python unit tests
 	yapf --recursive --parallel --diff package
-	flake8
+	flake8 package
 	# pydocstyle
 	# mypy package
 	# py.test -s -v
