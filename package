@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import os
+import os, yaml
 
 
 def detect_if_we_have_run_package_before():
@@ -74,14 +74,14 @@ def append_default_probes(port):
         if 'values.yaml' not in filenames:
             continue
         file = os.sep.join([dirpath, 'values.yaml'])
+        print(f'File: {file}')
 
         # Load the existing values.yaml
-        values = None
-        with open(file) as f:
-            values = yaml.load(f)
+        values = yaml.safe_load(open(file))
+        print(f'Values: {values}')
 
         # Append default top-level keys
-        for key, value in defaults.iteritems():
+        for key, value in defaults.items():
             if key not in values:
                 values[key] = value
 
