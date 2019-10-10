@@ -52,7 +52,7 @@ deps-py: requirements_dev.txt
 test-py: deps-py
 	yapf --recursive --parallel --diff package
 	flake8
-	pydocstyle
-	mypy package
+	# pydocstyle
+	# mypy package
 	# py.test -s -v
 .PHONY: test-py
