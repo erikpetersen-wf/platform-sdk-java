@@ -32,7 +32,7 @@ def parse_expected_http_port(filename='Dockerfile'):
         for line in f.readlines():
             if line.startswith('EXPOSE '):
                 for port in line[len('EXPOSE '):].strip().split():
-                    ports.append(port)
+                    ports.append(int(port))
     port = None
     if not len(ports):
         print('No PORT Detected in Dockerfile: Using 8888')

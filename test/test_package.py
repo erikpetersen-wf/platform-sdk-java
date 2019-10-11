@@ -16,5 +16,5 @@ class PlatformParsePortTestCase(unittest.TestCase):
         package = SourceFileLoader('package', path).load_module()
         with mock.patch('package.open', m):
             port = package.parse_expected_http_port(filename='--mocked--')
-            self.assertEqual(port, str(expected))
+            self.assertEqual(port, expected)
         m.assert_called_once_with('--mocked--')
