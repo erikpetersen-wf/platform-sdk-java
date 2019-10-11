@@ -27,10 +27,12 @@ def parse_expected_http_port(filename='Dockerfile'):
 
     TODO: look for a Dockerfile parser that enables access to EXPOSEd ports.
     """
-    ports = [
-        int(p) for l in open('Dockerfile').readlines()
-        for p in l[len('EXPOSE '):].strip().split() if l.startswith('EXPOSE')
-    ]
+    ports = []
+    with open(filename) as f:
+        for line in f.readlines():
+            if line.startswith('EXPOSE '):
+                for port in line[len('EXPOSE '):].strip().split():
+                    ports.append(port)
     port = None
     if not len(ports):
         print('No PORT Detected in Dockerfile: Using 8888')
