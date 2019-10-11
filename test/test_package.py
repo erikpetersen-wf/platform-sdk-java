@@ -1,24 +1,12 @@
+import os
 import unittest
 from unittest import mock
 
 from parameterized import parameterized
-
-# # monkey patch import for dynamic
-import os
-# import sys
-# import importlib as imp
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# import .. as platform  # noqa
+from importlib.machinery import SourceFileLoader
 
 # TODO: use pathlib
 # https://docs.python.org/3/library/pathlib.html
-
-# import imp
-# print(path)
-# package = imp.load_source('package', path)
-
-from importlib.machinery import SourceFileLoader
 
 
 class PlatformParsePortTestCase(unittest.TestCase):
@@ -28,12 +16,9 @@ class PlatformParsePortTestCase(unittest.TestCase):
     def test_parse_port(self, expected, read_data):
         path = os.path.dirname(os.path.dirname(
             os.path.abspath(__file__))) + '/package'
-
-        # print(dir(package))
-        # print(package.__file__)
         m = mock.mock_open(read_data=read_data)
-        with mock.patch('__main__.open', m):
-            package = SourceFileLoader('package', path).load_module()
+        package = SourceFileLoader('package', path).load_module()
+        with mock.patch('package.open', m):
             port = package.parse_expected_http_port(filename='--mocked--')
-            self.assertEqual(port, expected)
+            self.assertEqual(port, str(expected))
         m.assert_called_once_with('--mocked--')
