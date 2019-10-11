@@ -38,9 +38,10 @@ ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/target/platform-*.jar
 # TODO: move to skynet ;)
 FROM python:3.7-alpine
 RUN apk update && apk upgrade && apk add make
-ADD requirements.txt requirements_dev.txt Makefile /
+ADD requirements.txt requirements_dev.txt /
 RUN pip install -r requirements_dev.txt
-ADD package /
+ADD package Makefile /
+ADD test/ /test/
 RUN make check-py
 
 
