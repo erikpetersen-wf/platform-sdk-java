@@ -16,6 +16,10 @@ public class Platform implements AutoCloseable {
 
   private final Undertow httpServer;
 
+  static final String readinessPath = "/_wk/ready";
+
+  static final String livenessPath = "/_wk/alive";
+
   @Override
   public void close() {
     this.httpServer.stop();
@@ -36,9 +40,9 @@ public class Platform implements AutoCloseable {
 
     private int port = 8888;
     private Callable readinessFunction = Platform::defaultCheck;
-    private String readinessPath = "_wk/ready";
+    private String readinessPath = Platform.readinessPath;
     private Callable livenessFunction = Platform::defaultCheck;
-    private String livenessPath = "_wk/alive";
+    private String livenessPath = Platform.livenessPath;
 
     Builder() {}
 

@@ -22,7 +22,8 @@ public class HttpFrugalHealthHandler extends ChannelInboundHandlerAdapter {
     // TODO - this flow can probably be cleaned up a fair bit
     if (msg instanceof FullHttpRequest) {
       FullHttpRequest request = (FullHttpRequest) msg;
-      if (!request.uri().equalsIgnoreCase(Platform.healthPath)) {
+      if (!request.uri().equalsIgnoreCase(Platform.readinessPath)
+          && !request.uri().equalsIgnoreCase(Platform.livenessPath)) {
         ctx.fireChannelRead(msg);
       } else {
         FullHttpResponse response =
