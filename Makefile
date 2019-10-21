@@ -1,4 +1,4 @@
-.PHONY: help init check check-full build env-notify
+.PHONY: help init check check-full build env-notify clean
 
 # This target scrapes this Makefile for '##' and displays those messages
 help: ## Show this message!
@@ -33,6 +33,9 @@ env-notify:
 	@echo "\tARTIFACTORY_PRO_USER is your github username"
 	@echo "\tARTIFACTORY_PRO_PASS can be found at https://workivaeast.jfrog.io/workivaeast/webapp/#/profile"
 
+clean:
+	rm -rf test/__pycache__/installed
+	go clean -cache -modcache
 
 # ------------------------- Python -------------------------
 
@@ -56,7 +59,10 @@ check-py: init-py ## Run Python unit tests
 
 # ------------------------- Go -------------------------
 
-.PHONY: check-go
+.PHONY: init-go check-go
 
-check-go: ## Run Go unit tests
-	echo "TEST GO CODE"
+init-go: ## Initialize Go enviornment
+	GO111MODULE=on go mod download
+
+check-go: init-go ## Run Go unit tests
+	GO111MODULE=on go test -v ./...
