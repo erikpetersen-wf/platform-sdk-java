@@ -1,0 +1,12 @@
+
+# Debug filesystem
+RUN apk add tree
+RUN tree
+
+# Validate values.yaml Modifications
+RUN diff helm/readiness-missing/values.yaml helm/readiness-missing/expected.yaml
+RUN diff helm/readiness-override/values.yaml helm/readiness-override/expected.yaml
+
+# Validate templates Folder Injection
+# RUN [ -d "helm/readiness-missing/templates" ] || exit 1
+# RUN [ -d "helm/readiness-override/templates" ] || exit 1
