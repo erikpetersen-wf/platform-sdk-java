@@ -37,7 +37,7 @@ const fixture2 = `{
 		"type": "status",
 		"id": "2019-08-12T15:50:13-05:00",
 		"attributes": {
-			"status": "OK"
+			"status": "PASSED"
 		},
 		"meta": {
 			"goodbye": "PASSED",
