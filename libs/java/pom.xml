@@ -3,7 +3,7 @@
 
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform</artifactId>
-    <version>0.0.16</version>
+    <version>0.0.17</version>
     <packaging>jar</packaging>
 
     <name>platform</name>
