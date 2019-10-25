@@ -66,7 +66,7 @@ func init() {
 func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 	data := &availability{
 		ID:     timeNow().Format(time.RFC3339),
-		Status: `OK`,
+		Status: statusPassed,
 		meta:   jsonapi.Meta{},
 	}
 
