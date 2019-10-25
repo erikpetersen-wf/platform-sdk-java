@@ -16,9 +16,9 @@ public class Platform implements AutoCloseable {
 
   private final Undertow httpServer;
 
-  static final String readinessPath = "/_wk/ready";
+  public static final String readinessPath = "/_wk/ready";
 
-  static final String livenessPath = "/_wk/alive";
+  public static final String livenessPath = "/_wk/alive";
 
   @Override
   public void close() {
