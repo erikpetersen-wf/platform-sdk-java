@@ -1,21 +1,24 @@
 package check
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/google/jsonapi"
 )
 
 var (
-	checks   = map[string]func() error{}
-	lock     = &sync.RWMutex{}
-	timeNow  = time.Now // for testing
-	hostname = `unknown`
+	checks    = map[string]func() error{} // global set of checks
+	lock      = &sync.RWMutex{}           // global checks lock
+	timeNow   = time.Now                  // for testing
+	hostname  = `unknown`                 // set by init
+	whitelist atomic.Value                // map[string]struct{}
 )
 
 // Standard names shared between services.
@@ -61,6 +64,7 @@ func init() {
 	if name, err := os.Hostname(); err == nil {
 		hostname = name
 	}
+	initWhitelist()
 }
 
 func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
@@ -152,4 +156,50 @@ type availability struct {
 }
 
 // Implements jsonapi.Metable
-func (a *availability) JSONAPIMeta() *jsonapi.Meta { return &a.meta }
+func (a *availability) JSONAPIMeta() *jsonapi.Meta {
+	if a.meta == nil {
+		return nil
+	}
+	return &a.meta
+}
+
+// Determine if request IP is allowed to expose the meta
+func canExposeMeta(r *http.Request) bool {
+	whitelist, ok := whitelist.Load().(map[string]struct{})
+	if !ok {
+		log.Printf("check(load): invalid list")
+		return false
+	}
+	ip := r.Header.Get("x-forwarded-for")
+	_, ok = whitelist[ip]
+	if !ok {
+		log.Printf("check(status): unauthorized ip: " + ip)
+	}
+	return ok
+}
+
+// load the whitelist from env vars!
+// return value is for branch testing assertions
+func initWhitelist() string {
+	str := os.Getenv(`NEW_RELIC_SYNTHETICS_IP_WHITELIST`)
+	if str == "" {
+		log.Printf("check(load): unset NEW_RELIC_SYNTHETICS_IP_WHITELIST")
+		return "unset"
+	}
+	data, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		log.Printf("check(load): decode failed: %v", err)
+		return "decode"
+	}
+	var list []string
+	if err := json.Unmarshal(data, &list); err != nil {
+		log.Printf("check(load): unmarshal failed: %v", err)
+		return "unmarshal"
+	}
+	set := make(map[string]struct{}, len(list))
+	for _, ip := range list {
+		set[ip] = struct{}{}
+	}
+	whitelist.Store(set)
+	return ""
+}
