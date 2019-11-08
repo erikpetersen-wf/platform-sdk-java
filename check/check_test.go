@@ -50,10 +50,19 @@ const fixture2 = `{
 }
 `
 
+func setupCanExposeMeta(shouldExpose bool) func() {
+	previousValue := canExposeMetaWrappedForTesting
+	canExposeMetaWrappedForTesting = func(*http.Request) bool { return shouldExpose }
+	return func() {
+		canExposeMetaWrappedForTesting = previousValue
+	}
+}
+
 func TestRegister(t *testing.T) {
 	err := errors.New(`why?`)
 	Register(`hello`, func() error { return nil })
 	Register(`goodbye`, func() error { return err })
+	defer setupCanExposeMeta(true)()
 
 	// overrides
 	hostname = `testbox`

@@ -97,20 +97,28 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 	// serialize and write
 	w.Header().Set(`content-type`, jsonapi.MediaType)
 	w.WriteHeader(http.StatusOK)
-	if err := marshal(w, data); err != nil {
+	if err := marshal(w, r, data); err != nil {
 		log.Printf(`check: could not serialize response: %v`, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
+var canExposeMetaWrappedForTesting = canExposeMeta
+
 // duplicate of jsonapi.MarshalPayload with indentation and meta injection.
-func marshal(w http.ResponseWriter, models interface{}) error {
-	payload, err := jsonapi.Marshal(models)
+func marshal(w http.ResponseWriter, r *http.Request, model *availability) error {
+	exposeMeta := canExposeMetaWrappedForTesting(r)
+	if !exposeMeta {
+		model.meta = nil
+	}
+	payload, err := jsonapi.Marshal(model)
 	if err != nil {
 		return err
 	}
-	payload.(*jsonapi.OnePayload).Meta = &jsonapi.Meta{
-		`name`: hostname,
+	if exposeMeta {
+		payload.(*jsonapi.OnePayload).Meta = &jsonapi.Meta{
+			`name`: hostname,
+		}
 	}
 	m := json.NewEncoder(w)
 	m.SetIndent(``, "\t")
