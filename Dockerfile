@@ -22,8 +22,6 @@ RUN mvn -B dependency:go-offline -q -f ./libs/java/platform-jetty/pom.xml
 #! STAGE - Client Library - Java - Produce Library
 WORKDIR /build
 COPY ./libs/java ./libs/java
-COPY ./libs/java/platform ./libs/java/platform
-COPY ./libs/java/platform-jetty ./libs/java/platform-jetty
 
 WORKDIR /build/libs/java/platform
 # Linter Steps
@@ -33,17 +31,13 @@ RUN mvn -B checkstyle:checkstyle -q
 # Run Unit-Tests & Build
 RUN mvn -B clean && mvn -B verify
 
-# Publish Artifacts
-ARG BUILD_ARTIFACT_PLATFORM=/build/libs/java/platform/target/platform-*.jar
-
 WORKDIR /build/libs/java/platform-jetty
 RUN mvn -B fmt:check -q
 RUN mvn -B checkstyle:checkstyle -q
 RUN mvn -B clean && mvn -B verify
 
 # Publish Artifacts
-ARG BUILD_ARTIFACT_PLATFORM_JETTY=/build/libs/java/platform-jetty/target/platform-*.jar
-
+ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/platform/target/platform-*.jar:/build/libs/java/platform-jetty/target/platform-*.jar
 
 #! STAGE - Platform Python Tests - Python 3 - Verify the Python code
 # TODO: move to skynet ;)
