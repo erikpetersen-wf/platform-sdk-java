@@ -13,14 +13,17 @@ ARG ARTIFACTORY_PRO_PASS
 COPY ./workivabuild.settings.xml /root/.m2/settings.xml
 
 # Cache Wrapper Dependencies
-COPY ./libs/java/pom.xml ./libs/java/pom.xml
-RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
+COPY ./libs/java/platform/pom.xml ./libs/java/platform/pom.xml
+RUN mvn -B dependency:go-offline -q -f ./libs/java/platform/pom.xml
+
+COPY ./libs/java/platform-jetty/pom.xml ./libs/java/platform-jetty/pom.xml
+RUN mvn -B dependency:go-offline -q -f ./libs/java/platform-jetty/pom.xml
 
 #! STAGE - Client Library - Java - Produce Library
 WORKDIR /build
 COPY ./libs/java ./libs/java
 
-WORKDIR /build/libs/java
+WORKDIR /build/libs/java/platform
 # Linter Steps
 # TODO: move to skynet ;)
 RUN mvn -B fmt:check -q
@@ -29,9 +32,15 @@ RUN mvn -B checkstyle:checkstyle -q
 RUN mvn -B clean && mvn -B verify
 
 # Publish Artifacts
-# ARG BUILD_ARTIFACTS_AUDIT=/audit/**/*
-ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/target/platform-*.jar
-# ARG BUILD_ARTIFACTS_TEST_REPORTS=/build/libs/java/target/surefire-reports/TEST-*.xml
+ARG BUILD_ARTIFACT_PLATFORM=/build/libs/java/platform/target/platform-*.jar
+
+WORKDIR /build/libs/java/platform-jetty
+RUN mvn -B fmt:check -q
+RUN mvn -B checkstyle:checkstyle -q
+RUN mvn -B clean && mvn -B verify
+
+# Publish Artifacts
+ARG BUILD_ARTIFACT_PLATFORM_JETTY=/build/libs/java/platform-jetty/target/platform-*.jar
 
 
 #! STAGE - Platform Python Tests - Python 3 - Verify the Python code
@@ -71,7 +80,8 @@ ADD package /usr/local/bin
 ONBUILD ADD helm /build/helm/
 ONBUILD ADD Dockerfile /build/
 ONBUILD RUN package
-ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
+ONBUILD ARG BUILD_ARTIFACT_PLATFORM=/build/*.tgz
+ONBUILD ARG BUILD_ARTIFACT_PLATFORM_JETTY=/build/*.tgz
 
 # # USAGE
 # FROM drydock-prod.workiva.net/workiva/platform:v0
