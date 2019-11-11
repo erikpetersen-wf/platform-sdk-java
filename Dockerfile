@@ -80,8 +80,7 @@ ADD package /usr/local/bin
 ONBUILD ADD helm /build/helm/
 ONBUILD ADD Dockerfile /build/
 ONBUILD RUN package
-ONBUILD ARG BUILD_ARTIFACT_PLATFORM=/build/*.tgz
-ONBUILD ARG BUILD_ARTIFACT_PLATFORM_JETTY=/build/*.tgz
+ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
 # # USAGE
 # FROM drydock-prod.workiva.net/workiva/platform:v0
