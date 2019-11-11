@@ -22,6 +22,8 @@ RUN mvn -B dependency:go-offline -q -f ./libs/java/platform-jetty/pom.xml
 #! STAGE - Client Library - Java - Produce Library
 WORKDIR /build
 COPY ./libs/java ./libs/java
+COPY ./libs/java/platform ./libs/java/platform
+COPY ./libs/java/platform-jetty ./libs/java/platform-jetty
 
 WORKDIR /build/libs/java/platform
 # Linter Steps
