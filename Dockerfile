@@ -62,6 +62,9 @@ RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd
 COPY tools/wk/ /root/wk/
 RUN pip install /root/wk/
 
+# Add package (backwards compatibility for folks directly referencing `pacakge`)
+ADD tools/package /usr/local/bin
+
 # steps for consuming builds to use
 ONBUILD ADD helm /build/helm/
 ONBUILD ADD Dockerfile /build/
