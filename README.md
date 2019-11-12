@@ -45,7 +45,7 @@ The platform now has a builder to help with various Helm (future: and cloudforma
 To use this builder, add the following to the top of your `Dockerfile`:
 
 ```
-FROM drydock-prod.workiva.net/workiva/platform:v0 as platform
+FROM drydock-prod.workiva.net/workiva/platform:v0
 ```
 
 If you already have the platform builder in your repo, you can remove any `ADD`, `RUN` and `ARG` commands after it, and leave it for the platform `ONBUILD` commands to handle.
@@ -62,7 +62,7 @@ This build phase will execute the code in [platform](package).  It will look for
 <dependency>
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.19</version>
 </dependency>
 ```
 ### Running the platform
@@ -103,7 +103,7 @@ Platform.builder().readinessFunction(() -> myReadinessFunction()).start();
 
 Alternatively you can provide a reference to the function like `readinessFunction(PackageName::myReadinessFunction)`.
 
-**Note:** Any overridden functions and/or ports must be manually reflected in your Helm chart.  The builder does not currently support replacing the defaults with any overrides you define in code. 
+**Note:** Any overridden functions and/or ports must be manually reflected in your Helm chart.  The builder does not currently support replacing the defaults with any overrides you define in code.
 
 ### Building a custom function
 
@@ -114,14 +114,14 @@ We accomplish this by requiring functions used for readiness/liveness probes ret
 #### How to use `HealthStatus`
 
 The platform SDK will call the `isOk()` method and if it returns `true` the server will return a 200 status code.  Otherwise, we will return a 503.  Call the `ok() ` function or use the default constructor to build a `HealthStatus` object that will return a 200.
-    
+
 In order for the platform SDK to return a 503, call the `notOk("reason")` method.  If your custom function throws an uncaught exception, we will wrap that in a failing `HealthStatus` object with the reason set to the `getMessage()` of the exception.
-       
+
 ### Running the example
-       
+
 If you want to see the default liveness/readiness probe in action, go [here](libs/java/src/example/java/Main.java) and run the `main` method.  Navigate to `http://localhost:8888/_wk/ready` or `http://localhost:8888/_wk/alive` to see the response for yourself.
-       
-Feel free to modify the builder to override functions and/or ports to your hearts content. 
+
+Feel free to modify the builder to override functions and/or ports to your hearts content.
 
 ## Architecture Decision Records
 
