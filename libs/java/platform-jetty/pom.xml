@@ -3,7 +3,7 @@
 
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform-jetty</artifactId>
-    <version>0.0.19-SNAPSHOT</version>
+    <version>0.0.20</version>
     <packaging>jar</packaging>
 
     <name>platform</name>
