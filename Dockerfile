@@ -13,26 +13,34 @@ ARG ARTIFACTORY_PRO_PASS
 COPY ./workivabuild.settings.xml /root/.m2/settings.xml
 
 # Cache Wrapper Dependencies
-COPY ./libs/java/pom.xml ./libs/java/pom.xml
-RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
+COPY ./libs/java/platform/pom.xml ./libs/java/platform/pom.xml
+RUN mvn -B dependency:go-offline -q -f ./libs/java/platform/pom.xml
+
+COPY ./libs/java/platform-jetty/pom.xml ./libs/java/platform-jetty/pom.xml
+RUN mvn -B dependency:go-offline -q -f ./libs/java/platform-jetty/pom.xml
 
 #! STAGE - Client Library - Java - Produce Library
 WORKDIR /build
+RUN mkdir -p /artifacts/java
 COPY ./libs/java ./libs/java
 
-WORKDIR /build/libs/java
+WORKDIR /build/libs/java/platform
 # Linter Steps
 # TODO: move to skynet ;)
 RUN mvn -B fmt:check -q
 RUN mvn -B checkstyle:checkstyle -q
 # Run Unit-Tests & Build
 RUN mvn -B clean && mvn -B verify
+RUN mv /build/libs/java/platform/target/platform-*.jar /artifacts/java
+
+WORKDIR /build/libs/java/platform-jetty
+RUN mvn -B fmt:check -q
+RUN mvn -B checkstyle:checkstyle -q
+RUN mvn -B clean && mvn -B verify
+RUN mv /build/libs/java/platform-jetty/target/platform-jetty-*.jar /artifacts/java
 
 # Publish Artifacts
-# ARG BUILD_ARTIFACTS_AUDIT=/audit/**/*
-ARG BUILD_ARTIFACTS_JAVA=/build/libs/java/target/platform-*.jar
-# ARG BUILD_ARTIFACTS_TEST_REPORTS=/build/libs/java/target/surefire-reports/TEST-*.xml
-
+ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
 
 #! STAGE - Platform Python Tests - Python 3 - Verify the Python code
 # TODO: move to skynet ;)
