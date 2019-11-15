@@ -1,6 +1,8 @@
 .mypy_cache
 __pycache__
+libs/java/target
 libs/java/platform/target
 libs/java/platform-jetty/target
+libs/java/platform-core/target
 .idea
 *.iml
