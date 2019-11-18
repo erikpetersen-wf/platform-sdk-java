@@ -16,17 +16,16 @@ COPY ./workivabuild.settings.xml /root/.m2/settings.xml
 COPY ./libs/java ./libs/java
 RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
 
-#! STAGE - Client Library - Java - Produce Library
-WORKDIR /build
-RUN mkdir -p /artifacts/java
-
 WORKDIR /build/libs/java
 # Linter Steps
 # TODO: move to skynet ;)
 RUN mvn -B clean install
-RUN mv /build/libs/java/platform/target/platform-*.jar /artifacts/java
-RUN mv /build/libs/java/platform-jetty/target/platform-jetty-*.jar /artifacts/java
-RUN mv /build/libs/java/platform-core/target/platform-core-*.jar /artifacts/java
+
+RUN mkdir -p /artifacts/java && \
+    mv platform/target/platform-*.jar \
+    platform-jetty/target/platform-jetty-*.jar \
+    platform-core/target/platform-core-*.jar \
+    /artifacts/java
 
 # Publish Artifacts
 ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
