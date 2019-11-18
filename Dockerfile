@@ -61,11 +61,11 @@ WORKDIR /build/
 RUN apk update && apk upgrade
 
 # Install and Verify HELM
-RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz && \
-    echo "56ae2d5d08c68d6e7400d462d6ed10c929effac929fedce18d2636a9b4e166ba  helm-v2.9.1-linux-amd64.tar.gz" | sha256sum -c && \
-    tar xf helm-v2.9.1-linux-amd64.tar.gz && \
+RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-amd64.tar.gz && \
+    echo "7eebaaa2da4734242bbcdced62cc32ba8c7164a18792c8acdf16c77abffce202  helm-v2.16.1-linux-amd64.tar.gz" | sha256sum -c && \
+    tar xf helm-v2.16.1-linux-amd64.tar.gz && \
     cp linux-amd64/helm /usr/local/bin && \
-    rm -rf helm-v2.9.1-linux-amd64.tar.gz linux-amd64 && \
+    rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64 && \
     helm init --client-only
 
 # Add Python dependencies (layer caching!)
