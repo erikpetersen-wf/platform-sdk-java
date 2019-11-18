@@ -101,17 +101,14 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 	// serialize and write
 	w.Header().Set(`content-type`, jsonapi.MediaType)
 	w.WriteHeader(http.StatusOK)
-	if err := marshal(w, r, data); err != nil {
+	if err := marshal(w, data, canExposeMeta(r)); err != nil {
 		log.Printf(`check: could not serialize response: %v`, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
-var canExposeMetaWrappedForTesting = canExposeMeta
-
 // duplicate of jsonapi.MarshalPayload with indentation and meta injection.
-func marshal(w http.ResponseWriter, r *http.Request, model *availability) error {
-	exposeMeta := canExposeMetaWrappedForTesting(r)
+func marshal(w http.ResponseWriter, model *availability, exposeMeta bool) error {
 	if !exposeMeta {
 		model.meta = nil
 	}

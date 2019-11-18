@@ -26,7 +26,7 @@ const fixture1 = `{
 			"status": "FAILED"
 		},
 		"meta": {
-			"goodbye": "why?",
+			"goodbye": "public: show me",
 			"hello": "PASSED"
 		}
 	},
@@ -80,55 +80,48 @@ const fixture4 = `{
 `
 
 func TestRegister(t *testing.T) {
-	err := errors.New(`why?`)
+	var err error
 	Register(`hello`, func() error { return nil })
 	Register(`goodbye`, func() error { return err })
+
+	const (
+		allowed    = `1.1.1.1` // Cloudflare is comming for us all!!!
+		dissalowed = `8.8.8.8` // Google can't look at our data!!!
+	)
 
 	// overrides
 	hostname = `testbox`
 	timeNow = func() time.Time {
 		return time.Date(2019, 8, 12, 3+12, 50, 13, 0, time.FixedZone(`CDT`, -5*60*60))
 	}
-	r := httptest.NewRequest(http.MethodGet, `/_wk/status`, nil)
-	var canExpose bool
-	canExposeMetaWrappedForTesting = func(*http.Request) bool { return canExpose }
-
-	// asserter!
-	assert := func(t testing.TB, w *httptest.ResponseRecorder, name, want string) {
-		if w.Body.String() != want {
-			t.Errorf(`outp: %q`, w.Body.String())
-			t.Errorf(`want: %q`, want)
-			t.Fatalf(`missmatched responses (%s)`, name)
-		}
-		if w.Header().Get(`content-type`) != `application/vnd.api+json` {
-			t.Fatalf(`producing invalid json:API (%s)`, name)
-		}
-	}
+	whitelist = map[string]struct{}{allowed: struct{}{}}
 
 	// Test 1
-	canExpose = true
-	w := httptest.NewRecorder()
-	http.DefaultServeMux.ServeHTTP(w, r)
-	assert(t, w, "!pass, canExpose", fixture1)
-
-	// Test 2
-	canExpose = false
-	w = httptest.NewRecorder()
-	http.DefaultServeMux.ServeHTTP(w, r)
-	assert(t, w, "!pass, !canExpose", fixture2)
-
-	// Test 3
-	canExpose = true
-	err = nil
-	w = httptest.NewRecorder()
-	http.DefaultServeMux.ServeHTTP(w, r)
-	assert(t, w, "pass, canExpose", fixture3)
-
-	// Test 4
-	canExpose = false
-	w = httptest.NewRecorder()
-	http.DefaultServeMux.ServeHTTP(w, r)
-	assert(t, w, "pass, !canExpose", fixture4)
+	for _, test := range []struct {
+		name string // name fo the test to run
+		ip   string // ip of the incoming requester
+		want string // desired result
+		err  error  // the error produced by the "hello" check
+	}{
+		{"!pass, canExpose", allowed, fixture1, errors.New(`public: show me`)},
+		{"!pass, !canExpose", dissalowed, fixture2, errors.New(`private: secretz`)},
+		{"pass, canExpose", allowed, fixture3, nil},
+		{"pass, !canExpose", dissalowed, fixture4, nil},
+	} {
+		err = test.err // update the `hello` registered check
+		r := httptest.NewRequest(http.MethodGet, `/_wk/status`, nil)
+		r.Header.Set(`x-forwarded-for`, test.ip)
+		w := httptest.NewRecorder()
+		http.DefaultServeMux.ServeHTTP(w, r)
+		if w.Body.String() != test.want {
+			t.Errorf(`outp: %q`, w.Body.String())
+			t.Errorf(`want: %q`, test.want)
+			t.Fatalf(`missmatched responses (%s)`, test.name)
+		}
+		if w.Header().Get(`content-type`) != `application/vnd.api+json` {
+			t.Fatalf(`producing invalid json:API (%s)`, test.name)
+		}
+	}
 }
 
 func TestRegisterPanic(t *testing.T) {
@@ -178,6 +171,7 @@ func is(tb testing.TB, bit bool, args ...interface{}) {
 }
 
 func TestCanExposeMetaNotLoaded(t *testing.T) {
+	whitelist = nil
 	is(t, !canExposeMeta(nil), "Don't expose w/o data")
 }
 
