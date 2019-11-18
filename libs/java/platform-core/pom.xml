@@ -8,11 +8,11 @@
     </parent>
 
     <groupId>com.workiva.platform</groupId>
-    <artifactId>platform-jetty</artifactId>
+    <artifactId>platform-core</artifactId>
     <version>0.0.22</version>
     <packaging>jar</packaging>
 
-    <name>Platform Jetty</name>
+    <name>Platform Core</name>
 
     <properties>
         <!-- dependencies which can be set in consuming projects -->

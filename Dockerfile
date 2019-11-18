@@ -13,31 +13,19 @@ ARG ARTIFACTORY_PRO_PASS
 COPY ./workivabuild.settings.xml /root/.m2/settings.xml
 
 # Cache Wrapper Dependencies
-COPY ./libs/java/platform/pom.xml ./libs/java/platform/pom.xml
-RUN mvn -B dependency:go-offline -q -f ./libs/java/platform/pom.xml
-
-COPY ./libs/java/platform-jetty/pom.xml ./libs/java/platform-jetty/pom.xml
-RUN mvn -B dependency:go-offline -q -f ./libs/java/platform-jetty/pom.xml
-
-#! STAGE - Client Library - Java - Produce Library
-WORKDIR /build
-RUN mkdir -p /artifacts/java
 COPY ./libs/java ./libs/java
+RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
 
-WORKDIR /build/libs/java/platform
+WORKDIR /build/libs/java
 # Linter Steps
 # TODO: move to skynet ;)
-RUN mvn -B fmt:check -q
-RUN mvn -B checkstyle:checkstyle -q
-# Run Unit-Tests & Build
-RUN mvn -B clean && mvn -B verify
-RUN mv /build/libs/java/platform/target/platform-*.jar /artifacts/java
+RUN mvn -B clean install
 
-WORKDIR /build/libs/java/platform-jetty
-RUN mvn -B fmt:check -q
-RUN mvn -B checkstyle:checkstyle -q
-RUN mvn -B clean && mvn -B verify
-RUN mv /build/libs/java/platform-jetty/target/platform-jetty-*.jar /artifacts/java
+RUN mkdir -p /artifacts/java && \
+    mv platform/target/platform-*.jar \
+    platform-jetty/target/platform-jetty-*.jar \
+    platform-core/target/platform-core-*.jar \
+    /artifacts/java
 
 # Publish Artifacts
 ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
