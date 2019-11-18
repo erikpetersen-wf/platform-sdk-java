@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"sync"
-	"sync/atomic"
 	"time"
 
 	"github.com/google/jsonapi"
@@ -18,7 +17,8 @@ var (
 	lock      = &sync.RWMutex{}           // global checks lock
 	timeNow   = time.Now                  // for testing
 	hostname  = `unknown`                 // set by init
-	whitelist atomic.Value                // map[string]struct{}
+	whitelist map[string]struct{}         // allowed IPs to view whitelist
+	// FUTURE: use atomic.Value for whitelist when dynamic updating is implemented
 )
 
 // Standard names shared between services.
@@ -165,13 +165,12 @@ func (a *availability) JSONAPIMeta() *jsonapi.Meta {
 
 // Determine if request IP is allowed to expose the meta
 func canExposeMeta(r *http.Request) bool {
-	whitelist, ok := whitelist.Load().(map[string]struct{})
-	if !ok {
+	if whitelist == nil {
 		log.Printf("check(load): invalid list")
 		return false
 	}
 	ip := r.Header.Get("x-forwarded-for")
-	_, ok = whitelist[ip]
+	_, ok := whitelist[ip]
 	if !ok {
 		log.Printf("check(status): unauthorized ip: " + ip)
 	}
@@ -196,10 +195,9 @@ func initWhitelist() string {
 		log.Printf("check(load): unmarshal failed: %v", err)
 		return "unmarshal"
 	}
-	set := make(map[string]struct{}, len(list))
+	whitelist = make(map[string]struct{}, len(list))
 	for _, ip := range list {
-		set[ip] = struct{}{}
+		whitelist[ip] = struct{}{}
 	}
-	whitelist.Store(set)
 	return ""
 }
