@@ -1,6 +1,7 @@
 package check
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -12,10 +13,12 @@ import (
 )
 
 var (
-	checks   = map[string]func() error{}
-	lock     = &sync.RWMutex{}
-	timeNow  = time.Now // for testing
-	hostname = `unknown`
+	checks    = map[string]func() error{} // global set of checks
+	lock      = &sync.RWMutex{}           // global checks lock
+	timeNow   = time.Now                  // for testing
+	hostname  = `unknown`                 // set by init
+	whitelist map[string]struct{}         // allowed IPs to view whitelist
+	// FUTURE: use atomic.Value for whitelist when dynamic updating is implemented
 )
 
 // Standard names shared between services.
@@ -61,6 +64,7 @@ func init() {
 	if name, err := os.Hostname(); err == nil {
 		hostname = name
 	}
+	initWhitelist()
 }
 
 func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
@@ -97,20 +101,25 @@ func serviceCheckHandler(w http.ResponseWriter, r *http.Request) {
 	// serialize and write
 	w.Header().Set(`content-type`, jsonapi.MediaType)
 	w.WriteHeader(http.StatusOK)
-	if err := marshal(w, data); err != nil {
+	if err := marshal(w, data, canExposeMeta(r)); err != nil {
 		log.Printf(`check: could not serialize response: %v`, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 // duplicate of jsonapi.MarshalPayload with indentation and meta injection.
-func marshal(w http.ResponseWriter, models interface{}) error {
-	payload, err := jsonapi.Marshal(models)
+func marshal(w http.ResponseWriter, model *availability, exposeMeta bool) error {
+	if !exposeMeta {
+		model.meta = nil
+	}
+	payload, err := jsonapi.Marshal(model)
 	if err != nil {
 		return err
 	}
-	payload.(*jsonapi.OnePayload).Meta = &jsonapi.Meta{
-		`name`: hostname,
+	if exposeMeta {
+		payload.(*jsonapi.OnePayload).Meta = &jsonapi.Meta{
+			`name`: hostname,
+		}
 	}
 	m := json.NewEncoder(w)
 	m.SetIndent(``, "\t")
@@ -144,4 +153,48 @@ type availability struct {
 }
 
 // Implements jsonapi.Metable
-func (a *availability) JSONAPIMeta() *jsonapi.Meta { return &a.meta }
+func (a *availability) JSONAPIMeta() *jsonapi.Meta {
+	if a.meta == nil {
+		return nil
+	}
+	return &a.meta
+}
+
+// Determine if request IP is allowed to expose the meta
+func canExposeMeta(r *http.Request) bool {
+	if whitelist == nil {
+		log.Printf("check(load): invalid list")
+		return false
+	}
+	ip := r.Header.Get("x-forwarded-for")
+	_, ok := whitelist[ip]
+	if !ok {
+		log.Printf("check(status): unauthorized ip: " + ip)
+	}
+	return ok
+}
+
+// load the whitelist from env vars!
+// return value is for branch testing assertions
+func initWhitelist() string {
+	str := os.Getenv(`NEW_RELIC_SYNTHETICS_IP_WHITELIST`)
+	if str == "" {
+		log.Printf("check(load): unset NEW_RELIC_SYNTHETICS_IP_WHITELIST")
+		return "unset"
+	}
+	data, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		log.Printf("check(load): decode failed: %v", err)
+		return "decode"
+	}
+	var list []string
+	if err := json.Unmarshal(data, &list); err != nil {
+		log.Printf("check(load): unmarshal failed: %v", err)
+		return "unmarshal"
+	}
+	whitelist = make(map[string]struct{}, len(list))
+	for _, ip := range list {
+		whitelist[ip] = struct{}{}
+	}
+	return ""
+}
