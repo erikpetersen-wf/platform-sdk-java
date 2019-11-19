@@ -25,6 +25,7 @@ RUN mkdir -p /artifacts/java && \
     mv platform/target/platform-*.jar \
     platform-jetty/target/platform-jetty-*.jar \
     platform-core/target/platform-core-*.jar \
+    platform-servlet/target/platform-servlet-*.jar \
     /artifacts/java
 
 # Publish Artifacts
