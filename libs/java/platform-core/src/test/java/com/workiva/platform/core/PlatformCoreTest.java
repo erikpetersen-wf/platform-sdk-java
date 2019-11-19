@@ -3,11 +3,11 @@ package com.workiva.platform.core;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PlatformTest {
+public class PlatformCoreTest {
 
   @Test
   public void TestReady() {
-    Platform platform = new Platform();
+    PlatformCore platform = new PlatformCore();
 
     int statusCode = platform.ready();
     Assert.assertEquals(statusCode, 200);
@@ -15,7 +15,7 @@ public class PlatformTest {
 
   @Test
   public void TestAlive() {
-    Platform platform = new Platform();
+    PlatformCore platform = new PlatformCore();
 
     int statusCode = platform.alive();
     Assert.assertEquals(statusCode, 200);
@@ -23,7 +23,7 @@ public class PlatformTest {
 
   @Test
   public void TestShutdownHook() {
-    Platform platform = new Platform();
+    PlatformCore platform = new PlatformCore();
     platform.shutdown();
 
     int statusCode = platform.alive();

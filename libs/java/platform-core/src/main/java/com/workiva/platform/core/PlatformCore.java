@@ -1,6 +1,6 @@
 package com.workiva.platform.core;
 
-public class Platform {
+public class PlatformCore {
 
   private boolean isAlive;
 
@@ -8,7 +8,7 @@ public class Platform {
 
   public static final String livenessPath = "/_wk/alive";
 
-  Platform() {
+  PlatformCore() {
     isAlive = true;
   }
 
