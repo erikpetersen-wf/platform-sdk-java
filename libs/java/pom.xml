@@ -11,6 +11,7 @@
         <module>platform</module>
         <module>platform-jetty</module>
         <module>platform-core</module>
+        <module>platform-servlet</module>
     </modules>
 
     <properties>
