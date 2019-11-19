@@ -1,4 +1,4 @@
-package com.workiva.platform;
+package com.workiva.platform.core;
 
 import org.junit.Assert;
 import org.junit.Test;

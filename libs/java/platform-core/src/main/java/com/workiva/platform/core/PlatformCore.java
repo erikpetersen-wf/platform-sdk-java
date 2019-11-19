@@ -1,4 +1,4 @@
-package com.workiva.platform;
+package com.workiva.platform.core;
 
 public class Platform {
 
