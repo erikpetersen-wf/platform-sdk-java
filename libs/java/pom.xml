@@ -11,13 +11,56 @@
         <module>platform</module>
         <module>platform-jetty</module>
         <module>platform-core</module>
+        <module>platform-undertow</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+
+        <!-- dependencies which can be set in consuming projects -->
+        <workiva.platform.slf4j-api>1.7.28</workiva.platform.slf4j-api>
+        <workiva.platform.undertow-servlet>2.0.26.Final</workiva.platform.undertow-servlet>
+        <workiva.platform.gson>2.8.5</workiva.platform.gson>
+        <workiva.platform.jersey-server>2.29.1</workiva.platform.jersey-server>
+        <workiva.platform.javax-inject>1</workiva.platform.javax-inject>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- common -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${workiva.platform.slf4j-api}</version>
+            </dependency>
+
+            <!-- platform-undertow -->
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-servlet</artifactId>
+                <version>${workiva.platform.undertow-servlet}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${workiva.platform.gson}</version>
+            </dependency>
+            
+            <!-- platform-jetty -->
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${workiva.platform.jersey-server}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${workiva.platform.javax-inject}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
