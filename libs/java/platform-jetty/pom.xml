@@ -5,7 +5,6 @@
         <groupId>com.workiva.platform</groupId>
         <artifactId>platform-parent</artifactId>
         <version>0.0.26</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <groupId>com.workiva.platform</groupId>
