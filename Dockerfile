@@ -29,7 +29,6 @@ RUN mkdir -p /artifacts/java && \
     /artifacts/java
 
 # Publish Artifacts
-ARG BUILD_ARTIFACTS_POM=/build/libs/java/pom.xml
 ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
 
 #! STAGE - Platform Python Tests - Python 3 - Verify the Python code
