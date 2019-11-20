@@ -22,7 +22,8 @@ WORKDIR /build/libs/java
 RUN mvn -B clean install
 
 RUN mkdir -p /artifacts/java && \
-    mv platform/target/platform-*.jar \
+    mv target/platform-*.jar \
+    platform/target/platform-*.jar \
     platform-jetty/target/platform-jetty-*.jar \
     platform-core/target/platform-core-*.jar \
     /artifacts/java
