@@ -54,7 +54,7 @@ public class PlatformCore {
     }
     try {
       for (Callable<Boolean> check : aliveChecks.values()) {
-        if (check.call()) {
+        if (!check.call()) {
           return 500;
         }
       }
@@ -67,7 +67,7 @@ public class PlatformCore {
   public int ready() {
     try {
       for (Callable<Boolean> check : readyChecks.values()) {
-        if (check.call()) {
+        if (!check.call()) {
           return 500;
         }
       }
