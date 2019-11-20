@@ -77,8 +77,9 @@ public class PlatformCore {
     return 200;
   }
 
-  public HttpResponse status() {
+  public HttpResponse status(String sourceIP) {
     String response = "\t\t\"meta\": {";
+    String status = "PASSED";
     for (Map.Entry<String, Callable<Boolean>> entry : statusChecks.entrySet()) {
       response += "\n\t\t\t\"" + entry.getKey() + "\": \"";
       try {
@@ -86,15 +87,32 @@ public class PlatformCore {
           response += "PASSED";
         } else {
           response += "FAILED";
+          status = "FAILED";
         }
       } catch (Exception e) {
         response += e.toString();
       }
       response += "\",";
     }
-    response += "\n\t\t}";
-    // TODO: statusChecks
-    return new HttpResponse(418, response.getBytes());
+    response += "\n\t\t}\n";
+
+    String json = "{\n";
+    json += "\t\"data\": {\n";
+    json += "\t\t\"type\": \"status\",\n";
+    json += "\t\t\"id\": \"TODO\",\n"; // TODO: generate ID: 2019-08-12T15:50:13-05:00
+    json += "\t\t\"attributes\": {\n";
+    json += "\t\t\t\"status\": \"" + status + "\"\n";
+    json += "\t\t},\n";
+    // TODO: verify against NEW_RELIC_SYNTHETICS_IP_WHITELIST
+    json += response;
+    json += "\t}\n";
+    // TODO: add machine meta block (if meta is allowed)
+    json += "}\n";
+    return new HttpResponse(200, json.getBytes());
+  }
+
+  public HttpResponse status() {
+    return status("0.0.0.0");
   }
 
   public void register(String name, Callable<Boolean> callback, CheckType type) {
