@@ -8,7 +8,7 @@ public class PlatformCore {
 
   public static final String livenessPath = "/_wk/alive";
 
-  PlatformCore() {
+  public PlatformCore() {
     isAlive = true;
   }
 
