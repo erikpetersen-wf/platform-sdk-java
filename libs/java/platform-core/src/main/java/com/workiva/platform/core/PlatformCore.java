@@ -1,12 +1,19 @@
 package com.workiva.platform.core;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONValue;
+
+import java.util.Base64;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 
 public class PlatformCore {
 
   private boolean isAlive;
+  private Set<String> allowedIPs;
   private Map<String, Callable<Boolean>> aliveChecks;
   private Map<String, Callable<Boolean>> readyChecks;
   private Map<String, Callable<Boolean>> statusChecks;
@@ -42,6 +49,9 @@ public class PlatformCore {
     aliveChecks = new TreeMap<>();
     readyChecks = new TreeMap<>();
     statusChecks = new TreeMap<>();
+
+    String whitelist = System.getenv("NEW_RELIC_SYNTHETICS_IP_WHITELIST");
+    setAllowedIPs(parseWhitelist(whitelist));
   }
 
   public void shutdown() {
@@ -77,7 +87,7 @@ public class PlatformCore {
     return 200;
   }
 
-  public HttpResponse status(String sourceIP) {
+  public HttpResponse status(String forwardedFor) {
     String response = "\t\t\"meta\": {";
     String status = "PASSED";
     for (Map.Entry<String, Callable<Boolean>> entry : statusChecks.entrySet()) {
@@ -133,5 +143,23 @@ public class PlatformCore {
 
   public void register(String name, Callable<Boolean> callback) {
     register(name, callback, CheckType.STATUS);
+  }
+
+  void setAllowedIPs(Set<String> allowedIPs) {
+    this.allowedIPs = allowedIPs;
+  }
+
+  static Set<String> parseWhitelist(String whitelist) {
+    Set<String> ips = new TreeSet<String>();
+    if (whitelist == null) {
+      return ips;
+    }
+    String jsonString = new String(Base64.getDecoder().decode(whitelist));
+    JSONArray jsonArray = (JSONArray) JSONValue.parse(jsonString);
+
+    for (Object ip : jsonArray) {
+      ips.add(ip.toString());
+    }
+    return ips;
   }
 }

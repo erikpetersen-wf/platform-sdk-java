@@ -1,5 +1,6 @@
 package com.workiva.platform.core;
 
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.junit.Assert;
@@ -119,5 +120,13 @@ public class PlatformCoreTest {
     PlatformCore.HttpResponse res = platform.status();
     Assert.assertEquals(res.code, 200);
     Assert.assertEquals(new String(res.body), expected);
+  }
+
+  @Test
+  public void TestParseWhitelist() {
+    Set<String> set = PlatformCore.parseWhitelist("WyIxLjEuMS4xIiwiMS4wLjAuMSJd");
+    Assert.assertTrue(set.contains("1.1.1.1"));
+    Assert.assertTrue(set.contains("1.0.0.1"));
+    Assert.assertTrue(!set.contains("8.8.8.8"));
   }
 }
