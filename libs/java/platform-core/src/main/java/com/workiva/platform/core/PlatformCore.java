@@ -27,7 +27,7 @@ public class PlatformCore {
   public static final String readinessPath = PATH_READY;
   public static final String statusPath = PATH_STATUS;
 
-  PlatformCore() {
+  public PlatformCore() {
     isAlive = true;
     aliveChecks = new ConcurrentHashMap<>();
     readyChecks = new ConcurrentHashMap<>();
