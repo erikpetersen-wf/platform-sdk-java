@@ -66,26 +66,20 @@ public class PlatformCoreTest {
   @Test
   public void TestStatus() {
     PlatformCore platform = new PlatformCore();
-
-    String expected = "{\n";
-    expected += "\t\"data\": {\n";
-    expected += "\t\t\"type\": \"status\",\n";
-    expected += "\t\t\"id\": \"TODO\",\n";
-    expected += "\t\t\"attributes\": {\n";
-    expected += "\t\t\t\"status\": \"PASSED\"\n";
-    expected += "\t\t},\n";
-    expected += "\t\t\"meta\": {\n";
-    expected += "\t\t}\n";
-    expected += "\t}\n";
-    expected += "}\n";
-
     PlatformResponse res = platform.status();
     Assert.assertEquals(res.code, 200);
+
     JSONObject wrapper = (JSONObject) JSONValue.parse(new String(res.body));
     Assert.assertTrue(wrapper != null);
-    Assert.assertEquals(
-        new String(res.body),
-        "{\"data\":{\"attributes\":{\"status\":\"PASSED\"},\"id\":\"TODO\"}}");
+    Assert.assertTrue(wrapper.get("meta") == null);
+
+    JSONObject data = (JSONObject) wrapper.get("data");
+    Assert.assertTrue(data != null);
+    Assert.assertEquals(data.get("id"), "TODO");
+
+    JSONObject attrs = (JSONObject) data.get("attributes");
+    Assert.assertEquals(attrs.get("status"), PlatformStatus.PASSED);
+    Assert.assertTrue(attrs.get("meta") == null);
   }
 
   @Test

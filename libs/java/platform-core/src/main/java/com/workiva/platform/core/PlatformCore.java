@@ -88,7 +88,7 @@ public class PlatformCore {
 
     // TODO: verify against NEW_RELIC_SYNTHETICS_IP_WHITELIST
     // TODO: add machine meta block (if meta is allowed)
-    if (!meta.isEmpty()) {
+    if (!meta.isEmpty() && allowedIPs.contains(forwardedFor)) {
       data.put("meta", meta);
     }
 
