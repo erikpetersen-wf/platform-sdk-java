@@ -1,7 +1,9 @@
 package com.workiva.platform.core;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,34 +21,14 @@ public class PlatformCoreTest {
   @Test
   public void TestReadyCheckFail() {
     PlatformCore platform = new PlatformCore();
-
-    platform.register(
-        "don't care!",
-        new Callable<Boolean>() {
-          @Override
-          public Boolean call() throws Exception {
-            return false;
-          }
-        },
-        PlatformCore.CheckType.READY);
-
+    platform.register("don't care!", new PlatformStatus(false), PlatformCheckType.READY);
     Assert.assertEquals(platform.ready(), 500);
   }
 
   @Test
   public void TestReadyCheckPass() {
     PlatformCore platform = new PlatformCore();
-
-    platform.register(
-        "don't care!",
-        new Callable<Boolean>() {
-          @Override
-          public Boolean call() throws Exception {
-            return true;
-          }
-        },
-        PlatformCore.CheckType.READY);
-
+    platform.register("don't care!", new PlatformStatus(true), PlatformCheckType.READY);
     Assert.assertEquals(platform.ready(), 200);
   }
 
@@ -61,34 +43,14 @@ public class PlatformCoreTest {
   @Test
   public void TestAliveCheckFail() {
     PlatformCore platform = new PlatformCore();
-
-    platform.register(
-        "don't care!",
-        new Callable<Boolean>() {
-          @Override
-          public Boolean call() throws Exception {
-            return false;
-          }
-        },
-        PlatformCore.CheckType.ALIVE);
-
+    platform.register("don't care!", new PlatformStatus(false), PlatformCheckType.ALIVE);
     Assert.assertEquals(platform.alive(), 500);
   }
 
   @Test
   public void TestAliveCheckPass() {
     PlatformCore platform = new PlatformCore();
-
-    platform.register(
-        "don't care!",
-        new Callable<Boolean>() {
-          @Override
-          public Boolean call() throws Exception {
-            return true;
-          }
-        },
-        PlatformCore.CheckType.ALIVE);
-
+    platform.register("don't care!", new PlatformStatus(true), PlatformCheckType.ALIVE);
     Assert.assertEquals(platform.alive(), 200);
   }
 
@@ -117,9 +79,13 @@ public class PlatformCoreTest {
     expected += "\t}\n";
     expected += "}\n";
 
-    PlatformCore.HttpResponse res = platform.status();
+    PlatformResponse res = platform.status();
     Assert.assertEquals(res.code, 200);
-    Assert.assertEquals(new String(res.body), expected);
+    JSONObject wrapper = (JSONObject) JSONValue.parse(new String(res.body));
+    Assert.assertTrue(wrapper != null);
+    Assert.assertEquals(
+        new String(res.body),
+        "{\"data\":{\"attributes\":{\"status\":\"PASSED\"},\"id\":\"TODO\"}}");
   }
 
   @Test
