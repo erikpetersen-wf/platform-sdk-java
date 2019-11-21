@@ -4,7 +4,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +21,7 @@ public class PlatformCore {
   private Map<String, PlatformStatus> statusChecks;
 
   Set<String> allowedIPs;
+  DateTimeFormatter formatter;
 
   public static final String PATH_ALIVE = "/_wk/alive";
   public static final String PATH_READY = "/_wk/ready";
@@ -31,31 +35,33 @@ public class PlatformCore {
 
     String whitelist = System.getenv("NEW_RELIC_SYNTHETICS_IP_WHITELIST");
     allowedIPs = parseWhitelist(whitelist);
+    formatter =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneId.of("UTC"));
   }
 
   public void shutdown() {
     isAlive = false;
   }
 
-  public int alive() {
+  public PlatformResponse alive() {
     if (!isAlive) {
-      return 418; // I'm as useful as a teapot.
+      return new PlatformResponse(418); // I'm as useful as a teapot.
     }
     for (PlatformStatus check : aliveChecks.values()) {
       if (!check.isOK()) {
-        return 500;
+        return new PlatformResponse(500);
       }
     }
-    return 200;
+    return new PlatformResponse(200);
   }
 
-  public int ready() {
+  public PlatformResponse ready() {
     for (PlatformStatus check : readyChecks.values()) {
       if (!check.isOK()) {
-        return 500;
+        return new PlatformResponse(500);
       }
     }
-    return 200;
+    return new PlatformResponse(200);
   }
 
   public PlatformResponse status(String forwardedFor) {
@@ -79,11 +85,11 @@ public class PlatformCore {
     JSONObject attrs = new JSONObject();
     wrapper.put("data", data);
     attrs.put("status", status);
-    data.put("id", "TODO"); // TODO: generate ID: 2019-08-12T15:50:13-05:00
+    long ms = System.currentTimeMillis();
+    data.put("id", formatter.format(new Date(ms).toInstant()));
     data.put("attributes", attrs);
 
-    // TODO: verify against NEW_RELIC_SYNTHETICS_IP_WHITELIST
-    // TODO: add machine meta block (if meta is allowed)
+    // Add protected metadata if we are an allowed IP address
     if (!meta.isEmpty() && allowedIPs.contains(forwardedFor)) {
       data.put("meta", meta);
     }

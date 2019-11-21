@@ -8,4 +8,8 @@ public class PlatformResponse {
     this.code = code;
     this.body = body;
   }
+
+  PlatformResponse(int code) {
+    this(code, null);
+  }
 }

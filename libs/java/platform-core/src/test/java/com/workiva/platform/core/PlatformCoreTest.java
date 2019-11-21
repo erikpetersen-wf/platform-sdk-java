@@ -13,54 +13,48 @@ public class PlatformCoreTest {
   @Test
   public void TestReady() {
     PlatformCore platform = new PlatformCore();
-
-    int statusCode = platform.ready();
-    Assert.assertEquals(statusCode, 200);
+    Assert.assertEquals(platform.ready().code, 200);
   }
 
   @Test
   public void TestReadyCheckFail() throws Exception {
     PlatformCore platform = new PlatformCore();
     platform.register("don't care!", new PlatformStatus(false), PlatformCheckType.READY);
-    Assert.assertEquals(platform.ready(), 500);
+    Assert.assertEquals(platform.ready().code, 500);
   }
 
   @Test
   public void TestReadyCheckPass() throws Exception {
     PlatformCore platform = new PlatformCore();
     platform.register("don't care!", new PlatformStatus(true), PlatformCheckType.READY);
-    Assert.assertEquals(platform.ready(), 200);
+    Assert.assertEquals(platform.ready().code, 200);
   }
 
   @Test
   public void TestAlive() {
     PlatformCore platform = new PlatformCore();
-
-    int statusCode = platform.alive();
-    Assert.assertEquals(statusCode, 200);
+    Assert.assertEquals(platform.alive().code, 200);
   }
 
   @Test
   public void TestAliveCheckFail() throws Exception {
     PlatformCore platform = new PlatformCore();
     platform.register("don't care!", new PlatformStatus(false), PlatformCheckType.ALIVE);
-    Assert.assertEquals(platform.alive(), 500);
+    Assert.assertEquals(platform.alive().code, 500);
   }
 
   @Test
   public void TestAliveCheckPass() throws Exception {
     PlatformCore platform = new PlatformCore();
     platform.register("don't care!", new PlatformStatus(true), PlatformCheckType.ALIVE);
-    Assert.assertEquals(platform.alive(), 200);
+    Assert.assertEquals(platform.alive().code, 200);
   }
 
   @Test
   public void TestShutdownHook() {
     PlatformCore platform = new PlatformCore();
     platform.shutdown();
-
-    int statusCode = platform.alive();
-    Assert.assertEquals(statusCode, 418);
+    Assert.assertEquals(platform.alive().code, 418);
   }
 
   @Test
@@ -75,7 +69,7 @@ public class PlatformCoreTest {
 
     JSONObject data = (JSONObject) wrapper.get("data");
     Assert.assertTrue(data != null);
-    Assert.assertEquals(data.get("id"), "TODO");
+    Assert.assertTrue(data.get("id") instanceof String);
 
     JSONObject attrs = (JSONObject) data.get("attributes");
     Assert.assertEquals(attrs.get("status"), PlatformStatus.PASSED);
