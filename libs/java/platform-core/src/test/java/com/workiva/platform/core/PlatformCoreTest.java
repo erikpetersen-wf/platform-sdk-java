@@ -19,14 +19,14 @@ public class PlatformCoreTest {
   }
 
   @Test
-  public void TestReadyCheckFail() {
+  public void TestReadyCheckFail() throws Exception {
     PlatformCore platform = new PlatformCore();
     platform.register("don't care!", new PlatformStatus(false), PlatformCheckType.READY);
     Assert.assertEquals(platform.ready(), 500);
   }
 
   @Test
-  public void TestReadyCheckPass() {
+  public void TestReadyCheckPass() throws Exception {
     PlatformCore platform = new PlatformCore();
     platform.register("don't care!", new PlatformStatus(true), PlatformCheckType.READY);
     Assert.assertEquals(platform.ready(), 200);
@@ -41,14 +41,14 @@ public class PlatformCoreTest {
   }
 
   @Test
-  public void TestAliveCheckFail() {
+  public void TestAliveCheckFail() throws Exception {
     PlatformCore platform = new PlatformCore();
     platform.register("don't care!", new PlatformStatus(false), PlatformCheckType.ALIVE);
     Assert.assertEquals(platform.alive(), 500);
   }
 
   @Test
-  public void TestAliveCheckPass() {
+  public void TestAliveCheckPass() throws Exception {
     PlatformCore platform = new PlatformCore();
     platform.register("don't care!", new PlatformStatus(true), PlatformCheckType.ALIVE);
     Assert.assertEquals(platform.alive(), 200);

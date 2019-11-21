@@ -5,10 +5,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlatformCore {
 
@@ -29,9 +29,9 @@ public class PlatformCore {
 
   PlatformCore() {
     isAlive = true;
-    aliveChecks = new TreeMap<>();
-    readyChecks = new TreeMap<>();
-    statusChecks = new TreeMap<>();
+    aliveChecks = new ConcurrentHashMap<>();
+    readyChecks = new ConcurrentHashMap<>();
+    statusChecks = new ConcurrentHashMap<>();
 
     String whitelist = System.getenv("NEW_RELIC_SYNTHETICS_IP_WHITELIST");
     setAllowedIPs(parseWhitelist(whitelist));
@@ -99,24 +99,34 @@ public class PlatformCore {
     return status("0.0.0.0");
   }
 
-  public void register(String name, PlatformStatus status, PlatformCheckType type) {
+  public void register(String name, PlatformStatus status, PlatformCheckType type)
+      throws Exception {
     if (status == null) {
       return; // NOOP for null pointers
     }
     switch (type) {
       case ALIVE:
+        if (aliveChecks.containsKey(name)) {
+          throw new Exception("duplicate entry key");
+        }
         aliveChecks.put(name, status);
         break;
       case READY:
+        if (readyChecks.containsKey(name)) {
+          throw new Exception("duplicate entry key");
+        }
         readyChecks.put(name, status);
         break;
       default: // everything else is a status check
+        if (statusChecks.containsKey(name)) {
+          throw new Exception("duplicate entry key");
+        }
         statusChecks.put(name, status);
         break;
     }
   }
 
-  public void register(String name, PlatformStatus callback) {
+  public void register(String name, PlatformStatus callback) throws Exception {
     register(name, callback, PlatformCheckType.STATUS);
   }
 
@@ -125,7 +135,7 @@ public class PlatformCore {
   }
 
   static Set<String> parseWhitelist(String whitelist) {
-    Set<String> ips = new TreeSet<String>();
+    Set<String> ips = new HashSet<>();
     if (whitelist == null) {
       return ips;
     }
