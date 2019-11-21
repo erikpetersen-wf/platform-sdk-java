@@ -13,10 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlatformCore {
 
   private boolean isAlive;
-  private Set<String> allowedIPs;
   private Map<String, PlatformStatus> aliveChecks;
   private Map<String, PlatformStatus> readyChecks;
   private Map<String, PlatformStatus> statusChecks;
+
+  Set<String> allowedIPs;
 
   public static final String PATH_ALIVE = "/_wk/alive";
   public static final String PATH_READY = "/_wk/ready";
@@ -34,7 +35,7 @@ public class PlatformCore {
     statusChecks = new ConcurrentHashMap<>();
 
     String whitelist = System.getenv("NEW_RELIC_SYNTHETICS_IP_WHITELIST");
-    setAllowedIPs(parseWhitelist(whitelist));
+    allowedIPs = parseWhitelist(whitelist);
   }
 
   public void shutdown() {
@@ -128,10 +129,6 @@ public class PlatformCore {
 
   public void register(String name, PlatformStatus callback) throws Exception {
     register(name, callback, PlatformCheckType.STATUS);
-  }
-
-  void setAllowedIPs(Set<String> allowedIPs) {
-    this.allowedIPs = allowedIPs;
   }
 
   static Set<String> parseWhitelist(String whitelist) {
