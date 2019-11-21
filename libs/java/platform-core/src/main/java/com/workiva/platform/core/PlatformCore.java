@@ -23,11 +23,6 @@ public class PlatformCore {
   public static final String PATH_READY = "/_wk/ready";
   public static final String PATH_STATUS = "/_wk/status";
 
-  // old and deprecated
-  public static final String livenessPath = PATH_ALIVE;
-  public static final String readinessPath = PATH_READY;
-  public static final String statusPath = PATH_STATUS;
-
   public PlatformCore() {
     isAlive = true;
     aliveChecks = new ConcurrentHashMap<>();
