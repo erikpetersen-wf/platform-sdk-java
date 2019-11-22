@@ -4,10 +4,12 @@ public class PlatformStatus {
   public static final String FAILED = "FAILED";
   public static final String PASSED = "PASSED";
 
-  public String status;
+  private String status;
 
-  public PlatformStatus(String status) {
-    this.status = status;
+  // NOTE: failureReason is logged to our infrastructure.
+  // WARNING: DO NOT INCLUDE SENSITIVE DATA IN FAILURE_REASON!
+  public PlatformStatus(String failureReason) {
+    this.status = failureReason;
   }
 
   public PlatformStatus() {
@@ -26,19 +28,11 @@ public class PlatformStatus {
     return status == null || status.length() == 0;
   }
 
-  public void pass() {
-    status = null;
-  }
-
-  public void fail(String reason) {
-    if (reason == null || reason.length() == 0) {
-      status = FAILED;
+  public String toString() {
+    if (isOK()) {
+      return PASSED;
     } else {
-      status = reason;
+      return status;
     }
-  }
-
-  public void fail() {
-    fail(null);
   }
 }

@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,14 +20,30 @@ public class PlatformCoreTest {
   @Test
   public void TestReadyCheckFail() throws Exception {
     PlatformCore platform = new PlatformCore();
-    platform.register("don't care!", new PlatformStatus(false), PlatformCheckType.READY);
+    platform.register(
+        "don't care!",
+        new Callable<PlatformStatus>() {
+          @Override
+          public PlatformStatus call() throws Exception {
+            return new PlatformStatus(false);
+          }
+        },
+        PlatformCheckType.READY);
     Assert.assertEquals(platform.ready().code, 500);
   }
 
   @Test
   public void TestReadyCheckPass() throws Exception {
     PlatformCore platform = new PlatformCore();
-    platform.register("don't care!", new PlatformStatus(true), PlatformCheckType.READY);
+    platform.register(
+        "don't care!",
+        new Callable<PlatformStatus>() {
+          @Override
+          public PlatformStatus call() throws Exception {
+            return new PlatformStatus();
+          }
+        },
+        PlatformCheckType.READY);
     Assert.assertEquals(platform.ready().code, 200);
   }
 
@@ -39,14 +56,30 @@ public class PlatformCoreTest {
   @Test
   public void TestAliveCheckFail() throws Exception {
     PlatformCore platform = new PlatformCore();
-    platform.register("don't care!", new PlatformStatus(false), PlatformCheckType.ALIVE);
+    platform.register(
+        "don't care!",
+        new Callable<PlatformStatus>() {
+          @Override
+          public PlatformStatus call() throws Exception {
+            return new PlatformStatus(false);
+          }
+        },
+        PlatformCheckType.ALIVE);
     Assert.assertEquals(platform.alive().code, 500);
   }
 
   @Test
   public void TestAliveCheckPass() throws Exception {
     PlatformCore platform = new PlatformCore();
-    platform.register("don't care!", new PlatformStatus(true), PlatformCheckType.ALIVE);
+    platform.register(
+        "don't care!",
+        new Callable<PlatformStatus>() {
+          @Override
+          public PlatformStatus call() throws Exception {
+            return new PlatformStatus();
+          }
+        },
+        PlatformCheckType.ALIVE);
     Assert.assertEquals(platform.alive().code, 200);
   }
 

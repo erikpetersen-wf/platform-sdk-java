@@ -11,14 +11,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlatformCore {
 
   private boolean isAlive;
-  private Map<String, PlatformStatus> aliveChecks;
-  private Map<String, PlatformStatus> readyChecks;
-  private Map<String, PlatformStatus> statusChecks;
+  private Map<String, Callable<PlatformStatus>> aliveChecks;
+  private Map<String, Callable<PlatformStatus>> readyChecks;
+  private Map<String, Callable<PlatformStatus>> statusChecks;
 
   Set<String> allowedIPs;
   DateTimeFormatter formatter;
@@ -47,19 +48,27 @@ public class PlatformCore {
     if (!isAlive) {
       return new PlatformResponse(418); // I'm as useful as a teapot.
     }
-    for (PlatformStatus check : aliveChecks.values()) {
-      if (!check.isOK()) {
-        return new PlatformResponse(500);
+    try {
+      for (Callable<PlatformStatus> check : aliveChecks.values()) {
+        if (!check.call().isOK()) {
+          return new PlatformResponse(500);
+        }
       }
+    } catch (Exception e) {
+      return new PlatformResponse(500);
     }
     return new PlatformResponse(200);
   }
 
   public PlatformResponse ready() {
-    for (PlatformStatus check : readyChecks.values()) {
-      if (!check.isOK()) {
-        return new PlatformResponse(500);
+    try {
+      for (Callable<PlatformStatus> check : readyChecks.values()) {
+        if (!check.call().isOK()) {
+          return new PlatformResponse(500);
+        }
       }
+    } catch (Exception e) {
+      return new PlatformResponse(500);
     }
     return new PlatformResponse(200);
   }
@@ -67,14 +76,18 @@ public class PlatformCore {
   public PlatformResponse status(String forwardedFor) {
     JSONObject meta = new JSONObject();
     String status = PlatformStatus.PASSED;
-    for (Map.Entry<String, PlatformStatus> entry : statusChecks.entrySet()) {
+    for (Map.Entry<String, Callable<PlatformStatus>> entry : statusChecks.entrySet()) {
       String key = entry.getKey();
-      PlatformStatus value = entry.getValue();
-
-      if (value.isOK()) {
-        meta.put(key, PlatformStatus.PASSED);
-      } else {
-        meta.put(key, value.status);
+      try {
+        PlatformStatus value = entry.getValue().call();
+        if (value.isOK()) {
+          meta.put(key, PlatformStatus.PASSED);
+        } else {
+          meta.put(key, value.toString());
+          status = PlatformStatus.FAILED;
+        }
+      } catch (Exception e) {
+        meta.put(key, e.toString());
         status = PlatformStatus.FAILED;
       }
     }
@@ -101,34 +114,35 @@ public class PlatformCore {
     return status("0.0.0.0");
   }
 
-  public void register(String name, PlatformStatus status, PlatformCheckType type)
-      throws Exception {
+  public void register(String name, Callable<PlatformStatus> status, PlatformCheckType type)
+      throws IllegalStateException {
     if (status == null) {
       return; // NOOP for null pointers
     }
     switch (type) {
       case ALIVE:
         if (aliveChecks.containsKey(name)) {
-          throw new Exception("duplicate entry key");
+          throw new IllegalStateException("duplicate entry key");
         }
         aliveChecks.put(name, status);
         break;
       case READY:
         if (readyChecks.containsKey(name)) {
-          throw new Exception("duplicate entry key");
+          throw new IllegalStateException("duplicate entry key");
         }
         readyChecks.put(name, status);
         break;
       default: // everything else is a status check
         if (statusChecks.containsKey(name)) {
-          throw new Exception("duplicate entry key");
+          throw new IllegalStateException("duplicate entry key");
         }
         statusChecks.put(name, status);
         break;
     }
   }
 
-  public void register(String name, PlatformStatus callback) throws Exception {
+  public void register(String name, Callable<PlatformStatus> callback)
+      throws IllegalStateException {
     register(name, callback, PlatformCheckType.STATUS);
   }
 
