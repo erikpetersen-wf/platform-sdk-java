@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 
 public class PlatformCore {
 
-  private boolean isAlive;
+  private volatile boolean isAlive;
   private Map<String, Callable<PlatformStatus>> aliveChecks;
   private Map<String, Callable<PlatformStatus>> readyChecks;
   private Map<String, Callable<PlatformStatus>> statusChecks;
