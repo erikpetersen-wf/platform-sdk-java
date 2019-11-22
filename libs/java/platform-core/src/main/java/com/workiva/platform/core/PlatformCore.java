@@ -8,11 +8,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PlatformCore {
 
@@ -30,9 +30,9 @@ public class PlatformCore {
 
   public PlatformCore() {
     isAlive = true;
-    aliveChecks = new ConcurrentHashMap<>();
-    readyChecks = new ConcurrentHashMap<>();
-    statusChecks = new ConcurrentHashMap<>();
+    aliveChecks = new HashMap<>();
+    readyChecks = new HashMap<>();
+    statusChecks = new HashMap<>();
 
     String whitelist = System.getenv("NEW_RELIC_SYNTHETICS_IP_WHITELIST");
     allowedIPs = parseWhitelist(whitelist);
