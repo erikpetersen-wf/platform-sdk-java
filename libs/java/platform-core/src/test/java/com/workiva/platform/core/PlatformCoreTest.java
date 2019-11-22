@@ -18,7 +18,7 @@ public class PlatformCoreTest {
   }
 
   @Test
-  public void TestReadyCheckFail() throws Exception {
+  public void TestReadyCheckFail() {
     PlatformCore platform = new PlatformCore();
     platform.register(
         "don't care!",
@@ -33,7 +33,7 @@ public class PlatformCoreTest {
   }
 
   @Test
-  public void TestReadyCheckPass() throws Exception {
+  public void TestReadyCheckPass() {
     PlatformCore platform = new PlatformCore();
     platform.register(
         "don't care!",
@@ -54,7 +54,7 @@ public class PlatformCoreTest {
   }
 
   @Test
-  public void TestAliveCheckFail() throws Exception {
+  public void TestAliveCheckFail() {
     PlatformCore platform = new PlatformCore();
     platform.register(
         "don't care!",
@@ -69,7 +69,7 @@ public class PlatformCoreTest {
   }
 
   @Test
-  public void TestAliveCheckPass() throws Exception {
+  public void TestAliveCheckPass() {
     PlatformCore platform = new PlatformCore();
     platform.register(
         "don't care!",

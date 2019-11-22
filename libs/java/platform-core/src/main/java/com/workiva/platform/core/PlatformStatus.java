@@ -13,10 +13,10 @@ public class PlatformStatus {
   }
 
   public PlatformStatus() {
-    this.status = null;
+    this(null);
   }
 
-  public PlatformStatus(Boolean isOK) {
+  public PlatformStatus(boolean isOK) {
     if (isOK) {
       this.status = null;
     } else {
@@ -24,7 +24,7 @@ public class PlatformStatus {
     }
   }
 
-  public Boolean isOK() {
+  public boolean isOK() {
     return status == null || status.length() == 0;
   }
 

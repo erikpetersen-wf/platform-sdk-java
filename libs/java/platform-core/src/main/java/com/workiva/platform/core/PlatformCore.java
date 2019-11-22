@@ -21,8 +21,8 @@ public class PlatformCore {
   private Map<String, Callable<PlatformStatus>> readyChecks;
   private Map<String, Callable<PlatformStatus>> statusChecks;
 
-  Set<String> allowedIPs;
-  DateTimeFormatter formatter;
+  Set<String> allowedIPs; // potentially modified by unit tests
+  final DateTimeFormatter formatter;
 
   public static final String PATH_ALIVE = "/_wk/alive";
   public static final String PATH_READY = "/_wk/ready";
@@ -114,8 +114,7 @@ public class PlatformCore {
     return status("0.0.0.0");
   }
 
-  public void register(String name, Callable<PlatformStatus> status, PlatformCheckType type)
-      throws IllegalStateException {
+  public void register(String name, Callable<PlatformStatus> status, PlatformCheckType type) {
     if (status == null) {
       return; // NOOP for null pointers
     }
@@ -141,8 +140,7 @@ public class PlatformCore {
     }
   }
 
-  public void register(String name, Callable<PlatformStatus> callback)
-      throws IllegalStateException {
+  public void register(String name, Callable<PlatformStatus> callback) {
     register(name, callback, PlatformCheckType.STATUS);
   }
 
