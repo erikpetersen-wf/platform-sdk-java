@@ -107,7 +107,7 @@ public class PlatformCore {
       data.put("meta", meta);
     }
 
-    return new PlatformResponse(200, wrapper.toJSONString().getBytes());
+    return new PlatformResponse(200, wrapper.toJSONString());
   }
 
   public PlatformResponse status() {

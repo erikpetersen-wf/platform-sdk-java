@@ -14,7 +14,7 @@ public class PlatformCoreTest {
   @Test
   public void TestReady() {
     PlatformCore platform = new PlatformCore();
-    Assert.assertEquals(platform.ready().code, 200);
+    Assert.assertEquals(platform.ready().getCode(), 200);
   }
 
   @Test
@@ -29,7 +29,7 @@ public class PlatformCoreTest {
           }
         },
         PlatformCheckType.READY);
-    Assert.assertEquals(platform.ready().code, 500);
+    Assert.assertEquals(platform.ready().getCode(), 500);
   }
 
   @Test
@@ -44,13 +44,13 @@ public class PlatformCoreTest {
           }
         },
         PlatformCheckType.READY);
-    Assert.assertEquals(platform.ready().code, 200);
+    Assert.assertEquals(platform.ready().getCode(), 200);
   }
 
   @Test
   public void TestAlive() {
     PlatformCore platform = new PlatformCore();
-    Assert.assertEquals(platform.alive().code, 200);
+    Assert.assertEquals(platform.alive().getCode(), 200);
   }
 
   @Test
@@ -65,7 +65,7 @@ public class PlatformCoreTest {
           }
         },
         PlatformCheckType.ALIVE);
-    Assert.assertEquals(platform.alive().code, 500);
+    Assert.assertEquals(platform.alive().getCode(), 500);
   }
 
   @Test
@@ -80,23 +80,23 @@ public class PlatformCoreTest {
           }
         },
         PlatformCheckType.ALIVE);
-    Assert.assertEquals(platform.alive().code, 200);
+    Assert.assertEquals(platform.alive().getCode(), 200);
   }
 
   @Test
   public void TestShutdownHook() {
     PlatformCore platform = new PlatformCore();
     platform.shutdown();
-    Assert.assertEquals(platform.alive().code, 418);
+    Assert.assertEquals(platform.alive().getCode(), 418);
   }
 
   @Test
   public void TestStatus() {
     PlatformCore platform = new PlatformCore();
     PlatformResponse res = platform.status();
-    Assert.assertEquals(res.code, 200);
+    Assert.assertEquals(res.getCode(), 200);
 
-    JSONObject wrapper = (JSONObject) JSONValue.parse(new String(res.body));
+    JSONObject wrapper = (JSONObject) JSONValue.parse(res.getBody());
     Assert.assertTrue(wrapper != null);
     Assert.assertTrue(wrapper.get("meta") == null);
 
