@@ -8,9 +8,7 @@ help: ## Show this message!
 	@echo 'Targets:'
 	@egrep '^.+\:.*\ ##\ .+' Makefile | sed 's/:.*##/:/' | column -t -c 2 -s ':' | sort | sed 's/^/  /'
 
-init: init-py ## Initialize environment
-
-check: check-py check-go ## Run all unit tests
+check: check-go ## Run all unit tests
 
 check-full: check env-notify ## Run all tests (unit + integration)
 	docker build \
@@ -37,25 +35,6 @@ clean:
 	rm -rf test/__pycache__/installed
 	go clean -cache -modcache
 
-# ------------------------- Python -------------------------
-
-.PHONY: init-py check-py
-
-init-py: test/__pycache__/installed ## Initialize Python environment
-
-# use a marker file to denote if it's been run before
-# NOTE: this is how Makefiles are supposed to run, not be script runners
-test/__pycache__/installed: requirements_dev.txt requirements.txt
-	pip install -Ur requirements_dev.txt
-	mkdir -p test/__pycache__
-	touch test/__pycache__/installed
-
-check-py: init-py ## Run Python unit tests
-	yapf --recursive --parallel --diff package test
-	flake8 package test
-	# pydocstyle
-	# mypy package
-	py.test -s -v test
 
 # ------------------------- Go -------------------------
 
