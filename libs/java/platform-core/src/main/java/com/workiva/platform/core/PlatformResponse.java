@@ -10,7 +10,7 @@ public class PlatformResponse {
   }
 
   public PlatformResponse(int code) {
-    this(code, null);
+    this(code, "");
   }
 
   public int getCode() {
