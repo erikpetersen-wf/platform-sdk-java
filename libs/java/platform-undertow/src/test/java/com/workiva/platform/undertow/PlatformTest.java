@@ -50,4 +50,13 @@ public class PlatformTest {
     int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
     Assert.assertEquals(statusCode, HttpStatus.SC_OK);
   }
+
+  @Test
+  public void TestCustomPort() {
+    Platform platform = new Platform(8889).start();
+    HttpResponse httpFrugalResp = makeHttpRequest(platform, "http://localhost:8889/_wk/status");
+
+    int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
+    Assert.assertEquals(statusCode, HttpStatus.SC_OK);
+  }
 }
