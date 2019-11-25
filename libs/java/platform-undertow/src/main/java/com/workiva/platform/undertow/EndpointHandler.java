@@ -18,7 +18,7 @@ public class EndpointHandler implements HttpHandler {
   @Override
   public void handleRequest(HttpServerExchange exchange) throws Exception {
     exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-    
+
     PlatformResponse result = (PlatformResponse) callable.call();
 
     exchange.setStatusCode(result.getCode());
