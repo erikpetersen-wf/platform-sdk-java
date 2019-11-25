@@ -18,7 +18,7 @@ Below, is a list of various components necessary to build software at Workiva.
   * [Builder](#builder)
   * Language SDKs
     * [Go](platform.go) (TODO: link to the developer docs)
-    * [Java](lib/src/java) ([documentation](#java))
+    * [Java](libs/java) ([documentation](#java))
     * Dart (TODO)
     * Python (TODO)
   * Security Guidelines (TODO)
