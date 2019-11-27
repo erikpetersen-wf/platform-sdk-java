@@ -9,6 +9,11 @@ public class Platform extends PlatformCore {
 
   private static ServletContextHandler servletContext;
 
+  /**
+   * Takes a servlet context handler and registers the readiness, liveness, and status endpoints.
+   *
+   * @param servletContext Context from the Jetty server.
+   */
   public void registerEndpoints(ServletContextHandler servletContext) {
     Platform.servletContext = servletContext;
 
