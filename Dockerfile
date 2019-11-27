@@ -22,24 +22,15 @@ WORKDIR /build/libs/java
 RUN mvn -B clean install
 
 RUN mkdir -p /artifacts/java && \
-    mv platform/target/platform-*.jar \
+    mv target/platform-*.jar \
+    platform/target/platform-*.jar \
     platform-jetty/target/platform-jetty-*.jar \
     platform-core/target/platform-core-*.jar \
-    platform-servlet/target/platform-servlet-*.jar \
+    platform-undertow/target/platform-undertow-*.jar \
     /artifacts/java
 
 # Publish Artifacts
 ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
-
-#! STAGE - Platform Python Tests - Python 3 - Verify the Python code
-# TODO: move to skynet ;)
-FROM python:3.7-alpine
-RUN apk update && apk upgrade && apk add make
-ADD requirements.txt requirements_dev.txt /
-RUN pip install -r requirements_dev.txt
-ADD package Makefile /
-ADD test/ /test/
-RUN make check-py
 
 
 #! STAGE - Platform Builder - Python 3 - Help customers package their application
@@ -57,17 +48,17 @@ RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-am
     rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64 && \
     helm init --client-only
 
-# Add Python dependencies (layer caching!)
-ADD requirements.txt .
-RUN pip install -r requirements.txt && rm requirements.txt
+# Add wk tool (with requirements based layer caching!)
+COPY tools/wk/ /root/wk/
+RUN pip install /root/wk/
 
-# Add the actual package script!
-ADD package /usr/local/bin
+# Add package (backwards compatibility for folks directly referencing `package`)
+ADD tools/package /usr/local/bin
 
 # steps for consuming builds to use
 ONBUILD ADD helm /build/helm/
 ONBUILD ADD Dockerfile /build/
-ONBUILD RUN package
+ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
 # # USAGE
