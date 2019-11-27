@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public class HealthCheck extends HttpServlet {
 
-  private static Callable callable;
+  private Callable callable;
 
   public HealthCheck(Callable c) {
-    HealthCheck.callable = c;
+    this.callable = c;
   }
 
   @Override
