@@ -1,6 +1,5 @@
 package com.workiva.platform.servlet;
 
-import com.workiva.platform.core.PlatformStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -42,15 +41,10 @@ public class PlatformTest {
             ServletContextHandler.NO_SESSIONS | ServletContextHandler.NO_SECURITY);
     server.setHandler(servletContextHandler);
     Platform platform = new Platform();
-    platform.register("db", this::myDbHealthCheck);
     platform.registerEndpoints(servletContextHandler);
 
     // Start Server
     server.start();
-  }
-
-  private PlatformStatus myDbHealthCheck() {
-    return new PlatformStatus("DB down.");
   }
 
   @After
