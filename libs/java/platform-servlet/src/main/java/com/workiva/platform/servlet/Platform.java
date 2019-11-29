@@ -7,6 +7,7 @@ import com.workiva.platform.core.PlatformCore;
 
 public class Platform extends PlatformCore {
 
+  static final String PATH_PREFIX = "/_wk";
   /**
    * Takes a servlet context handler and registers the readiness, liveness, and status endpoints.
    *
