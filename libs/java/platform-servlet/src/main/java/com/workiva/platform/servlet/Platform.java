@@ -19,5 +19,14 @@ public class Platform extends PlatformCore {
         new ServletHolder(new HealthCheck(this::alive)), PlatformCore.PATH_ALIVE);
     servletContext.addServlet(
         new ServletHolder(new HealthCheck(this::status)), PlatformCore.PATH_STATUS);
+  /**
+   * Creates a servlet context and registers health check endpoints.
+   *
+   * @return Servlet context handler with healthcheck servlets.
+   */
+  public ServletContextHandler registerEndpoints() {
+    ServletContextHandler servletContext = new ServletContextHandler(null, PATH_PREFIX);
+    this.registerEndpoints(servletContext);
+    return servletContext;
   }
 }
