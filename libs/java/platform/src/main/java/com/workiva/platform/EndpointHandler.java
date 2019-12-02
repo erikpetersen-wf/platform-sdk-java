@@ -9,11 +9,11 @@ import io.undertow.util.StatusCodes;
 import java.util.concurrent.Callable;
 
 public class EndpointHandler implements HttpHandler {
-  Callable callable;
+  Callable<HealthStatus> callable;
 
   private EndpointHandler() {}
 
-  EndpointHandler(Callable c) {
+  EndpointHandler(Callable<HealthStatus> c) {
     this.callable = c;
   }
 
@@ -24,7 +24,7 @@ public class EndpointHandler implements HttpHandler {
     Gson gson = new Gson();
     HealthStatus result = null;
     try {
-      result = (HealthStatus) callable.call();
+      result = callable.call();
     } catch (Exception e) {
       result = new HealthStatus(false);
       result.notOk(e.getMessage());
