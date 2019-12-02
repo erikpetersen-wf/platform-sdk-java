@@ -16,5 +16,8 @@ public class SpringHealthCheck {
 
     @RequestMapping(value = Platform.livenessPath, method = RequestMethod.GET)
     public void getLiveness() {}
+
+    @RequestMapping(value = Platform.statusPath, method = RequestMethod.GET)
+    public void getStatus() {}
   }
 }
