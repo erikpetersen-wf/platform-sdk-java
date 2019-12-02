@@ -12,7 +12,7 @@
         <module>platform-jetty</module>
         <module>platform-core</module>
         <module>platform-undertow</module>
-        <module>platform-servlet</module>
+        <module>platform-jetty-servlet</module>
     </modules>
 
     <properties>

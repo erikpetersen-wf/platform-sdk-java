@@ -1,4 +1,4 @@
-package com.workiva.platform.servlet;
+package com.workiva.platform.jetty.servlet;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -36,12 +36,8 @@ public class PlatformTest {
   public void startJetty() throws Exception {
     // Create Server
     server = new Server(8080);
-    ServletContextHandler servletContextHandler =
-        new ServletContextHandler(
-            ServletContextHandler.NO_SESSIONS | ServletContextHandler.NO_SECURITY);
+    ServletContextHandler servletContextHandler = new Platform().registerEndpoints();
     server.setHandler(servletContextHandler);
-    Platform platform = new Platform();
-    platform.registerEndpoints(servletContextHandler);
 
     // Start Server
     server.start();

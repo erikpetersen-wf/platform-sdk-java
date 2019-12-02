@@ -8,7 +8,7 @@
     </parent>
 
     <groupId>com.workiva.platform</groupId>
-    <artifactId>platform-servlet</artifactId>
+    <artifactId>platform-jetty-servlet</artifactId>
     <version>0.0.37</version>
     <packaging>jar</packaging>
 
