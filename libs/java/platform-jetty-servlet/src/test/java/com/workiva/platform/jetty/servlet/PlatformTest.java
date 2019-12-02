@@ -1,4 +1,4 @@
-package com.workiva.platform.servlet;
+package com.workiva.platform.jetty.servlet;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

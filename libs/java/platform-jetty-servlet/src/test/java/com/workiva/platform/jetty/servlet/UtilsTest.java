@@ -1,4 +1,4 @@
-package com.workiva.platform.servlet;
+package com.workiva.platform.jetty.servlet;
 
 import org.junit.Assert;
 import org.junit.Test;

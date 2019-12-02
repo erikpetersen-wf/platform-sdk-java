@@ -1,4 +1,4 @@
-package com.workiva.platform.servlet;
+package com.workiva.platform.jetty.servlet;
 
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;

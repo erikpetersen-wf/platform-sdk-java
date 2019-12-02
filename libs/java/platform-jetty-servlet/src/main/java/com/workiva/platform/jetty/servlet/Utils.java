@@ -1,11 +1,11 @@
-package com.workiva.platform.servlet;
+package com.workiva.platform.jetty.servlet;
 
 import com.workiva.platform.core.PlatformCore;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.workiva.platform.servlet.Platform.PATH_PREFIX;
+import static com.workiva.platform.jetty.servlet.Platform.PATH_PREFIX;
 
 class Utils {
 
