@@ -20,6 +20,8 @@ public class Platform implements AutoCloseable {
 
   public static final String livenessPath = "/_wk/alive";
 
+  public static final String statusPath = "/_wk/status";
+
   @Override
   public void close() {
     this.httpServer.stop();
@@ -39,9 +41,9 @@ public class Platform implements AutoCloseable {
   public static class Builder {
 
     private int port = 8888;
-    private Callable readinessFunction = Platform::defaultCheck;
+    private Callable<HealthStatus> readinessFunction = Platform::defaultCheck;
     private String readinessPath = Platform.readinessPath;
-    private Callable livenessFunction = Platform::defaultCheck;
+    private Callable<HealthStatus> livenessFunction = Platform::defaultCheck;
     private String livenessPath = Platform.livenessPath;
 
     Builder() {}
@@ -51,7 +53,7 @@ public class Platform implements AutoCloseable {
       return this;
     }
 
-    public Builder function(Callable function) {
+    public Builder function(Callable<HealthStatus> function) {
       this.readinessFunction = function;
       this.livenessFunction = function;
       return this;
@@ -68,7 +70,7 @@ public class Platform implements AutoCloseable {
       return this;
     }
 
-    public Builder readinessFunction(Callable function) {
+    public Builder readinessFunction(Callable<HealthStatus> function) {
       this.readinessFunction = function;
       return this;
     }
@@ -78,7 +80,7 @@ public class Platform implements AutoCloseable {
       return this;
     }
 
-    public Builder livenessFunction(Callable function) {
+    public Builder livenessFunction(Callable<HealthStatus> function) {
       this.livenessFunction = function;
       return this;
     }
