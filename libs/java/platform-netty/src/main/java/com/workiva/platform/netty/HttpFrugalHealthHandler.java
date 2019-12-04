@@ -1,4 +1,4 @@
-package com.workiva.platform;
+package com.workiva.platform.netty;
 
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -8,6 +8,8 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+
+import com.workiva.platform.core.PlatformCore;
 
 /** Intercepts an HTTP request when the path is equal to `Platform.healthPath` and returns a 200. */
 public class HttpFrugalHealthHandler extends ChannelInboundHandlerAdapter {
@@ -22,9 +24,9 @@ public class HttpFrugalHealthHandler extends ChannelInboundHandlerAdapter {
     // TODO - this flow can probably be cleaned up a fair bit
     if (msg instanceof FullHttpRequest) {
       FullHttpRequest request = (FullHttpRequest) msg;
-      if (!request.uri().equalsIgnoreCase(Platform.readinessPath)
-          && !request.uri().equalsIgnoreCase(Platform.livenessPath)
-          && !request.uri().equalsIgnoreCase(Platform.statusPath)) {
+      if (!request.uri().equalsIgnoreCase(PlatformCore.PATH_READY)
+          && !request.uri().equalsIgnoreCase(PlatformCore.PATH_ALIVE)
+          && !request.uri().equalsIgnoreCase(PlatformCore.PATH_STATUS)) {
         ctx.fireChannelRead(msg);
       } else {
         FullHttpResponse response =

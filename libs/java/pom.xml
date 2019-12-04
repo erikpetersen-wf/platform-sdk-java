@@ -13,6 +13,8 @@
         <module>platform-core</module>
         <module>platform-undertow</module>
         <module>platform-jetty-servlet</module>
+        <module>platform-netty</module>
+        <module>platform-spring</module>
     </modules>
 
     <properties>
