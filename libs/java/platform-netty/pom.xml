@@ -14,20 +14,17 @@
 
     <name>Platform Netty</name>
 
-
     <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
 
         <!-- Pin Versions -->
         <dependency>
             <groupId>com.workiva.platform</groupId>
             <artifactId>platform-core</artifactId>
             <version>0.0.40</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.42.Final</version>
         </dependency>
 
         <dependency>

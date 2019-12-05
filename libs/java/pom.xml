@@ -30,6 +30,7 @@
         <workiva.platform.javax-inject>1</workiva.platform.javax-inject>
         <workiva.platform.servlet-api>4.0.1</workiva.platform.servlet-api>
         <workiva.platform.jetty>9.4.8.v20171121</workiva.platform.jetty>
+        <workiva.platform.netty>4.1.42.Final</workiva.platform.netty>
     </properties>
 
     <dependencyManagement>
@@ -70,6 +71,13 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
                 <version>${workiva.platform.jetty}</version>
+            </dependency>
+
+            <!-- platform-netty -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${workiva.platform.netty}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
