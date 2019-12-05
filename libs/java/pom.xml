@@ -13,6 +13,8 @@
         <module>platform-core</module>
         <module>platform-undertow</module>
         <module>platform-jetty-servlet</module>
+        <module>platform-netty</module>
+        <module>platform-spring</module>
     </modules>
 
     <properties>
@@ -28,6 +30,8 @@
         <workiva.platform.javax-inject>1</workiva.platform.javax-inject>
         <workiva.platform.servlet-api>4.0.1</workiva.platform.servlet-api>
         <workiva.platform.jetty>9.4.8.v20171121</workiva.platform.jetty>
+        <workiva.platform.netty>4.1.42.Final</workiva.platform.netty>
+        <workiva.platform.spring>5.1.9.RELEASE</workiva.platform.spring>
     </properties>
 
     <dependencyManagement>
@@ -63,12 +67,32 @@
                 <version>${workiva.platform.javax-inject}</version>
             </dependency>
 
-            <!-- platform-servlet -->
+            <!-- platform-jetty-servlet -->
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
                 <version>${workiva.platform.jetty}</version>
             </dependency>
+
+            <!-- platform-netty -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${workiva.platform.netty}</version>
+            </dependency>
+
+            <!-- platform-spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${workiva.platform.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${workiva.platform.spring}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

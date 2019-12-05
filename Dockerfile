@@ -28,6 +28,8 @@ RUN mkdir -p /artifacts/java && \
     platform-core/target/platform-core-*.jar \
     platform-undertow/target/platform-undertow-*.jar \
     platform-jetty-servlet/target/platform-jetty-servlet-*.jar \
+    platform-netty/target/platform-netty-*.jar \
+    platform-spring/target/platform-spring-*.jar \
     /artifacts/java
 
 # Publish Artifacts
