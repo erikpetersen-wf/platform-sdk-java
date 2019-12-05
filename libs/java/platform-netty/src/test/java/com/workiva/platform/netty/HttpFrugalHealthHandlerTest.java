@@ -1,9 +1,11 @@
 package com.workiva.platform.netty;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
 import com.workiva.platform.core.PlatformCore;
 
+import com.workiva.platform.core.PlatformStatus;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -51,6 +53,7 @@ public class HttpFrugalHealthHandlerTest {
 
   @BeforeClass
   public static void setup() {
+    Platform platform = new Platform();
     EventLoopGroup bossGroup = new NioEventLoopGroup();
     EventLoopGroup workerGroup = new NioEventLoopGroup();
     try {
@@ -64,7 +67,7 @@ public class HttpFrugalHealthHandlerTest {
                   // codec+aggregator needed to make a FullHttpRequest.
                   ch.pipeline().addLast("codec", new HttpServerCodec());
                   ch.pipeline().addLast("aggregator", new HttpObjectAggregator(512 * 1024 * 10));
-                  ch.pipeline().addLast(new HttpFrugalHealthHandler());
+                  ch.pipeline().addLast(platform.getHandler());
                 }
               });
 

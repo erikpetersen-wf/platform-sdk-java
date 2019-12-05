@@ -1,6 +1,8 @@
 package com.workiva.platform.netty;
 
+import com.workiva.platform.core.PlatformResponse;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -11,8 +13,21 @@ import io.netty.handler.codec.http.HttpVersion;
 
 import com.workiva.platform.core.PlatformCore;
 
+import java.util.concurrent.Callable;
+
 /** Intercepts an HTTP request when the path is equal to health paths and returns a 200. */
+@ChannelHandler.Sharable
 public class HttpFrugalHealthHandler extends ChannelInboundHandlerAdapter {
+
+  private Callable ready;
+  private Callable alive;
+  private Callable status;
+
+  HttpFrugalHealthHandler(Callable ready, Callable alive, Callable status) {
+    this.ready = ready;
+    this.alive = alive;
+    this.status = status;
+  }
 
   @Override
   public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -20,17 +35,24 @@ public class HttpFrugalHealthHandler extends ChannelInboundHandlerAdapter {
   }
 
   @Override
-  public void channelRead(ChannelHandlerContext ctx, Object msg) {
-    // TODO - this flow can probably be cleaned up a fair bit
+  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
     if (msg instanceof FullHttpRequest) {
       FullHttpRequest request = (FullHttpRequest) msg;
-      if (!request.uri().equalsIgnoreCase(PlatformCore.PATH_READY)
-          && !request.uri().equalsIgnoreCase(PlatformCore.PATH_ALIVE)
-          && !request.uri().equalsIgnoreCase(PlatformCore.PATH_STATUS)) {
-        ctx.fireChannelRead(msg);
+      PlatformResponse result = null;
+      if (request.uri().equalsIgnoreCase(PlatformCore.PATH_READY)) {
+        result = (PlatformResponse) ready.call();
+      } else if (request.uri().equalsIgnoreCase(PlatformCore.PATH_ALIVE)) {
+        result = (PlatformResponse) alive.call();
+      } else if (request.uri().equalsIgnoreCase(PlatformCore.PATH_STATUS)) {
+        result = (PlatformResponse) status.call();
       } else {
+        ctx.fireChannelRead(msg);
+      }
+
+      if (result != null) {
         FullHttpResponse response =
-            new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+            new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1, new HttpResponseStatus(result.getCode(), result.getBody()));
         ctx.write(response).addListener(ChannelFutureListener.CLOSE);
         request.release();
       }
