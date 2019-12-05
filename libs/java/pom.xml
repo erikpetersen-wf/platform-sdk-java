@@ -31,6 +31,7 @@
         <workiva.platform.servlet-api>4.0.1</workiva.platform.servlet-api>
         <workiva.platform.jetty>9.4.8.v20171121</workiva.platform.jetty>
         <workiva.platform.netty>4.1.42.Final</workiva.platform.netty>
+        <workiva.platform.spring>5.1.9.RELEASE</workiva.platform.spring>
     </properties>
 
     <dependencyManagement>
@@ -79,6 +80,19 @@
                 <artifactId>netty-all</artifactId>
                 <version>${workiva.platform.netty}</version>
             </dependency>
+
+            <!-- platform-spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${workiva.platform.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${workiva.platform.spring}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
