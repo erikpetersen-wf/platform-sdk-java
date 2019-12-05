@@ -1,6 +1,5 @@
 package com.workiva.platform.netty;
 
-import com.workiva.platform.core.PlatformResponse;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,6 +11,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 
 import com.workiva.platform.core.PlatformCore;
+import com.workiva.platform.core.PlatformResponse;
 
 import java.util.concurrent.Callable;
 
