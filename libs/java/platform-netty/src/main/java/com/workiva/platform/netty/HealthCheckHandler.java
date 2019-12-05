@@ -17,13 +17,13 @@ import java.util.concurrent.Callable;
 
 /** Intercepts an HTTP request when the path is equal to health paths and returns a 200. */
 @ChannelHandler.Sharable
-public class HttpFrugalHealthHandler extends ChannelInboundHandlerAdapter {
+public class HealthCheckHandler extends ChannelInboundHandlerAdapter {
 
   private Callable ready;
   private Callable alive;
   private Callable status;
 
-  HttpFrugalHealthHandler(Callable ready, Callable alive, Callable status) {
+  HealthCheckHandler(Callable ready, Callable alive, Callable status) {
     this.ready = ready;
     this.alive = alive;
     this.status = status;

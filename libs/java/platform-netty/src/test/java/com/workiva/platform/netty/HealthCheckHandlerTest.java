@@ -1,11 +1,9 @@
 package com.workiva.platform.netty;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 import com.workiva.platform.core.PlatformCore;
 
-import com.workiva.platform.core.PlatformStatus;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -24,11 +22,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class HttpFrugalHealthHandlerTest {
+public class HealthCheckHandlerTest {
 
-  static final int frugalPort = 8000;
+  private static final int frugalPort = 8000;
 
-  final CloseableHttpClient httpClient = HttpClients.createDefault();
+  private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
   private HttpResponse makeHttpRequest(String path) {
     HttpResponse httpFrugalResp = null;
@@ -63,7 +61,7 @@ public class HttpFrugalHealthHandlerTest {
           .childHandler(
               new ChannelInitializer<SocketChannel>() {
                 @Override
-                public void initChannel(SocketChannel ch) throws Exception {
+                public void initChannel(SocketChannel ch) {
                   // codec+aggregator needed to make a FullHttpRequest.
                   ch.pipeline().addLast("codec", new HttpServerCodec());
                   ch.pipeline().addLast("aggregator", new HttpObjectAggregator(512 * 1024 * 10));
