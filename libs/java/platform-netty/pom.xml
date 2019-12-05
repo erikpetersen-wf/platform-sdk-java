@@ -14,18 +14,6 @@
 
     <name>Platform Netty</name>
 
-    <repositories>
-        <repository>
-            <id>workiva-release</id>
-            <name>workiva-release</name>
-            <url>https://workivaeast.jfrog.io/workivaeast/maven-prod</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencies>
 
