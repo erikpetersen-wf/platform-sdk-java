@@ -11,7 +11,7 @@ import io.netty.handler.codec.http.HttpVersion;
 
 import com.workiva.platform.core.PlatformCore;
 
-/** Intercepts an HTTP request when the path is equal to `Platform.healthPath` and returns a 200. */
+/** Intercepts an HTTP request when the path is equal to health paths and returns a 200. */
 public class HttpFrugalHealthHandler extends ChannelInboundHandlerAdapter {
 
   @Override
