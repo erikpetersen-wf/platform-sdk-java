@@ -19,9 +19,9 @@ import java.util.concurrent.Callable;
 @ChannelHandler.Sharable
 public class HealthCheckHandler extends ChannelInboundHandlerAdapter {
 
-  private Callable ready;
-  private Callable alive;
-  private Callable status;
+  private Callable<PlatformResponse> ready;
+  private Callable<PlatformResponse> alive;
+  private Callable<PlatformResponse> status;
 
   HealthCheckHandler(Callable ready, Callable alive, Callable status) {
     this.ready = ready;
@@ -39,14 +39,18 @@ public class HealthCheckHandler extends ChannelInboundHandlerAdapter {
     if (msg instanceof FullHttpRequest) {
       FullHttpRequest request = (FullHttpRequest) msg;
       PlatformResponse result = null;
-      if (request.uri().equalsIgnoreCase(PlatformCore.PATH_READY)) {
-        result = (PlatformResponse) ready.call();
-      } else if (request.uri().equalsIgnoreCase(PlatformCore.PATH_ALIVE)) {
-        result = (PlatformResponse) alive.call();
-      } else if (request.uri().equalsIgnoreCase(PlatformCore.PATH_STATUS)) {
-        result = (PlatformResponse) status.call();
-      } else {
-        ctx.fireChannelRead(msg);
+      switch (request.uri()) {
+        case PlatformCore.PATH_READY:
+          result = ready.call();
+          break;
+        case PlatformCore.PATH_ALIVE:
+          result = alive.call();
+          break;
+        case PlatformCore.PATH_STATUS:
+          result = status.call();
+          break;
+        default:
+          ctx.fireChannelRead(msg);
       }
 
       if (result != null) {
