@@ -22,11 +22,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class HttpFrugalHealthHandlerTest {
+public class HealthCheckHandlerTest {
 
-  static final int frugalPort = 8000;
+  private static final int frugalPort = 8000;
 
-  final CloseableHttpClient httpClient = HttpClients.createDefault();
+  private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
   private HttpResponse makeHttpRequest(String path) {
     HttpResponse httpFrugalResp = null;
@@ -51,6 +51,7 @@ public class HttpFrugalHealthHandlerTest {
 
   @BeforeClass
   public static void setup() {
+    Platform platform = new Platform();
     EventLoopGroup bossGroup = new NioEventLoopGroup();
     EventLoopGroup workerGroup = new NioEventLoopGroup();
     try {
@@ -60,11 +61,11 @@ public class HttpFrugalHealthHandlerTest {
           .childHandler(
               new ChannelInitializer<SocketChannel>() {
                 @Override
-                public void initChannel(SocketChannel ch) throws Exception {
+                public void initChannel(SocketChannel ch) {
                   // codec+aggregator needed to make a FullHttpRequest.
                   ch.pipeline().addLast("codec", new HttpServerCodec());
                   ch.pipeline().addLast("aggregator", new HttpObjectAggregator(512 * 1024 * 10));
-                  ch.pipeline().addLast(new HttpFrugalHealthHandler());
+                  ch.pipeline().addLast(platform.getHandler());
                 }
               });
 
@@ -102,7 +103,7 @@ public class HttpFrugalHealthHandlerTest {
   }
 
   @Test
-  public void TestFrugalReadiness() {
+  public void TestReadiness() {
     HttpResponse httpFrugalResp = makeHttpRequest("http://localhost:8000/_wk/ready");
 
     int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
@@ -113,7 +114,7 @@ public class HttpFrugalHealthHandlerTest {
   }
 
   @Test
-  public void TestFrugalLiveness() {
+  public void TestLiveness() {
     HttpResponse httpFrugalResp = makeHttpRequest("http://localhost:8000/_wk/alive");
 
     int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
@@ -124,7 +125,7 @@ public class HttpFrugalHealthHandlerTest {
   }
 
   @Test
-  public void TestFrugalStatus() {
+  public void TestStatus() {
     HttpResponse httpFrugalResp = makeHttpRequest("http://localhost:8000/_wk/status");
 
     int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
