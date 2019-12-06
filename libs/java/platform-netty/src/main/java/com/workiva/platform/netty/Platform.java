@@ -6,7 +6,7 @@ public class Platform extends PlatformCore {
 
   HealthCheckHandler healthHandler;
 
-  HealthCheckHandler getHandler() {
+  public HealthCheckHandler getHandler() {
     return this.healthHandler = new HealthCheckHandler(this::ready, this::alive, this::status);
   }
 }
