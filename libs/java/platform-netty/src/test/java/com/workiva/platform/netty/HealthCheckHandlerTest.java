@@ -103,7 +103,7 @@ public class HealthCheckHandlerTest {
   }
 
   @Test
-  public void TestFrugalReadiness() {
+  public void TestReadiness() {
     HttpResponse httpFrugalResp = makeHttpRequest("http://localhost:8000/_wk/ready");
 
     int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
@@ -114,7 +114,7 @@ public class HealthCheckHandlerTest {
   }
 
   @Test
-  public void TestFrugalLiveness() {
+  public void TestLiveness() {
     HttpResponse httpFrugalResp = makeHttpRequest("http://localhost:8000/_wk/alive");
 
     int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
@@ -125,7 +125,7 @@ public class HealthCheckHandlerTest {
   }
 
   @Test
-  public void TestFrugalStatus() {
+  public void TestStatus() {
     HttpResponse httpFrugalResp = makeHttpRequest("http://localhost:8000/_wk/status");
 
     int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
