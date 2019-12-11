@@ -9,7 +9,6 @@
 
     <modules>
         <module>platform</module>
-        <module>platform-jetty</module>
         <module>platform-core</module>
         <module>platform-undertow</module>
         <module>platform-jetty-servlet</module>
