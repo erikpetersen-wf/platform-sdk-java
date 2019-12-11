@@ -24,7 +24,6 @@ RUN mvn -B clean install
 RUN mkdir -p /artifacts/java && \
     mv target/platform-*.jar \
     platform/target/platform-*.jar \
-    platform-jetty/target/platform-jetty-*.jar \
     platform-core/target/platform-core-*.jar \
     platform-undertow/target/platform-undertow-*.jar \
     platform-jetty-servlet/target/platform-jetty-servlet-*.jar \
