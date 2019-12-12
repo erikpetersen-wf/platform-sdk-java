@@ -8,7 +8,6 @@
     <name>Platform Parent Project</name>
 
     <modules>
-        <module>platform</module>
         <module>platform-core</module>
         <module>platform-undertow</module>
         <module>platform-jetty-servlet</module>
