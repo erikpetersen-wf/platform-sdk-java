@@ -8,11 +8,12 @@ import org.springframework.test.web.servlet.setup.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class SpringHealthCheckTest {
+public class HealthCheckTest {
 
   @Test
   public void TestReadiness() throws Exception {
-    SpringHealthCheck.Controller controller = new SpringHealthCheck.Controller();
+    Platform core = new Platform();
+    HealthCheck.Controller controller = new HealthCheck.Controller(core);
     StandaloneMockMvcBuilder mockMvcBuilder = MockMvcBuilders.standaloneSetup(controller);
     MockMvc mockMvc = mockMvcBuilder.build();
     mockMvc
@@ -22,7 +23,8 @@ public class SpringHealthCheckTest {
 
   @Test
   public void TestLiveness() throws Exception {
-    SpringHealthCheck.Controller controller = new SpringHealthCheck.Controller();
+    Platform core = new Platform();
+    HealthCheck.Controller controller = new HealthCheck.Controller(core);
     StandaloneMockMvcBuilder mockMvcBuilder = MockMvcBuilders.standaloneSetup(controller);
     MockMvc mockMvc = mockMvcBuilder.build();
     mockMvc
@@ -32,7 +34,8 @@ public class SpringHealthCheckTest {
 
   @Test
   public void TestStatus() throws Exception {
-    SpringHealthCheck.Controller controller = new SpringHealthCheck.Controller();
+    Platform core = new Platform();
+    HealthCheck.Controller controller = new HealthCheck.Controller(core);
     StandaloneMockMvcBuilder mockMvcBuilder = MockMvcBuilders.standaloneSetup(controller);
     MockMvc mockMvc = mockMvcBuilder.build();
     mockMvc
