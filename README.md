@@ -57,71 +57,131 @@ This build phase will execute the code in [platform](package).  It will look for
 *Note*: This assumes your `helm` folder exists at the root of your repository and that your `Dockerfile` is named as such (ie: not `workivabuild.Dockerfile` or anything non-standard).
 
 ## Java
-### Adding the dependency
-```xml
-<dependency>
-    <groupId>com.workiva.platform</groupId>
-    <artifactId>platform</artifactId>
-    <version>0.0.19</version>
-</dependency>
-```
-### Running the platform
-Running `Platform.builder().start()` will setup an HTTP server with the following routes for your service:
-* Readiness probe running at `_wk/ready` on port `8888`.
-* Liveness probe running at `_wk/alive` on port `8888`.
+The Java SDK comes in the following varieties:
+* [platform-core](#platform-core)
+* [platform-undertow](#platform-undertow)
+* [platform-jetty-servlet](#platform-jetty-servlet)
+* [platform-netty](#platform-netty)
+* [platform-spring](#platform-spring)
 
-### Override defaults
-The port and the functions that are run can all be overridden if necessary.
+Each of these libraries will register three publicly exposed endpoints: `_wk/ready`, `_wk/alive`, and `_wk/status` used for your readiness probe, liveness probe, and availability checks respectively.
 
-#### Port
-Global Override
+### Platform Core
+This library contains the core logic from which all other libraries inherit.
+
+Included within the core library are the [constants](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L27) for the `readiness`, `liveness`, and `status` checks.  These checks are consumed by the other libraries.
+
+The core library also implements the logic for each of those checks.
+
+#### Alive / Ready
+The [alive](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L47) and [ready](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L63) functions are used for your [liveness/readiness](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) probes.  These functions simply returns a `200` response if your container is reachable and can return a response.
+
+#### Status
+The [status](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L76) function is used to check the availability of third-party dependencies of your service.
+
+Invididual checks can be registered with the [`register`](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L117) function like:
 ```java
-Platform.builder().port(9999).start();
+platform.register("status", testFunction);
+
+PlatformStatus testFunction() {
+    return new PlatformStatus(false);
+}
 ```
 
-Individual Override
+As you can see, the function must return type [PlatformStatus](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformStatus.java).
+
+An overloaded `register` function exists that allows you to specify the [PlatformCheckType](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCheckType.java). This enables you to register individual checks for the readiness/liveness probes.  It is normally [not recommended](https://w-dev-blog.appspot.com/posts/2019/07/15/kubernetes-liveness-readiness-best-practices/index.html) to register individual checks for anything but the `status` endpoint.
+
+*Note: The core library is not meant to be consumed directly unless none of the other libraries satisfy your use case (ie: [here](https://github.com/Workiva/sa-tools-changeset-service/blob/master/src/main/java/com/workiva/satools/Main.java#L70)).*
+
+### Platform Undertow
+This library spins up the health checks using an independent HTTP server called Undertow.  Use this library if your service does not already have its own HTTP server.
+
+#### Example Usage
 ```java
-Platform.builder().livenessPort(9999).start();
+Platform platform = new Platform();
+platform.register("check", ...);
+platform.start();
 ```
+
+### Platform Netty
+This library spins up the health checks using an existing Netty HTTP server.
+
+#### Example Usage
 ```java
-Platform.builder().readinessPort(9999).start();
+Platform platform = new Platform();
+platform.register("check", ...);
+EventLoopGroup bossGroup = new NioEventLoopGroup();
+EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+ ServerBootstrap b = new ServerBootstrap();
+ b.group(bossGroup, workerGroup)
+  .channel(NioServerSocketChannel.class)
+  .childHandler(
+      new ChannelInitializer<SocketChannel>() {
+        @Override
+        public void initChannel(SocketChannel ch) {
+          // codec+aggregator needed to make a FullHttpRequest.
+          ch.pipeline().addLast("codec", new HttpServerCodec());
+          ch.pipeline().addLast("aggregator", new HttpObjectAggregator(512 * 1024 * 10));
+          ch.pipeline().addLast(platform.getHandler());
+        }
+      });
 ```
 
-#### Function
-Global Override
+### Platform Jetty Servlet
+This library spins up the health checks using an existing Jetty HTTP handler.  There are *two* ways this library can be used.
+
+#### Example Usage
 ```java
-Platform.builder().function(() -> myFunction())).start();
+Server server = new Server(8080);
+Platform platform = new Platform();
+platform.register("check", ...);
+ServletContextHandler handler = platform.registerEndpoints();
+server.setHandler(handler);
+server.start();
 ```
 
-Individual Override
+#### Example Usage (passing in your own `ServletContextHandler`)
 ```java
-Platform.builder().livenessFunction(() -> myLivenessFunction()).start();
+Server server = new Server(8080);
+ServletContextHandler handler = new ServletContextHandler(null, "/_wk/");
+Platform platform = new Platform();
+platform.register("check", ...);
+platform.registerEndpoints(handler);
+server.setHandler(handler);
+server.start();
 ```
+
+### Platform Spring
+This library spins up the health checks using an existing Spring configuration.
+
+#### Example Usage (Spring Boot 2.x)
 ```java
-Platform.builder().readinessFunction(() -> myReadinessFunction()).start();
+@EnablePlatform
+public class Application {
+  public static void main(String[] args) throws Exception {
+    ApplicationContext context = SpringApplication.run(Application.class, args);
+    Platform platform = context.getBean(Platform.class);
+    platform.register("check", ...);
+  }
+}
 ```
 
-Alternatively you can provide a reference to the function like `readinessFunction(PackageName::myReadinessFunction)`.
-
-**Note:** Any overridden functions and/or ports must be manually reflected in your Helm chart.  The builder does not currently support replacing the defaults with any overrides you define in code.
-
-### Building a custom function
-
-In order to report the status of your readiness/liveness probes, we need to return a status code of 200 or 503.
-
-We accomplish this by requiring functions used for readiness/liveness probes return a [HealthStatus](libs/java/src/main/java/com/workiva/platform/HealthStatus.java) object. Here is the [function](libs/java/src/main/java/com/workiva/platform/Platform.java#L28) that is used by default.  Here is a [function](https://github.com/Workiva/ale-service/blob/master/server/src/main/java/com/workiva/ale/service/controllers/FrugalController.java#L418) that a consuming service uses to override the default.  Notice how they catch and handle exceptions in that example.
-
-#### How to use `HealthStatus`
-
-The platform SDK will call the `isOk()` method and if it returns `true` the server will return a 200 status code.  Otherwise, we will return a 503.  Call the `ok() ` function or use the default constructor to build a `HealthStatus` object that will return a 200.
-
-In order for the platform SDK to return a 503, call the `notOk("reason")` method.  If your custom function throws an uncaught exception, we will wrap that in a failing `HealthStatus` object with the reason set to the `getMessage()` of the exception.
-
-### Running the example
-
-If you want to see the default liveness/readiness probe in action, go [here](libs/java/src/example/java/Main.java) and run the `main` method.  Navigate to `http://localhost:8888/_wk/ready` or `http://localhost:8888/_wk/alive` to see the response for yourself.
-
-Feel free to modify the builder to override functions and/or ports to your hearts content.
+#### Example Usage (Spring Boot 1.x)
+Uses the same setup as 2.x with the exception you won't be able to access the bean after making the call to `SpringApplication.run(...)`.  Instead what you need is another class that does this:
+```java
+@Component
+public class PlatformStartup
+    implements ApplicationListener<ContextRefreshedEvent> {
+    
+    @Override
+    public void onApplicationEvent(final ContextRefreshedEvent event) {
+        ApplicationContext applicationContext = event.getApplicationContext();
+        Platform platform = applicationContext.getBean(Platform.class);
+        platform.register("check", ...);
+    }
+```
 
 ## Architecture Decision Records
 
