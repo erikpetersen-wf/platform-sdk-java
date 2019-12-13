@@ -69,7 +69,7 @@ Each of these libraries will register three publicly exposed endpoints: `_wk/rea
 ### Platform Core
 This library contains the core logic from which all other libraries inherit.
 
-Included within the core library are the [constants](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L27) for the `readiness`, `liveness`, and `status` endpoints.  These endpoints are consumed by the other libraries.
+Included within the core library are the [constants](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L27) for the `readiness`, `liveness`, and `status` checks.  These checks are consumed by the other libraries.
 
 The core library also implements the logic for each of those checks.
 
