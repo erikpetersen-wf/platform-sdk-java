@@ -3,6 +3,7 @@ package com.workiva.platform.netty;
 import java.io.IOException;
 
 import com.workiva.platform.core.PlatformCore;
+import com.workiva.platform.core.PlatformStatus;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -18,6 +19,8 @@ import org.apache.http.util.EntityUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -132,6 +135,17 @@ public class HealthCheckHandlerTest {
     Assert.assertEquals(200, statusCode);
 
     String responseStatus = getBodyFromResponse(httpFrugalResp);
-    Assert.assertEquals("", responseStatus);
+
+    JSONObject wrapper = (JSONObject) JSONValue.parse(responseStatus);
+    Assert.assertTrue(wrapper != null);
+    Assert.assertTrue(wrapper.get("meta") == null);
+
+    JSONObject data = (JSONObject) wrapper.get("data");
+    Assert.assertTrue(data != null);
+    Assert.assertTrue(data.get("id") instanceof String);
+
+    JSONObject attrs = (JSONObject) data.get("attributes");
+    Assert.assertEquals(attrs.get("status"), PlatformStatus.PASSED);
+    Assert.assertTrue(attrs.get("meta") == null);
   }
 }

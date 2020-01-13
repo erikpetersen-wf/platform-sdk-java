@@ -1,5 +1,6 @@
 package com.workiva.platform.netty;
 
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -56,7 +57,9 @@ public class HealthCheckHandler extends ChannelInboundHandlerAdapter {
       if (result != null) {
         FullHttpResponse response =
             new DefaultFullHttpResponse(
-                HttpVersion.HTTP_1_1, new HttpResponseStatus(result.getCode(), result.getBody()));
+                HttpVersion.HTTP_1_1,
+                HttpResponseStatus.valueOf(result.getCode()),
+                Unpooled.copiedBuffer(result.getBody().getBytes("utf-8")));
         ctx.write(response).addListener(ChannelFutureListener.CLOSE);
         request.release();
       }
