@@ -110,6 +110,36 @@ public class PlatformCoreTest {
   }
 
   @Test
+  public void TestStatusHandler() throws Exception {
+    PlatformMock platform = new PlatformMock();
+    platform.setAllowedIPs("0.0.0.0");
+    platform.register(
+        "don't care!",
+        new Callable<PlatformStatus>() {
+          @Override
+          public PlatformStatus call() throws Exception {
+            return new PlatformStatus();
+          }
+        });
+    StatusHandler statusHandler = new StatusHandler(platform);
+    statusHandler.setForwardedFor("0.0.0.0");
+    PlatformResponse res = (PlatformResponse) statusHandler.call();
+    Assert.assertEquals(res.getCode(), 200);
+
+    JSONObject wrapper = (JSONObject) JSONValue.parse(res.getBody());
+    Assert.assertTrue(wrapper != null);
+
+    JSONObject data = (JSONObject) wrapper.get("data");
+    Assert.assertTrue(data != null);
+    Assert.assertTrue(data.get("meta") != null);
+    Assert.assertTrue(data.get("id") instanceof String);
+
+    JSONObject attrs = (JSONObject) data.get("attributes");
+    Assert.assertEquals(attrs.get("status"), PlatformStatus.PASSED);
+    Assert.assertTrue(attrs.get("meta") == null);
+  }
+
+  @Test
   public void TestParseWhitelist() {
     Set<String> set = PlatformCore.parseWhitelist("WyIxLjEuMS4xIiwiMS4wLjAuMSJd");
     Assert.assertTrue(set.contains("1.1.1.1"));
