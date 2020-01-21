@@ -21,6 +21,7 @@ Below, is a list of various components necessary to build software at Workiva.
     * [Java](libs/java) ([documentation](#java))
     * Dart (TODO)
     * Python (TODO)
+    * [`status` metadata](#status-metadata)
   * Security Guidelines (TODO)
   * StyleGuides (TODO)
 * Test
@@ -181,7 +182,16 @@ public class PlatformStartup
         Platform platform = applicationContext.getBean(Platform.class);
         platform.register("check", ...);
     }
-```
+```  
+
+### `status` metadata
+Every check you register on the status endpoint adds to the `meta` JSON that is
+included in the response.  Only IP addresses included in the base64-encoded 
+[`NEW_RELIC_SYNTHETICS_IP_WHITELIST`](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L38) 
+environment variable can access this metadata.  This environment variable is 
+injected into services through the [Workiva Deployer](https://github.com/Workiva/workiva-deploy/blob/master/workiva_deploy/deployer/kubernetes.py#L601-L634). 
+The IP address is then injected into HTTP requests via [nginx](https://www.nginx.com/resources/wiki/start/topics/examples/forwarded/). 
+For more information on the status checks, read [RFD 0232](https://sandbox.wdesk.com/a/QWNjb3VudB82NzE5NTMwMjcyOTQ4MjI0/doc/804361ea3fc54769b6cf27c65e3ad70d/r/-1/v/1/sec/804361ea3fc54769b6cf27c65e3ad70d_170). 
 
 ## Architecture Decision Records
 
