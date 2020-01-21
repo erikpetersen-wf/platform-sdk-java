@@ -2,9 +2,7 @@ package com.workiva.platform.core;
 
 import java.util.concurrent.Callable;
 
-/**
- * Class needed to pass `X-Forwarded-For` request header to `status` method.
- */
+/** Class needed to pass `X-Forwarded-For` request header to `status` method. */
 public class StatusHandler implements Callable {
 
   private PlatformCore platform;
@@ -23,4 +21,3 @@ public class StatusHandler implements Callable {
     this.forwardedFor = forwardedFor;
   }
 }
-
