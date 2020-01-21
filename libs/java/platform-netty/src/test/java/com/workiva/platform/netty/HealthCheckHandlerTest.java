@@ -1,6 +1,7 @@
 package com.workiva.platform.netty;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
 import com.workiva.platform.core.PlatformCore;
 import com.workiva.platform.core.PlatformStatus;
@@ -29,12 +30,15 @@ public class HealthCheckHandlerTest {
 
   private static final int frugalPort = 8000;
 
+  private static PlatformMock platform;
+
   private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
   private HttpResponse makeHttpRequest(String path) {
     HttpResponse httpFrugalResp = null;
     try {
       HttpGet httpGet = new HttpGet(path);
+      httpGet.setHeader(PlatformCore.FORWARDED_FOR, "0.0.0.0");
       httpFrugalResp = httpClient.execute(httpGet);
     } catch (Exception ex) {
       Assert.fail(ex.getMessage());
@@ -54,7 +58,16 @@ public class HealthCheckHandlerTest {
 
   @BeforeClass
   public static void setup() {
-    Platform platform = new Platform();
+    platform = new PlatformMock();
+    platform.register(
+        "don't care!",
+        new Callable<PlatformStatus>() {
+          @Override
+          public PlatformStatus call() throws Exception {
+            return new PlatformStatus();
+          }
+        });
+
     EventLoopGroup bossGroup = new NioEventLoopGroup();
     EventLoopGroup workerGroup = new NioEventLoopGroup();
     try {
@@ -138,10 +151,35 @@ public class HealthCheckHandlerTest {
 
     JSONObject wrapper = (JSONObject) JSONValue.parse(responseStatus);
     Assert.assertTrue(wrapper != null);
-    Assert.assertTrue(wrapper.get("meta") == null);
 
     JSONObject data = (JSONObject) wrapper.get("data");
     Assert.assertTrue(data != null);
+    Assert.assertTrue(data.get("meta") == null);
+    Assert.assertTrue(data.get("id") instanceof String);
+
+    JSONObject attrs = (JSONObject) data.get("attributes");
+    Assert.assertEquals(attrs.get("status"), PlatformStatus.PASSED);
+    Assert.assertTrue(attrs.get("meta") == null);
+  }
+
+  /** Ensure if request originates from allowed ip, meta data included in response. */
+  @Test
+  public void TestStatusWithMeta() {
+    platform.setAllowedIPs("0.0.0.0");
+
+    HttpResponse httpFrugalResp = makeHttpRequest("http://localhost:8000/_wk/status");
+
+    int statusCode = httpFrugalResp.getStatusLine().getStatusCode();
+    Assert.assertEquals(200, statusCode);
+
+    String responseStatus = getBodyFromResponse(httpFrugalResp);
+
+    JSONObject wrapper = (JSONObject) JSONValue.parse(responseStatus);
+    Assert.assertTrue(wrapper != null);
+
+    JSONObject data = (JSONObject) wrapper.get("data");
+    Assert.assertTrue(data != null);
+    Assert.assertTrue(data.get("meta") != null);
     Assert.assertTrue(data.get("id") instanceof String);
 
     JSONObject attrs = (JSONObject) data.get("attributes");
