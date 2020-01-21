@@ -13,11 +13,22 @@ public class StatusHandler implements Callable {
   }
 
   @Override
-  public Object call() throws Exception {
+  public Object call() {
+    String forwardedFor = unsetForwardedFor();
     return platform.status(forwardedFor);
   }
 
   public void setForwardedFor(String forwardedFor) {
     this.forwardedFor = forwardedFor;
+  }
+
+  public String getForwardedFor() {
+    return this.forwardedFor;
+  }
+
+  private String unsetForwardedFor() {
+    String forwardedFor = this.forwardedFor;
+    this.forwardedFor = "";
+    return forwardedFor;
   }
 }

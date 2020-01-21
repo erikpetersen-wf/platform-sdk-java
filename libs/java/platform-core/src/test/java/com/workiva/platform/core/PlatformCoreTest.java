@@ -110,33 +110,22 @@ public class PlatformCoreTest {
   }
 
   @Test
-  public void TestStatusHandler() throws Exception {
-    PlatformMock platform = new PlatformMock();
-    platform.setAllowedIPs("0.0.0.0");
-    platform.register(
-        "don't care!",
-        new Callable<PlatformStatus>() {
-          @Override
-          public PlatformStatus call() throws Exception {
-            return new PlatformStatus();
-          }
-        });
+  public void TestStatusHandlerSetsForwardedFor() throws Exception {
+    PlatformCore platform = new PlatformCore();
     StatusHandler statusHandler = new StatusHandler(platform);
     statusHandler.setForwardedFor("0.0.0.0");
-    PlatformResponse res = (PlatformResponse) statusHandler.call();
-    Assert.assertEquals(res.getCode(), 200);
 
-    JSONObject wrapper = (JSONObject) JSONValue.parse(res.getBody());
-    Assert.assertTrue(wrapper != null);
+    Assert.assertTrue(statusHandler.getForwardedFor().equals("0.0.0.0"));
+  }
 
-    JSONObject data = (JSONObject) wrapper.get("data");
-    Assert.assertTrue(data != null);
-    Assert.assertTrue(data.get("meta") != null);
-    Assert.assertTrue(data.get("id") instanceof String);
+  @Test
+  public void TestStatusHandlerUnsetsForwardedFor() throws Exception {
+    PlatformCore platform = new PlatformCore();
+    StatusHandler statusHandler = new StatusHandler(platform);
+    statusHandler.setForwardedFor("0.0.0.0");
+    statusHandler.call();
 
-    JSONObject attrs = (JSONObject) data.get("attributes");
-    Assert.assertEquals(attrs.get("status"), PlatformStatus.PASSED);
-    Assert.assertTrue(attrs.get("meta") == null);
+    Assert.assertTrue(statusHandler.getForwardedFor().equals(""));
   }
 
   @Test
