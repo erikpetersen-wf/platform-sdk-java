@@ -27,6 +27,7 @@ public class PlatformCore {
   public static final String PATH_ALIVE = "/_wk/alive";
   public static final String PATH_READY = "/_wk/ready";
   public static final String PATH_STATUS = "/_wk/status";
+  public static final String FORWARDED_FOR = "X-Forwarded-For";
 
   public PlatformCore() {
     isAlive = true;
