@@ -22,7 +22,7 @@ public class StatusHandler implements Callable {
     this.forwardedFor = forwardedFor;
   }
 
-  public String getForwardedFor() {
+  String getForwardedFor() {
     return this.forwardedFor;
   }
 
