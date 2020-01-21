@@ -21,7 +21,7 @@ public class PlatformCore {
   private Map<String, Callable<PlatformStatus>> readyChecks;
   private Map<String, Callable<PlatformStatus>> statusChecks;
 
-  Set<String> allowedIPs; // potentially modified by unit tests
+  protected Set<String> allowedIPs;
   final DateTimeFormatter formatter;
 
   public static final String PATH_ALIVE = "/_wk/alive";
