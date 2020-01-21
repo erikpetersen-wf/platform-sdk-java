@@ -14,20 +14,14 @@ import io.netty.handler.codec.http.HttpVersion;
 import com.workiva.platform.core.PlatformCore;
 import com.workiva.platform.core.PlatformResponse;
 
-import java.util.concurrent.Callable;
-
 /** Intercepts an HTTP request when the path is equal to health paths and returns a 200. */
 @ChannelHandler.Sharable
 public class HealthCheckHandler extends ChannelInboundHandlerAdapter {
 
-  private Callable<PlatformResponse> ready;
-  private Callable<PlatformResponse> alive;
-  private Callable<PlatformResponse> status;
+  private Platform platform;
 
-  HealthCheckHandler(Callable ready, Callable alive, Callable status) {
-    this.ready = ready;
-    this.alive = alive;
-    this.status = status;
+  HealthCheckHandler(Platform platform) {
+    this.platform = platform;
   }
 
   @Override
@@ -42,13 +36,13 @@ public class HealthCheckHandler extends ChannelInboundHandlerAdapter {
       PlatformResponse result = null;
       switch (request.uri()) {
         case PlatformCore.PATH_READY:
-          result = ready.call();
+          result = platform.ready();
           break;
         case PlatformCore.PATH_ALIVE:
-          result = alive.call();
+          result = platform.alive();
           break;
         case PlatformCore.PATH_STATUS:
-          result = status.call();
+          result = platform.status(request.headers().get(PlatformCore.FORWARDED_FOR));
           break;
         default:
           ctx.fireChannelRead(msg);
