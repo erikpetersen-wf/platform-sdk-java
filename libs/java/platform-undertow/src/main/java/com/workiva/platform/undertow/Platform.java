@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.workiva.platform.core.PlatformCore;
+import com.workiva.platform.core.StatusHandler;
 
 /** Stands up an HTTP server for liveness/readiness probes. */
 public class Platform extends PlatformCore implements AutoCloseable {
@@ -34,7 +35,7 @@ public class Platform extends PlatformCore implements AutoCloseable {
                 Handlers.path()
                     .addExactPath(PATH_ALIVE, new EndpointHandler(this::alive))
                     .addExactPath(PATH_READY, new EndpointHandler(this::ready))
-                    .addExactPath(PATH_STATUS, new EndpointHandler(this::status)))
+                    .addExactPath(PATH_STATUS, new EndpointHandler(new StatusHandler(this))))
             .build();
     this.httpServer = httpServer;
     httpServer.start();
