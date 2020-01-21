@@ -110,6 +110,25 @@ public class PlatformCoreTest {
   }
 
   @Test
+  public void TestStatusHandlerSetsForwardedFor() throws Exception {
+    PlatformCore platform = new PlatformCore();
+    StatusHandler statusHandler = new StatusHandler(platform);
+    statusHandler.setForwardedFor("0.0.0.0");
+
+    Assert.assertTrue(statusHandler.getForwardedFor().equals("0.0.0.0"));
+  }
+
+  @Test
+  public void TestStatusHandlerUnsetsForwardedFor() throws Exception {
+    PlatformCore platform = new PlatformCore();
+    StatusHandler statusHandler = new StatusHandler(platform);
+    statusHandler.setForwardedFor("0.0.0.0");
+    statusHandler.call();
+
+    Assert.assertTrue(statusHandler.getForwardedFor().equals(""));
+  }
+
+  @Test
   public void TestParseWhitelist() {
     Set<String> set = PlatformCore.parseWhitelist("WyIxLjEuMS4xIiwiMS4wLjAuMSJd");
     Assert.assertTrue(set.contains("1.1.1.1"));
