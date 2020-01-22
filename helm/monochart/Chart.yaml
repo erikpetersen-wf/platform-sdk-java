@@ -1,0 +1,4 @@
+apiVersion: 'v1'
+name: monochart
+description: A Helm chart for Workiva
+version: '0.0.0' # updated by pipelines / deployer / helm catalog
