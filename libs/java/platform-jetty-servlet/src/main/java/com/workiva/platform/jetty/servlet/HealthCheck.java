@@ -1,6 +1,8 @@
 package com.workiva.platform.jetty.servlet;
 
+import com.workiva.platform.core.PlatformCore;
 import com.workiva.platform.core.PlatformResponse;
+import com.workiva.platform.core.StatusHandler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,6 +24,10 @@ public class HealthCheck extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     PlatformResponse result = null;
     try {
+      if (callable.getClass().equals(StatusHandler.class)) {
+        String forwardedFor = request.getHeader(PlatformCore.FORWARDED_FOR);
+        ((StatusHandler) callable).setForwardedFor(forwardedFor);
+      }
       result = (PlatformResponse) callable.call();
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

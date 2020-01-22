@@ -4,6 +4,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import com.workiva.platform.core.PlatformCore;
+import com.workiva.platform.core.StatusHandler;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Platform extends PlatformCore {
     servletContext.addServlet(
         new ServletHolder(new HealthCheck(this::alive)), endpointPaths.get(1));
     servletContext.addServlet(
-        new ServletHolder(new HealthCheck(this::status)), endpointPaths.get(2));
+        new ServletHolder(new HealthCheck(new StatusHandler(this))), endpointPaths.get(2));
   }
 
   /**
