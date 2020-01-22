@@ -1,0 +1,12 @@
+apiVersion: v1
+entries:
+  monochart:
+  - apiVersion: v1
+    created: "2020-01-22T16:50:00.901984-06:00"
+    description: A Helm chart for Workiva
+    digest: 9dc9c14032bee188da34c33b56acf316ef9113766a6709dfe8a98483a0ebb5e6
+    name: monochart
+    urls:
+    - monochart-0.0.0.tgz
+    version: 0.0.0
+generated: "2020-01-22T16:50:00.897988-06:00"
