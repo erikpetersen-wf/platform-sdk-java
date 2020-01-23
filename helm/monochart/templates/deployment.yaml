@@ -1,0 +1,84 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "template.fullname" . }}
+  labels:
+    app: {{ template "template.name" . }}
+    chart: {{ template "template.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicas | default 1.0 }}
+  selector:
+    matchLabels:
+      app: {{ template "template.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "template.name" . }}
+        release: {{ .Release.Name }}
+      annotations:
+        checksum/secrets: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- if .Values.iamRole }}
+        iam.amazonaws.com/role: "{{ .Values.iamRole }}"
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image }}
+          {{- if not .Values.runAsRoot }}
+          securityContext:
+            runAsUser: 65534
+            allowPrivilegeEscalation: false
+          {{- end }}
+          env:
+          {{- if .Values.environment }}
+            {{- range $key, $value := .Values.environment }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- if not (hasKey .Values.environment "PORT") }}
+            - name: PORT # Tell the container what port we EXPECT 1
+              value: "8080"
+            {{- end }}
+          {{ else }}
+            - name: PORT # Tell the container what port we EXPECT 2
+              value: "8080"
+          {{- end }}
+            {{- range $key, $value := .Values.secrets }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "template.fullname" $ }}
+                  key: {{ $key }}
+            {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | trimSuffix "\n" | indent 12 }}
+          {{- end }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | trimSuffix "\n" | indent 12 }}
+          {{- end }}
+          {{- if .Values.resources }}
+          resources:
+{{ toYaml .Values.resources | trimSuffix "\n" | indent 12 }}
+          {{- end }}
+      {{- if .Values.files }}
+          volumeMounts:
+            {{- range $file, $data := .Values.files }}
+            - name: files
+              mountPath: {{ $file }}
+              subPath: {{ $file | splitList "/" | last }}
+            {{- end }}
+      volumes:
+        - name: files
+          secret:
+            secretName: {{ template "template.fullname" . }}-files
+            items:
+              {{- range $file, $data := .Values.files }}
+              - key: file{{ $file | replace "." "-" | replace "/" "_" }}
+                path: {{ $file | splitList "/" | last }}
+              {{- end }}
+      {{- end }}

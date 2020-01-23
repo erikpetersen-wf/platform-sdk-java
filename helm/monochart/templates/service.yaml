@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "template.fullname" . }}
+  labels:
+    app: {{ template "template.name" . }}
+    chart: {{ template "template.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    {{- range $port := .Values.ports }}
+    - port: {{ $port.from }}
+      targetPort: {{ $port.to }}
+      name: port-{{ $port.from }}-{{ $port.to }}
+    {{ else }}
+    {{- if .Values.environment}}
+    - port: {{ default 8080 (get .Values.environment "PORT") }}
+      targetPort: {{ default 8080 (get .Values.environment "PORT") }}
+      name: svc
+    {{- else }}
+    - port: 8080
+      targetPort: 8080
+      name: svc
+    {{- end }}
+    {{- end }}
+  selector:
+    app: {{ template "template.name" . }}
+    release: {{ .Release.Name }}
