@@ -64,6 +64,6 @@ spec:
               {{- else }}
               servicePort: 8080
               {{- end }}
-            path: /s/{{ .Chart.Name }}(.*)
+            path: /s/{{ .Release.Name }}(.*)
 {{- end }}
 {{- end -}}
