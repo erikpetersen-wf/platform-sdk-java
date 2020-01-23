@@ -39,12 +39,12 @@ spec:
               value: {{ $value | quote }}
             {{- end }}
             {{- if not (hasKey .Values.environment "PORT") }}
-            - name: PORT # Tell the container what port we EXPECT
-              value: 8080
+            - name: PORT # Tell the container what port we EXPECT 1
+              value: "8080"
             {{- end }}
           {{ else }}
-            - name: PORT # Tell the container what port we EXPECT
-              value: 8080
+            - name: PORT # Tell the container what port we EXPECT 2
+              value: "8080"
           {{- end }}
             {{- range $key, $value := .Values.secrets }}
             - name: {{ $key }}
