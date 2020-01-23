@@ -10,3 +10,5 @@ echo "TODO: update monochart version if there are changes!"
 
 helm package monochart
 helm repo index .
+
+echo "TODO: run this script in check mode during CI to make sure assets are committed"
