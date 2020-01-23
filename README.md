@@ -82,10 +82,11 @@ The [status](https://github.com/Workiva/platform/blob/master/libs/java/platform-
 
 Invididual checks can be registered with the [`register`](https://github.com/Workiva/platform/blob/master/libs/java/platform-core/src/main/java/com/workiva/platform/core/PlatformCore.java#L117) function like:
 ```java
-platform.register("status", testFunction);
+platform.register("database", checkDB);
 
-PlatformStatus testFunction() {
-    return new PlatformStatus(false);
+PlatformStatus checkDB() {
+    boolean dbOk = isDbOK();
+    return new PlatformStatus(dbOk);
 }
 ```
 
