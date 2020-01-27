@@ -6,9 +6,9 @@ cd "$(dirname "$0")"
 
 # https://helm.sh/docs/topics/chart_repository/
 
-echo "TODO: update monochart version if there are changes!"
+echo "TODO: update helm charts' version if there are changes!"
 
-helm package monochart
+helm package service
 helm repo index .
 
 echo "TODO: run this script in check mode during CI to make sure assets are committed"

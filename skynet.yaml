@@ -39,3 +39,17 @@ scripts:
   - cd test/package && ./run
 size: small
 timeout: moderate
+---
+name: update
+image: alpine:3
+scripts:
+  - wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-amd64.tar.gz && \
+    echo "7eebaaa2da4734242bbcdced62cc32ba8c7164a18792c8acdf16c77abffce202  helm-v2.16.1-linux-amd64.tar.gz" | sha256sum -c && \
+    tar xf helm-v2.16.1-linux-amd64.tar.gz && \
+    cp linux-amd64/helm /usr/local/bin && \
+    rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64 && \
+    helm init --client-only
+  - mkdir orig
+  - cp helm/* orig/
+  - ./helm/gen.sh
+  - diff -r orig/ helm/
