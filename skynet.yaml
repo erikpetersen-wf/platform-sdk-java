@@ -51,4 +51,5 @@ scripts:
   - helm init --client-only
   - cp -r helm orig
   - ./helm/gen.sh
-  - diff -r orig helm
+  - diff orig/service-0.0.0.tgz helm/service-0.0.0.tgz
+  # - diff -r orig helm # can't do this because helm changes dates on us :cry:
