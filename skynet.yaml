@@ -49,7 +49,6 @@ scripts:
   - cp linux-amd64/helm /usr/local/bin
   - rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64
   - helm init --client-only
-  - mkdir orig
   - cp -r helm orig
   - ./helm/gen.sh
   - diff -r orig helm

@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # Setup "safe" bash script, releative to scripts location
 set -euxo pipefail
