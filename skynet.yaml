@@ -49,6 +49,5 @@ scripts:
   - tar xf helm-v3.0.1-linux-amd64.tar.gz
   - cp linux-amd64/helm /usr/local/bin
   - rm -rf helm-v3.0.1-linux-amd64.tar.gz linux-amd64
-  - helm init --client-only
   # Actual test
   - ./helm/gen.sh --check
