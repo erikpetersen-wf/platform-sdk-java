@@ -34,6 +34,15 @@ RUN mkdir -p /artifacts/java && \
 ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
 
 
+#! STAGE - Helm Download - Helm - download helm for install in base image.
+FROM bash:5 as helm
+RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-amd64.tar.gz && \
+    echo "7eebaaa2da4734242bbcdced62cc32ba8c7164a18792c8acdf16c77abffce202  helm-v2.16.1-linux-amd64.tar.gz" | sha256sum -c && \
+    tar xf helm-v2.16.1-linux-amd64.tar.gz && \
+    cp linux-amd64/helm /usr/local/bin && \
+    rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64
+
+
 #! STAGE - Platform Builder - Python 3 - Help customers package their application
 FROM amazonlinux:2
 WORKDIR /build/
@@ -41,31 +50,18 @@ WORKDIR /build/
 # Get latest package updates (security requirement)
 RUN yum update -y && \
     yum upgrade -y && \
-    yum install -y \
-        # Install dependencies
-        wget \
-        tar \
-        gzip \
-        # base requirements
-        python3 \
-        && \
-    # clean the install layers
+    yum install -y python3 && \
     yum autoremove -y && \
     yum clean all && \
     rm -rf /var/cache/yum
 
-# Install and Verify HELM
-# TODO: move off to a pre-build container
-RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-amd64.tar.gz && \
-    echo "7eebaaa2da4734242bbcdced62cc32ba8c7164a18792c8acdf16c77abffce202  helm-v2.16.1-linux-amd64.tar.gz" | sha256sum -c && \
-    tar xf helm-v2.16.1-linux-amd64.tar.gz && \
-    cp linux-amd64/helm /usr/local/bin && \
-    rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64 && \
-    helm init --client-only
+# Verify HELM
+COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
+RUN helm init --client-only
 
 # Add wk tool (with requirements based layer caching!)
 COPY tools/wk/ /root/wk/
-RUN python3 -m pip install /root/wk/
+RUN pip3 install /root/wk/
 
 # Add package (backwards compatibility for folks directly referencing `package`)
 ADD tools/package /usr/local/bin
