@@ -1,37 +1,37 @@
-# #! STAGE - Client Library - Java - Cache Depencencies
-# FROM maven:3.6-jdk-8-alpine as java_lib_dependencies
-#
-# WORKDIR /build
-# ENV MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-# ENV CODECOV_TOKEN='bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB'
-# RUN apk add --update bash git perl wget
-#
-# # Setup Maven Authentication
-# RUN mkdir -p /root/.m2
-# ARG ARTIFACTORY_PRO_USER
-# ARG ARTIFACTORY_PRO_PASS
-# COPY ./workivabuild.settings.xml /root/.m2/settings.xml
-#
-# # Cache Wrapper Dependencies
-# COPY ./libs/java ./libs/java
-# RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
-#
-# WORKDIR /build/libs/java
-# # Linter Steps
-# # TODO: move to skynet ;)
-# RUN mvn -B clean install
-#
-# RUN mkdir -p /artifacts/java && \
-#     mv target/platform-*.jar \
-#     platform-core/target/platform-core-*.jar \
-#     platform-undertow/target/platform-undertow-*.jar \
-#     platform-jetty-servlet/target/platform-jetty-servlet-*.jar \
-#     platform-netty/target/platform-netty-*.jar \
-#     platform-spring/target/platform-spring-*.jar \
-#     /artifacts/java
-#
-# # Publish Artifacts
-# ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
+#! STAGE - Client Library - Java - Cache Depencencies
+FROM maven:3.6-jdk-8-alpine as java_lib_dependencies
+
+WORKDIR /build
+ENV MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+ENV CODECOV_TOKEN='bQ4MgjJ0G2Y73v8JNX6L7yMK9679nbYB'
+RUN apk add --update bash git perl wget
+
+# Setup Maven Authentication
+RUN mkdir -p /root/.m2
+ARG ARTIFACTORY_PRO_USER
+ARG ARTIFACTORY_PRO_PASS
+COPY ./workivabuild.settings.xml /root/.m2/settings.xml
+
+# Cache Wrapper Dependencies
+COPY ./libs/java ./libs/java
+RUN mvn -B dependency:go-offline -q -f ./libs/java/pom.xml
+
+WORKDIR /build/libs/java
+# Linter Steps
+# TODO: move to skynet ;)
+RUN mvn -B clean install
+
+RUN mkdir -p /artifacts/java && \
+    mv target/platform-*.jar \
+    platform-core/target/platform-core-*.jar \
+    platform-undertow/target/platform-undertow-*.jar \
+    platform-jetty-servlet/target/platform-jetty-servlet-*.jar \
+    platform-netty/target/platform-netty-*.jar \
+    platform-spring/target/platform-spring-*.jar \
+    /artifacts/java
+
+# Publish Artifacts
+ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
 
 
 #! STAGE - Platform Builder - Python 3 - Help customers package their application
