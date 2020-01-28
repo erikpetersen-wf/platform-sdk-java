@@ -8,7 +8,25 @@ cd "$(dirname "$0")"
 
 echo "TODO: update helm charts' version if there are changes!"
 
+# While in --check mode, we need to prune out `created` and `generated` lines
+# because they include the exact timestamp of generation.  This value is used
+# below with `grep -v` to create a clean file that can be verified.
+export DIRTY="ated:"
+
+# If we are verifying, create a clean copy of the original index.yaml
+if [[ $* == *--check* ]]
+then
+  grep -v $DIRTY index.yaml > orig.yaml
+  trap "rm orig.yaml" EXIT
+fi
+
 helm package service
 helm repo index .
 
-echo "TODO: run this script in check mode during CI to make sure assets are committed"
+# If we are verifying, create a clean copy of the generated index.yaml and diff
+if [[ $* == *--check* ]]
+then
+  grep -v $DIRTY index.yaml > next.yaml
+  trap "rm next.yaml orig.yaml" EXIT # traps overrite, so delete both files here
+  diff orig.yaml next.yaml
+fi
