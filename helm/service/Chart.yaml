@@ -1,4 +1,0 @@
-apiVersion: 'v1'
-name: service
-description: A Helm chart for Workiva services
-version: '0.0.0' # updated by pipelines / deployer / helm catalog
