@@ -1,6 +1,6 @@
 
 # Debug filesystem
-RUN apk add tree
+RUN yum install tree -y
 RUN tree
 
 # Validate values.yaml Modifications
