@@ -16,7 +16,10 @@ public class RelationalDatabase {
   private String username;
   private String password;
 
-  public RelationalDatabase() {
+  public RelationalDatabase() throws ResourceNotProvisionedException {
+    if (System.getenv("RDS_HOST") == null) {
+      throw new ResourceNotProvisionedException("No database resource provisioned.");
+    }
     serviceName = System.getenv("WORKIVA_SERVICE_NAME");
     hostName = System.getenv("RDS_HOST");
     username = System.getenv("RDS_USER");
