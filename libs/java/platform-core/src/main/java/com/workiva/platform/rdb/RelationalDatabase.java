@@ -6,9 +6,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * Provide basic functionality to work with database resources provisioned with
- * consolidated-rds service.  In the future this logic will likely be provided
- * through the Data SDK.
+ * Provide basic functionality to work with database resources provisioned with consolidated-rds
+ * service. In the future this logic will likely be provided through the Data SDK.
  */
 public class RelationalDatabase {
 
