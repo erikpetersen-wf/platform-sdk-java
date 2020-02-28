@@ -36,7 +36,7 @@ func Main(ctx context.Context) {
 
 	// Create the server (FUTURE: wrap default MUX)
 	s := &http.Server{
-		Handler: http.DefaultServeMux,
+		Handler: addTracing(http.DefaultServeMux),
 		Addr:    ":" + coercePort(ctx),
 	}
 
