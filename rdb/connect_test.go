@@ -47,8 +47,6 @@ type fakeSQL struct {
 func (d *fakeSQL) Open(name string) (driver.Conn, error)     { return d, d.openErr }
 func (d *fakeSQL) Prepare(query string) (driver.Stmt, error) { return nil, nil }
 func (d *fakeSQL) Begin() (driver.Tx, error)                 { return nil, nil }
-
-// func (d *fakeSQL) Ping(ctx context.Context) error            { return d.pingErr }
 func (d *fakeSQL) Close() error {
 	d.closed = true
 	return nil

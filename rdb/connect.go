@@ -59,7 +59,7 @@ func dsn() string {
 	params += "timeout=90s&"
 	params += "writeTimeout=90s&"
 	params += "readTimeout=90s&"
-	params += "tls=skip-verify&"
+	params += "tls=skip-verify&" // https://github.com/go-sql-driver/mysql/issues/363
 	params += "maxAllowedPacket=1000000000&"
 	params += "rejectReadOnly=true"
 	return user + ":" + pass + "@tcp(" + host + ":3306)/" + name + "?" + params
