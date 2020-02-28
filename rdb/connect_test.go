@@ -17,6 +17,8 @@ func fakeENV(tb testing.TB) func() {
 			return "user"
 		case "RDS_HOST":
 			return "host"
+		case "RDS_PORT":
+			return "port"
 		case "RDS_PASSWORD":
 			return "pass"
 		default:
@@ -31,8 +33,8 @@ func fakeENV(tb testing.TB) func() {
 
 func TestDSN(t *testing.T) {
 	defer fakeENV(t)()
-	str := dsn()
-	exp := "user:pass@tcp(host:3306)/service?parseTime=true&timeout=90s&writeTimeout=90s&"
+	str := dsn("")
+	exp := "user:pass@tcp(host:port)/service?parseTime=true&timeout=90s&writeTimeout=90s&"
 	exp += "readTimeout=90s&tls=skip-verify&maxAllowedPacket=1000000000&rejectReadOnly=true"
 	if str != exp {
 		t.Errorf("Did not retrieve expected DSN\nGOT : %q\nWANT: %q", str, exp)
@@ -62,7 +64,7 @@ func TestConnect(t *testing.T) {
 	sql.Register("fake", d)
 
 	// Case 0: noop everything
-	_, err := Connect(nil)
+	_, err := Connect(nil, "")
 	if err != nil {
 		t.Fatalf("Couldn't connect: %v", err)
 	}
@@ -70,7 +72,7 @@ func TestConnect(t *testing.T) {
 	// Case 1: ping failure
 	db = nil
 	d.openErr = errors.New("bad ping")
-	_, err = Connect(nil)
+	_, err = Connect(nil, "")
 	if err == nil || err.Error() != "bad ping" {
 		t.Fatalf("Unexpected ping error: %v", err)
 	}
@@ -78,14 +80,14 @@ func TestConnect(t *testing.T) {
 	// Case 2: open failure
 	db = nil
 	driverName = "other"
-	_, err = Connect(nil)
+	_, err = Connect(nil, "")
 	if err == nil || err.Error() != "sql: unknown driver \"other\" (forgotten import?)" {
 		t.Fatalf("Unexpected open error: %v", err)
 	}
 }
 
 func TestBadConnect(t *testing.T) {
-	_, err := Connect(nil)
+	_, err := Connect(nil, "")
 	if err == nil || err.Error() != "rdb: No database resource provisioned" {
 		t.Fatalf("Unexpected connect error: %v", err)
 	}

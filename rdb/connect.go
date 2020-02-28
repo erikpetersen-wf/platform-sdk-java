@@ -24,7 +24,7 @@ var (
 )
 
 // Connect pulls information from your environment and connects to a database.
-func Connect(ctx context.Context) (*sql.DB, error) {
+func Connect(ctx context.Context, name string) (*sql.DB, error) {
 	mu.Lock() // defer in go 1.11 and 1.12 takes a noticable amount of time when tracing
 	if db != nil {
 		mu.Unlock()
@@ -36,7 +36,7 @@ func Connect(ctx context.Context) (*sql.DB, error) {
 		return nil, errors.New("rdb: No database resource provisioned")
 	}
 
-	idb, err := sql.Open(driverName, dsn())
+	idb, err := sql.Open(driverName, dsn(name))
 	if err != nil {
 		mu.Unlock()
 		return nil, err
@@ -67,10 +67,13 @@ func Connect(ctx context.Context) (*sql.DB, error) {
 // used for unit tests (gross, I know)
 var getenv = os.Getenv
 
-func dsn() string {
-	name := getenv("WORKIVA_SERVICE_NAME")
+func dsn(name string) string {
+	if name == "" {
+		name = getenv("WORKIVA_SERVICE_NAME")
+	}
 	user := getenv("RDS_USER")
 	host := getenv("RDS_HOST")
+	port := getenv("RDS_PORT")
 	pass := getenv("RDS_PASSWORD")
 	// Config stolen from skaardb (TODO: document each option)
 	// https://github.com/Workiva/skaardb/search?q=dsn_params&unscoped_q=dsn_params
@@ -82,5 +85,5 @@ func dsn() string {
 	params += "tls=skip-verify&" // https://github.com/go-sql-driver/mysql/issues/363
 	params += "maxAllowedPacket=1000000000&"
 	params += "rejectReadOnly=true"
-	return user + ":" + pass + "@tcp(" + host + ":3306)/" + name + "?" + params
+	return user + ":" + pass + "@tcp(" + host + ":" + port + ")/" + name + "?" + params
 }
