@@ -68,6 +68,7 @@ func TestConnect(t *testing.T) {
 	}
 
 	// Case 1: ping failure
+	db = nil
 	d.openErr = errors.New("bad ping")
 	_, err = Connect(nil)
 	if err == nil || err.Error() != "bad ping" {
@@ -75,6 +76,7 @@ func TestConnect(t *testing.T) {
 	}
 
 	// Case 2: open failure
+	db = nil
 	driverName = "other"
 	_, err = Connect(nil)
 	if err == nil || err.Error() != "sql: unknown driver \"other\" (forgotten import?)" {

@@ -5,26 +5,45 @@ import (
 	"database/sql"
 	"errors"
 	"os"
+	"sync"
 	"time"
 
 	// Forcing mysql driver and new-relic integration
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/newrelic/go-agent/_integrations/nrmysql"
+
+	"github.com/Workiva/platform/check"
 )
 
 // used for unit tests (gross, I know)
 var driverName = "nrmysql"
 
+var (
+	db *sql.DB
+	mu sync.Mutex
+)
+
 // Connect pulls information from your environment and connects to a database.
 func Connect(ctx context.Context) (*sql.DB, error) {
+	mu.Lock() // defer in go 1.11 and 1.12 takes a noticable amount of time when tracing
+	if db != nil {
+		mu.Unlock()
+		return db, nil
+	}
 	// context.Context can be used in the future to get account level secure databases.
 	if getenv("RDS_HOST") == "" {
+		mu.Unlock()
 		return nil, errors.New("rdb: No database resource provisioned")
 	}
-	db, err := sql.Open(driverName, dsn())
+
+	idb, err := sql.Open(driverName, dsn())
 	if err != nil {
+		mu.Unlock()
 		return nil, err
 	}
+	db = idb
+	mu.Unlock()
+
 	// By default, this is 0 which sets max number of open conns to infinity.
 	// We need to monitor this to ensure we don't overwhelm the container if
 	// we open too many TCP connections simultaneously. Use zero for "infinity"
@@ -41,6 +60,7 @@ func Connect(ctx context.Context) (*sql.DB, error) {
 	if err = db.Ping(); err != nil {
 		return nil, err
 	}
+	check.Register("rdb", check.Debounce(db.Ping, time.Second))
 	return db, nil
 }
 
