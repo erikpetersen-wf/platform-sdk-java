@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"os"
@@ -15,7 +16,8 @@ import (
 var driverName = "nrmysql"
 
 // Connect pulls information from your environment and connects to a database.
-func Connect() (*sql.DB, error) {
+func Connect(ctx context.Context) (*sql.DB, error) {
+	// context.Context can be used in the future to get account level secure databases.
 	if getenv("RDS_HOST") == "" {
 		return nil, errors.New("rdb: No database resource provisioned")
 	}

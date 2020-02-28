@@ -64,28 +64,28 @@ func TestConnect(t *testing.T) {
 	sql.Register("fake", d)
 
 	// Case 0: noop everything
-	_, err := Connect()
+	_, err := Connect(nil)
 	if err != nil {
 		t.Fatalf("Couldn't connect: %v", err)
 	}
 
 	// Case 1: ping failure
 	d.openErr = errors.New("bad ping")
-	_, err = Connect()
+	_, err = Connect(nil)
 	if err == nil || err.Error() != "bad ping" {
 		t.Fatalf("Unexpected ping error: %v", err)
 	}
 
 	// Case 2: open failure
 	driverName = "other"
-	_, err = Connect()
+	_, err = Connect(nil)
 	if err == nil || err.Error() != "sql: unknown driver \"other\" (forgotten import?)" {
 		t.Fatalf("Unexpected open error: %v", err)
 	}
 }
 
 func TestBadConnect(t *testing.T) {
-	_, err := Connect()
+	_, err := Connect(nil)
 	if err == nil || err.Error() != "rdb: No database resource provisioned" {
 		t.Fatalf("Unexpected connect error: %v", err)
 	}
