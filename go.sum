@@ -1,2 +1,6 @@
+github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
+github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/google/jsonapi v0.0.0-20170708005851-46d3ced04344 h1:G5TmuUtIYeR0scfa8ZQ06cfHeAAfVeFlIG8TVOCfuAA=
 github.com/google/jsonapi v0.0.0-20170708005851-46d3ced04344/go.mod h1:XSx4m2SziAqk9DXY9nz659easTq4q6TyrpYd9tHSm0g=
+github.com/newrelic/go-agent v3.3.0+incompatible h1:2J3ssCWfOl/j/c+dV0Ps8BZaNStWPw8ApHA2AqVjEi8=
+github.com/newrelic/go-agent v3.3.0+incompatible/go.mod h1:a8Fv1b/fYhFSReoTU6HDkTYIMZeSVNffmoS726Y0LzQ=
