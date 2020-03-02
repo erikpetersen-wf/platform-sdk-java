@@ -24,16 +24,17 @@ var (
 )
 
 // Connect pulls information from your environment and connects to a database.
+// context.Context can be used in the future to get account level secure databases.
 func Connect(ctx context.Context, name string) (*sql.DB, error) {
+
+	if getenv("RDS_HOST") == "" {
+		return nil, errors.New("rdb: No database resource provisioned")
+	}
+
 	mu.Lock() // defer in go 1.11 and 1.12 takes a noticable amount of time when tracing
 	if db != nil {
 		mu.Unlock()
 		return db, nil
-	}
-	// context.Context can be used in the future to get account level secure databases.
-	if getenv("RDS_HOST") == "" {
-		mu.Unlock()
-		return nil, errors.New("rdb: No database resource provisioned")
 	}
 
 	idb, err := sql.Open(driverName, dsn(name))
