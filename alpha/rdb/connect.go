@@ -26,7 +26,9 @@ var (
 // Connect pulls information from your environment and connects to a database.
 // context.Context can be used in the future to get account level secure databases.
 func Connect(ctx context.Context, name string) (*sql.DB, error) {
-
+	if getenv("WORKIVA_DEPLOY_MODE") == "" {
+		return nil, errors.New("rdb: Not deployed with workiva/platform")
+	}
 	if getenv("RDS_HOST") == "" {
 		return nil, errors.New("rdb: No database resource provisioned")
 	}
