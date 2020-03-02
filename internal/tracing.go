@@ -11,6 +11,10 @@ import (
 )
 
 func addTracing(hand http.Handler) http.Handler {
+	// NOOP if deployed with an existing methology
+	if os.Getenv("WORKIVA_DEPLOY_MODE") == "" {
+		return hand
+	}
 	app, err := setUpAPM()
 	if err != nil {
 		log.Printf("Error starting New Relic application.")
