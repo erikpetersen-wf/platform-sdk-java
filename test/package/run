@@ -1,16 +1,25 @@
-#! /bin/sh
+#! /bin/bash
 
-set -e # fail on error
-set -x # be verbose
+# Setup "safe" bash script, releative to scripts location
+set -euxo pipefail
+cd "$(dirname "$0")"
 
-# Inject the proper image into the Dockerfile for building
-IMAGE="${SKYNET_APPLICATION_PLATFORM:-drydock-prod.workiva.net/workiva/platform:v0}"
-echo $IMAGE
-sed "s~IMAGE~${IMAGE}~g" Dockerfile.orig > Dockerfile
-cat Dockerfile
+# Function to test multiple different dockerfile configs with same result.
+function runTest {
+  # Inject the proper image into the Dockerfile for building
+  IMAGE="${SKYNET_APPLICATION_PLATFORM:-drydock-prod.workiva.net/workiva/platform:v0}"
+  echo $IMAGE
+  sed "s~IMAGE~${IMAGE}~g" $1.txt > Dockerfile
+  cat trailer.txt >> Dockerfile
+  cat Dockerfile
+  cp Dockerfile $1.Dockerfile
 
-# Simulate Workiva-Build (contains checks against expected values)
-docker build . | tee output.log
+  # Simulate Workiva-Build (contains checks against expected values)
+  docker build --no-cache . | tee $1.log
 
-# Verify we properly detect first exposed port as the probe port
-grep -q "Using 2222 for readiness probe" output.log
+  # Verify we properly detect first exposed port as the probe port
+  grep -q "Running helm" $1.log
+}
+
+runTest original
+runTest onbuild

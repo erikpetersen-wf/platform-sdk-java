@@ -1,0 +1,4 @@
+# Fake Consumer Dockerfile post v0.0.10 (ONBUILD declarations in platform img)
+FROM IMAGE as platform
+EXPOSE 2222
+EXPOSE 80 443 8080 8123 8124

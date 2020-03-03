@@ -1,0 +1,12 @@
+package com.workiva.platform.netty;
+
+import com.workiva.platform.core.PlatformCore;
+
+public class Platform extends PlatformCore {
+
+  HealthCheckHandler healthHandler;
+
+  public HealthCheckHandler getHandler() {
+    return this.healthHandler = new HealthCheckHandler(this);
+  }
+}

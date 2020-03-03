@@ -10,6 +10,7 @@ require (
 	github.com/Workiva/go-auth v0.0.0-20180606144156-041929d19d91 // indirect
 	github.com/Workiva/messaging-sdk v0.0.0-20190422221936-cee83480243c
 	github.com/Workiva/vessel v0.0.0-20190911220016-54cb050d26ac // indirect
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-stomp/stomp v2.0.3+incompatible // indirect
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/google/jsonapi v0.0.0-20181016150055-d0428f63eb51
@@ -18,8 +19,9 @@ require (
 	github.com/nats-io/gnatsd v1.4.1 // indirect
 	github.com/nats-io/go-nats v1.7.2 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/newrelic/go-agent v3.3.0+incompatible
 	github.com/pborman/uuid v1.2.0 // indirect
-	github.com/sirupsen/logrus v1.4.2
+	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4 // indirect
 	golang.org/x/net v0.0.0-20190514140710-3ec191127204 // indirect
