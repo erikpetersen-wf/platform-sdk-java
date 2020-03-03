@@ -1,6 +1,13 @@
 version: 1
 update_configs:
   - package_manager: "java:gradle"
+    directory: "/libs/java"
+    update_schedule: "weekly"
+    commit_message:
+      prefix: "fix"
+      prefix_development: "chore"
+      include_scope: true
+  - package_manager: "go:modules"
     directory: "/"
     update_schedule: "weekly"
     commit_message:
