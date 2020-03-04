@@ -3,11 +3,11 @@ package log
 import (
 	"context"
 	"io/ioutil"
+	"os"
 
 	"github.com/Sirupsen/logrus"
 
 	appintel "github.com/Workiva/app_intelligence_go"
-	"github.com/Workiva/messaging-sdk/lib/go/sdk"
 )
 
 // Common field declarations across Workiva.
@@ -33,7 +33,7 @@ func New(ctx context.Context) logrus.FieldLogger {
 	// https://github.com/Workiva/platform/pull/26
 
 	// Add app-intelligence if we have are considered "safe".
-	if !sdk.IamUnsafe() {
+	if os.Getenv("WORKIVA_DEPLOY_MODE") != "" {
 		log.AddHook(appintel.NewHook()) // Add hook from app intelligence
 		log.Out = ioutil.Discard        // Don't duplicate logs to stderr
 	}
