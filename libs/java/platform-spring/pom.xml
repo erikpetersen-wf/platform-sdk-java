@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.workiva.platform</groupId>
         <artifactId>platform-parent</artifactId>
-        <version>0.0.65</version>
+        <version>0.0.68</version>
     </parent>
 
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform-spring</artifactId>
-    <version>0.0.65</version>
+    <version>0.0.68</version>
     <packaging>jar</packaging>
 
     <name>Platform Spring</name>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.1.5.v20140505</version>
+            <version>9.4.27.v20200227</version>
             <scope>test</scope>
         </dependency>
         <dependency>
