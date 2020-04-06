@@ -22,7 +22,7 @@
 
         <!-- dependencies which can be set in consuming projects -->
         <workiva.platform.slf4j-api>1.7.28</workiva.platform.slf4j-api>
-        <workiva.platform.undertow-servlet>2.0.26.Final</workiva.platform.undertow-servlet>
+        <workiva.platform.undertow-servlet>2.0.30.Final</workiva.platform.undertow-servlet>
         <workiva.platform.gson>2.8.6</workiva.platform.gson>
         <workiva.platform.jersey-server>2.29.1</workiva.platform.jersey-server>
         <workiva.platform.javax-inject>1</workiva.platform.javax-inject>
