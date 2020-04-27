@@ -1,7 +1,7 @@
 name: go-unit
 image: golang:1.12
 contact: Nate Woods (nate.woods@workiva.com)
-description: Run go unit tests and report to codecov
+description: Run go unit tests and report to /dev/null
 run:
   source: smithy
   on-promotion: true
@@ -21,7 +21,6 @@ scripts:
   - go fmt ./...
   - go test -v ./... -coverprofile=out/cover.cov | tee out/go.log
   - go2xunit -input=out/go.log -output=out/go-xunit.xml
-  - bash <(curl -s https://codecov.workiva.net/bash) -t $CODECOV_TOKEN -r Workiva/platform -f out/cover.cov -F go-unit -C $SKYNET_BUILD_COMMIT_HASH
 artifacts:
   - /go/src/github.com/Workiva/platform/out
 test-reports:
