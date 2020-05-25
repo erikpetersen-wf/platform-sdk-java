@@ -24,7 +24,7 @@
         <workiva.platform.slf4j-api>1.7.30</workiva.platform.slf4j-api>
         <workiva.platform.undertow-servlet>2.1.1.Final</workiva.platform.undertow-servlet>
         <workiva.platform.gson>2.8.6</workiva.platform.gson>
-        <workiva.platform.jersey-server>2.30.1</workiva.platform.jersey-server>
+        <workiva.platform.jersey-server>2.31</workiva.platform.jersey-server>
         <workiva.platform.javax-inject>1</workiva.platform.javax-inject>
         <workiva.platform.servlet-api>4.0.1</workiva.platform.servlet-api>
         <workiva.platform.jetty>9.4.28.v20200408</workiva.platform.jetty>
