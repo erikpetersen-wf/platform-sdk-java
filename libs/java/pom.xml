@@ -4,7 +4,7 @@
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.88</version>
+    <version>0.0.89</version>
     <name>Platform Parent Project</name>
 
     <modules>
