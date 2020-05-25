@@ -27,7 +27,7 @@
         <workiva.platform.jersey-server>2.31</workiva.platform.jersey-server>
         <workiva.platform.javax-inject>1</workiva.platform.javax-inject>
         <workiva.platform.servlet-api>4.0.1</workiva.platform.servlet-api>
-        <workiva.platform.jetty>9.4.28.v20200408</workiva.platform.jetty>
+        <workiva.platform.jetty>9.4.29.v20200521</workiva.platform.jetty>
         <workiva.platform.netty>4.1.50.Final</workiva.platform.netty>
         <workiva.platform.spring>5.2.6.RELEASE</workiva.platform.spring>
     </properties>
