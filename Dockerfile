@@ -54,12 +54,14 @@ RUN yum update -y && \
     yum autoremove -y && \
     yum clean all && \
     rm -rf /var/cache/yum
+RUN pip3 install --upgrade pip
 
 # Verify HELM
 COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
 RUN helm init --client-only
 
 # Add wk tool (with requirements based layer caching!)
+ARG PIP_INDEX_URL
 COPY tools/wk/ /root/wk/
 RUN pip3 install /root/wk/
 
