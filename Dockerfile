@@ -63,8 +63,7 @@ RUN yum update -y && \
     rm -rf /opt/Python* /opt/python.tgz
 
 RUN python3 --version
-
-# RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade pip
 
 
 #! STAGE - Python deps - download tool dependencies
@@ -86,11 +85,13 @@ COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
 RUN helm init --client-only
 
 # Add package (backwards compatibility for folks directly referencing `package`)
+ADD tools/package /usr/local/bin
+
+# Copy in WK command
 COPY --from=python-deps /root/wk/ /root/wk/
 COPY --from=python-deps /wheels /wheels
 RUN pip3 install --no-index --find-links=/wheels /root/wk/
 RUN wk --version
-ADD tools/package /usr/local/bin
 
 # steps for consuming builds to use
 ONBUILD ADD helm /build/helm/
