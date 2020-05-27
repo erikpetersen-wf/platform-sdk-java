@@ -43,26 +43,43 @@ RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-am
     rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64
 
 
-#! STAGE - Shared python3.7 python builder (security approved python:3.7 image)
-FROM python:3.8 as python
+#! STAGE - Shared python builder (security approved python:3.8 image)
+# https://tecadmin.net/install-python-3-8-centos/
+FROM amazonlinux:2 as python38
 WORKDIR /build/
-RUN pip3 install --upgrade pip
+ENV VERSION=3.8.3
+RUN yum update -y && \
+    yum upgrade -y && \
+    yum install -y gcc openssl-devel bzip2-devel libffi-devel tar gzip make && \
+    yum autoremove -y && \
+    yum clean all && \
+    rm -rf /var/cache/yum && \
+    cd /opt && \
+    curl -o python.tgz https://www.python.org/ftp/python/${VERSION}/Python-${VERSION}.tgz && \
+    tar xzf python.tgz && \
+    cd Python-${VERSION}/ && \
+    ./configure --enable-optimizations && \
+    make install && \
+    rm -rf /opt/Python* /opt/python.tgz
+
+RUN python3 --version
+
+# RUN pip3 install --upgrade pip
 
 
 #! STAGE - Python deps - download tool dependencies
-FROM python as python-deps
+FROM python38 as python-deps
 
 # Add wk tool (with requirements based layer caching!)
 ARG PIP_INDEX_URL
 COPY tools/wk/ /root/wk/
-# RUN pip3 install /root/wk/
 RUN mkdir -p /wheels && \
-  pip3 install wheel && \
-  pip3 wheel -w /wheels -r /root/wk/requirements.txt
+    pip3 install wheel && \
+    pip3 wheel -w /wheels -r /root/wk/requirements.txt
 
 
 #! STAGE - Platform Builder - Python 3 - Help customers package their application
-FROM python
+FROM python38
 
 # Verify HELM
 COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
