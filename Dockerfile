@@ -43,29 +43,36 @@ RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-am
     rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64
 
 
-#! STAGE - Platform Builder - Python 3 - Help customers package their application
-FROM amazonlinux:2
+#! STAGE - Shared python3.7 python builder (security approved python:3.7 image)
+FROM python:3.8 as python
 WORKDIR /build/
-
-# Get latest package updates (security requirement)
-RUN yum update -y && \
-    yum upgrade -y && \
-    yum install -y python3 && \
-    yum autoremove -y && \
-    yum clean all && \
-    rm -rf /var/cache/yum
 RUN pip3 install --upgrade pip
+
+
+#! STAGE - Python deps - download tool dependencies
+FROM python as python-deps
+
+# Add wk tool (with requirements based layer caching!)
+ARG PIP_INDEX_URL
+COPY tools/wk/ /root/wk/
+# RUN pip3 install /root/wk/
+RUN mkdir -p /wheels && \
+  pip3 install wheel && \
+  pip3 wheel -w /wheels -r /root/wk/requirements.txt
+
+
+#! STAGE - Platform Builder - Python 3 - Help customers package their application
+FROM python
 
 # Verify HELM
 COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
 RUN helm init --client-only
 
-# Add wk tool (with requirements based layer caching!)
-ARG PIP_INDEX_URL
-COPY tools/wk/ /root/wk/
-RUN pip3 install /root/wk/
-
 # Add package (backwards compatibility for folks directly referencing `package`)
+COPY --from=python-deps /root/wk/ /root/wk/
+COPY --from=python-deps /wheels /wheels
+RUN pip3 install --no-index --find-links=/wheels /root/wk/
+RUN wk --version
 ADD tools/package /usr/local/bin
 
 # steps for consuming builds to use
