@@ -86,6 +86,8 @@ RUN helm init --client-only
 
 # Add package (backwards compatibility for folks directly referencing `package`)
 ADD tools/package /usr/local/bin
+RUN mkdir /root/.wk
+COPY tools/config.yml /root/.wk/config.yml
 
 # Copy in WK command
 COPY --from=python-deps /root/wk/ /root/wk/
