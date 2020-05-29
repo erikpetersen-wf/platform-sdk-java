@@ -47,20 +47,14 @@ RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-am
 # https://tecadmin.net/install-python-3-8-centos/
 FROM amazonlinux:2 as python38
 WORKDIR /build/
-ENV VERSION=3.8.3
+
+# Get latest package updates (security requirement)
 RUN yum update -y && \
     yum upgrade -y && \
-    yum install -y gcc openssl-devel bzip2-devel libffi-devel tar gzip make && \
+    yum install -y python3 && \
     yum autoremove -y && \
     yum clean all && \
-    rm -rf /var/cache/yum && \
-    cd /opt && \
-    curl -o python.tgz https://www.python.org/ftp/python/${VERSION}/Python-${VERSION}.tgz && \
-    tar xzf python.tgz && \
-    cd Python-${VERSION}/ && \
-    ./configure --enable-optimizations && \
-    make install && \
-    rm -rf /opt/Python* /opt/python.tgz
+    rm -rf /var/cache/yum
 
 RUN python3 --version
 RUN pip3 install --upgrade pip
