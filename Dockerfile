@@ -89,7 +89,9 @@ COPY --from=python-deps /wheels /wheels
 RUN pip3 install --no-index --find-links=/wheels /root/wk/
 RUN wk --version
 
-# steps for consuming builds to use\
+# steps for consuming builds to use
+ONBUILD ARG GITHUB_USER
+ONBUILD ARG GITHUB_PASS
 ONBUILD ADD ./ /build/
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
