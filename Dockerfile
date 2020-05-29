@@ -89,9 +89,8 @@ COPY --from=python-deps /wheels /wheels
 RUN pip3 install --no-index --find-links=/wheels /root/wk/
 RUN wk --version
 
-# steps for consuming builds to use
-ONBUILD ADD helm /build/helm/
-ONBUILD ADD Dockerfile /build/
+# steps for consuming builds to use\
+ONBUILD ADD ./ /build/
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
