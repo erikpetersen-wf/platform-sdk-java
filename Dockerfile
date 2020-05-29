@@ -36,11 +36,11 @@ ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
 
 #! STAGE - Helm Download - Helm - download helm for install in base image.
 FROM bash:5 as helm
-RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-amd64.tar.gz && \
-    echo "7eebaaa2da4734242bbcdced62cc32ba8c7164a18792c8acdf16c77abffce202  helm-v2.16.1-linux-amd64.tar.gz" | sha256sum -c && \
-    tar xf helm-v2.16.1-linux-amd64.tar.gz && \
+RUN wget -q https://get.helm.sh/helm-v3.2.1-linux-amd64.tar.gz && \
+    echo "018f9908cb950701a5d59e757653a790c66d8eda288625dbb185354ca6f41f6b  helm-v3.2.1-linux-amd64.tar.gz" | sha256sum -c && \
+    tar xf helm-v3.2.1-linux-amd64.tar.gz && \
     cp linux-amd64/helm /usr/local/bin && \
-    rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64
+    rm -rf helm-v3.2.1-linux-amd64.tar.gz linux-amd64
 
 
 #! STAGE - Shared python builder (security approved python:3.8 image)
@@ -76,7 +76,6 @@ FROM python38
 
 # Verify HELM
 COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
-RUN helm init --client-only
 
 # Add package (backwards compatibility for folks directly referencing `package`)
 ADD tools/package /usr/local/bin
