@@ -45,7 +45,7 @@ RUN wget -q https://get.helm.sh/helm-v3.2.1-linux-amd64.tar.gz && \
 
 #! STAGE - Shared python builder (security approved python:3.8 image)
 # https://tecadmin.net/install-python-3-8-centos/
-FROM amazonlinux:2 as python38
+FROM amazonlinux:2 as python-base
 WORKDIR /build/
 
 # Get latest package updates (security requirement)
@@ -61,7 +61,7 @@ RUN pip3 install --upgrade pip
 
 
 #! STAGE - Python deps - download tool dependencies
-FROM python38 as python-deps
+FROM python-base as python-deps
 
 # Add wk tool (with requirements based layer caching!)
 ARG PIP_INDEX_URL
@@ -72,7 +72,7 @@ RUN mkdir -p /wheels && \
 
 
 #! STAGE - Platform Builder - Python 3 - Help customers package their application
-FROM python38
+FROM python-base
 
 # Verify HELM
 COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
