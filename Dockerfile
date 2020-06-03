@@ -36,15 +36,16 @@ ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
 
 #! STAGE - Helm Download - Helm - download helm for install in base image.
 FROM bash:5 as helm
-RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-amd64.tar.gz && \
-    echo "7eebaaa2da4734242bbcdced62cc32ba8c7164a18792c8acdf16c77abffce202  helm-v2.16.1-linux-amd64.tar.gz" | sha256sum -c && \
-    tar xf helm-v2.16.1-linux-amd64.tar.gz && \
+RUN wget -q https://get.helm.sh/helm-v3.2.1-linux-amd64.tar.gz && \
+    echo "018f9908cb950701a5d59e757653a790c66d8eda288625dbb185354ca6f41f6b  helm-v3.2.1-linux-amd64.tar.gz" | sha256sum -c && \
+    tar xf helm-v3.2.1-linux-amd64.tar.gz && \
     cp linux-amd64/helm /usr/local/bin && \
-    rm -rf helm-v2.16.1-linux-amd64.tar.gz linux-amd64
+    rm -rf helm-v3.2.1-linux-amd64.tar.gz linux-amd64
 
 
-#! STAGE - Platform Builder - Python 3 - Help customers package their application
-FROM amazonlinux:2
+#! STAGE - Shared python builder (security approved python:3.8 image)
+# https://tecadmin.net/install-python-3-8-centos/
+FROM amazonlinux:2 as python-base
 WORKDIR /build/
 
 # Get latest package updates (security requirement)
@@ -55,20 +56,42 @@ RUN yum update -y && \
     yum clean all && \
     rm -rf /var/cache/yum
 
-# Verify HELM
-COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
-RUN helm init --client-only
+RUN python3 --version
+RUN pip3 install --upgrade pip
+
+
+#! STAGE - Python deps - download tool dependencies
+FROM python-base as python-deps
 
 # Add wk tool (with requirements based layer caching!)
+ARG PIP_INDEX_URL
 COPY tools/wk/ /root/wk/
-RUN pip3 install /root/wk/
+RUN mkdir -p /wheels && \
+    pip3 install wheel && \
+    pip3 wheel -w /wheels -r /root/wk/requirements.txt
+
+
+#! STAGE - Platform Builder - Python 3 - Help customers package their application
+FROM python-base
+
+# Verify HELM
+COPY --from=helm /usr/local/bin/helm /usr/local/bin/helm
 
 # Add package (backwards compatibility for folks directly referencing `package`)
 ADD tools/package /usr/local/bin
+RUN mkdir /root/.wk
+COPY tools/config.yml /root/.wk/config.yml
+
+# Copy in WK command
+COPY --from=python-deps /root/wk/ /root/wk/
+COPY --from=python-deps /wheels /wheels
+RUN pip3 install --no-index --find-links=/wheels /root/wk/
+RUN wk --version
 
 # steps for consuming builds to use
-ONBUILD ADD helm /build/helm/
-ONBUILD ADD Dockerfile /build/
+ONBUILD ARG GITHUB_USER
+ONBUILD ARG GITHUB_PASS
+ONBUILD ADD ./ /build/
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
