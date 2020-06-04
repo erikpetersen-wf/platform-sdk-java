@@ -60,17 +60,6 @@ RUN python3 --version
 RUN pip3 install --upgrade pip
 
 
-#! STAGE - Python deps - download tool dependencies
-FROM python-base as python-deps
-
-# Add wk tool (with requirements based layer caching!)
-ARG PIP_INDEX_URL
-COPY tools/wk/ /root/wk/
-RUN mkdir -p /wheels && \
-    pip3 install wheel && \
-    pip3 wheel -w /wheels -r /root/wk/requirements.txt
-
-
 #! STAGE - Platform Builder - Python 3 - Help customers package their application
 FROM python-base
 
@@ -82,15 +71,14 @@ ADD tools/package /usr/local/bin
 RUN mkdir /root/.wk
 COPY tools/config.yml /root/.wk/config.yml
 
-# Copy in WK command
-COPY --from=python-deps /root/wk/ /root/wk/
-COPY --from=python-deps /wheels /wheels
-RUN pip3 install --no-index --find-links=/wheels /root/wk/
-RUN wk --version
 
 # steps for consuming builds to use
 ONBUILD ARG GITHUB_USER
 ONBUILD ARG GITHUB_PASS
+ONBUILD ARG PIP_INDEX_URL
+# public pip registry has a version 1.0 for some reason :cry:
+ONBUILD RUN pip install "wk<1.0"
+ONBUILD RUN wk --version
 ONBUILD ADD ./ /build/
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
