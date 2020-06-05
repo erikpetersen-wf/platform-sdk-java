@@ -82,17 +82,17 @@ ADD tools/package /usr/local/bin
 RUN mkdir /root/.wk
 COPY tools/config.yml /root/.wk/config.yml
 
-# Copy in WK dependencies
+# Copy in WK command
 COPY --from=python-deps /wheels /wheels
+RUN pip3 install --no-index --find-links=/wheels "wk!=1.0"
+RUN wk --version
 
 # steps for consuming builds to use
 ONBUILD ARG GITHUB_USER
 ONBUILD ARG GITHUB_PASS
 ONBUILD ARG PIP_INDEX_URL
 # If PIP_INDEX_URL is available, pull latest version of wk!
-ONBUILD RUN if [[ ! -z "$PIP_INDEX_URL" ]]; then rm /wheels/wk-*.whl ; fi
-# public pip registry has a version 1.0 for some reason :cry:
-ONBUILD RUN pip install --find-links=/wheels "wk!=1.0"
+ONBUILD RUN if [[ $PIP_INDEX_URL ]]; then rm /wheels/wk-*.whl && pip install -U --find-links=/wheels "wk!=1.0" ; fi
 ONBUILD RUN wk --version
 ONBUILD ADD ./ /build/
 ONBUILD RUN wk package
