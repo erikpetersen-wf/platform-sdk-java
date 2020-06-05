@@ -91,6 +91,7 @@ RUN wk --version
 # steps for consuming builds to use
 ONBUILD ARG GITHUB_USER
 ONBUILD ARG GITHUB_PASS
+ONBUILD ARG GIT_HEAD_REPO
 ONBUILD ADD ./ /build/
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
