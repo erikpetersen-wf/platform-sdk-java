@@ -26,7 +26,28 @@ func WithPort(ctx context.Context, port int) context.Context {
 	return context.WithValue(ctx, internal.PORT, port)
 }
 
-// NewHTTPClient ... TODO: GOOD DOCSTRING
+// NewHTTPClient creates a unique HTTP client to be used on a per client basis.
+//
+// There is a known issue in the golang base http client where if a connection to a
+// remote host fails in an unexpected way, if the request set a custom http header, the
+// caller not only blocks, but it leaves in place a mutex preventing any other new
+// connections on the same http client from reaching that same remote host.
+//
+// See https://github.com/golang/go/issues/33006 for more details.
+//
+// This client is designed to not share any of the global resources with go's builtin
+// http.DefaultClient so that clients can be isolated from this shared failure state.
+// This should help with issues as seen in https://jira.atl.workiva.net/browse/OI-1338.
+//
+// By default, this client also sets a Timeout for all connections running through it.
+// If you feel this timeout does not satisfy your needs, feel free to override it using:
+//
+//   client := platform.NewHTTPClient()
+//   client.Timeout = 60 * time.Second
+//
+// Keep in mind that this timeout should be the MAXIMUM timeout for this client.
+// If you would like a lower, per-request timeout, please set request's Context
+// using req.WithContext(ctx): https://golang.org/pkg/net/http/#Request.WithContext
 func NewHTTPClient() *http.Client {
 	// borrowed from net/http::DefaultTransport to ensure we don't have shared globals
 	dialer := &net.Dialer{
