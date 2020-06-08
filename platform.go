@@ -68,8 +68,6 @@ func NewHTTPClient() *http.Client {
 		Transport: transport,
 
 		// Default timeout for all requests going through this client.
-		// Should be "similar" to the linux TCP client timout
-		// See tcp_retries2 in https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
-		Timeout: 15 * 60 * time.Second,
+		Timeout: 60 * time.Second,
 	}
 }
