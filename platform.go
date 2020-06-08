@@ -37,7 +37,7 @@ func NewHTTPClient() *http.Client {
 	transport := &http.Transport{
 		Proxy:                 http.ProxyFromEnvironment,
 		DialContext:           dialer.DialContext,
-		ForceAttemptHTTP2:     true,
+		ForceAttemptHTTP2:     true, // added in go 1.13, if your build breaks here.. update
 		MaxIdleConns:          100,
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
@@ -45,6 +45,10 @@ func NewHTTPClient() *http.Client {
 	}
 	return &http.Client{
 		Transport: transport,
-		Timeout:   15 * 60 * time.Second, // THE REAL ADDIITON HERE
+
+		// Default timeout for all requests going through this client.
+		// Should be "similar" to the linux TCP client timout
+		// See tcp_retries2 in https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
+		Timeout: 15 * 60 * time.Second,
 	}
 }
