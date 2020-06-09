@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.workiva.platform</groupId>
         <artifactId>platform-parent</artifactId>
-        <version>0.0.97</version>
+        <version>0.0.98</version>
     </parent>
 
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform-jetty-servlet</artifactId>
-    <version>0.0.97</version>
+    <version>0.0.98</version>
     <packaging>jar</packaging>
 
     <name>Platform Servlet</name>
