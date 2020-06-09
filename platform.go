@@ -2,12 +2,10 @@ package platform
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"net/http"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/Workiva/platform/internal"
 )
 
@@ -60,6 +58,10 @@ func NewHTTPClient() *http.Client {
 	}
 }
 
+// NewHTTPTransport creates a unique http transport to be used in an http client.
+//
+// The returned transport has all the same settings as the default global
+// http transport, with the exception of MaxIdleConnsPerHost, which is set to 100.
 func NewHTTPTransport() *http.Transport {
 	// borrowed from net/http::DefaultTransport to ensure we don't have shared globals
 	dialer := &net.Dialer{
