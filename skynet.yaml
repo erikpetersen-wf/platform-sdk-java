@@ -1,5 +1,5 @@
 name: go-unit
-image: golang:1.12
+image: golang:1.13
 contact: Nate Woods (nate.woods@workiva.com)
 description: Run go unit tests and report to /dev/null
 run:
