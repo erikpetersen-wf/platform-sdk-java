@@ -65,7 +65,6 @@ FROM python-base as python-deps
 
 # Add wk tool (with requirements based layer caching!)
 ARG PIP_INDEX_URL
-COPY tools/wk/ /root/wk/
 RUN mkdir -p /wheels && \
     pip3 install wheel && \
     pip3 wheel -w /wheels "wk!=1.0"
