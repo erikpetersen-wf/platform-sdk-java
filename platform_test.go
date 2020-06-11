@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"testing"
 
 	"github.com/Workiva/platform"
 )
@@ -20,4 +21,14 @@ func ExampleMain() {
 	})
 
 	platform.Main(platform.WithPort(ctx, 6070))
+}
+
+func TestNewHTTPClient(t *testing.T) {
+	client := platform.NewHTTPClient()
+	if client.Timeout == 0 {
+		t.Fatalf("should have a reasonable default for timeout.")
+	}
+	if client.Transport == nil {
+		t.Fatalf("don't fallback to http.DefaultTransport.")
+	}
 }

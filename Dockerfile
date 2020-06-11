@@ -90,6 +90,7 @@ RUN wk --version
 # steps for consuming builds to use
 ONBUILD ARG GITHUB_USER
 ONBUILD ARG GITHUB_PASS
+ONBUILD ARG GIT_HEAD_REPO
 ONBUILD ARG PIP_INDEX_URL
 # If PIP_INDEX_URL is available, pull latest version of wk!
 ONBUILD RUN if [[ $PIP_INDEX_URL ]]; then rm /wheels/wk-*.whl && pip install -U --find-links=/wheels "wk!=1.0" ; fi
