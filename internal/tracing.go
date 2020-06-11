@@ -41,6 +41,7 @@ func setUpAPM() (newrelic.Application, error) {
 	config := newrelic.NewConfig(appKey, licenseKey)
 	config.DistributedTracer.Enabled = true
 	config.Logger = newrelic.NewLogger(os.Stdout)
+	config.Transport = NewHTTPTransport()
 
 	if relicLabels := os.Getenv("NEW_RELIC_LABELS"); relicLabels != "" {
 		labelList := strings.Split(relicLabels, ";")
