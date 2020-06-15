@@ -29,7 +29,7 @@
         <workiva.platform.servlet-api>4.0.1</workiva.platform.servlet-api>
         <workiva.platform.jetty>9.4.29.v20200521</workiva.platform.jetty>
         <workiva.platform.netty>4.1.50.Final</workiva.platform.netty>
-        <workiva.platform.spring>5.2.6.RELEASE</workiva.platform.spring>
+        <workiva.platform.spring>5.2.7.RELEASE</workiva.platform.spring>
     </properties>
 
     <dependencyManagement>
