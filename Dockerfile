@@ -94,7 +94,8 @@ ONBUILD ARG PIP_INDEX_URL
 # If PIP_INDEX_URL is available, pull latest version of wk!
 ONBUILD RUN if [[ $PIP_INDEX_URL ]]; then rm /wheels/wk-*.whl && pip install -U --find-links=/wheels "wk!=1.0" ; fi
 ONBUILD RUN wk --version
-ONBUILD ADD *Dockerfile* helm/*/values.yaml /build/
+ONBUILD ADD *Dockerfile* workiva.y[a]ml /build/
+ONBUILD ADD helm/ /build/helm/
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
