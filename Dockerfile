@@ -94,7 +94,9 @@ ONBUILD ARG PIP_INDEX_URL
 # If PIP_INDEX_URL is available, pull latest version of wk!
 ONBUILD RUN if [[ $PIP_INDEX_URL ]]; then rm /wheels/wk-*.whl && pip install -U --find-links=/wheels "wk!=1.0" ; fi
 ONBUILD RUN wk --version
-ONBUILD ADD *Dockerfile* workiva.y[a]ml /build/
+# If we ever want to support workivabuild.Dockerfile, replace Dockerfile with *Dockerfile
+# Explicitly named files must exist or ADD errors, but wildcarded terms may match as few as 0 files. Use a wildcard in workiva.yml to tolerate the file not existing.
+ONBUILD ADD Dockerfile workiva.y[a]ml /build/
 ONBUILD ADD helm/ /build/helm/
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
