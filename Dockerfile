@@ -100,7 +100,7 @@ ONBUILD ADD *Dockerfile* [w]orkiva.yml [d]eploy.json /build/
 # We don't actually want Dockerfile in the helm directory, but ADD must successfully copy _something_ and we know Dockerfile exists.
 ONBUILD ADD *Dockerfile* [h]elm  /build/helm/
 # If helm doesn't exist in the context, we need to delete it from this container so that `wk package` works correctly.
-ONBUILD RUN rm /build/helm/*Dockerfile*; rmdir /build/helm 2> /dev/null
+ONBUILD RUN rm /build/helm/*Dockerfile*; rmdir /build/helm 2> /dev/null || true
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
