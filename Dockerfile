@@ -95,11 +95,11 @@ ONBUILD ARG PIP_INDEX_URL
 ONBUILD RUN if [[ $PIP_INDEX_URL ]]; then rm /wheels/wk-*.whl && pip install -U --find-links=/wheels "wk!=1.0" ; fi
 ONBUILD RUN wk --version
 # We don't actually support Dockerfiles with any name other than Dockerfile, but provide the wildcard so that we don't fail the build if we don't find the expected file name.
-# Explicitly named files must exist or ADD errors, but wildcarded terms may match as few as 0 files. Use a wildcard in workiva.yml to tolerate the file not existing.
-ONBUILD ADD *Dockerfile* workiva.y[m]l /build/
+# Explicitly named files must exist or ADD errors, but wildcarded terms may match as few as 0 files. Use a wildcard in workiva.yml and deploy.json to tolerate the file not existing.
+ONBUILD ADD *Dockerfile* workiva.y[m]l [d]eploy.json /build/
 # We don't actually want Dockerfile in the helm directory, but ADD must successfully copy _something_ and we know Dockerfile exists.
-ONBUILD ADD *Dockerfile* hel[m] /build/helm/
-ONBUILD RUN rm /build/helm/*Dockerfile*
+ONBUILD ADD *Dockerfile* [h]elm  /build/helm/
+ONBUILD RUN rm /build/helm/*Dockerfile*; rmdir /build/helm 2> /dev/null
 ONBUILD RUN wk package
 ONBUILD ARG BUILD_ARTIFACTS_HELM_CHARTS=/build/*.tgz
 
