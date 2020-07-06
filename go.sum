@@ -20,6 +20,8 @@ github.com/newrelic/go-agent v3.6.0+incompatible h1:FB+iAM0xe+oUHZG1fz0oSdnC6XKM
 github.com/newrelic/go-agent v3.6.0+incompatible/go.mod h1:a8Fv1b/fYhFSReoTU6HDkTYIMZeSVNffmoS726Y0LzQ=
 github.com/newrelic/go-agent v3.7.0+incompatible h1:tH/g5xbCBhhEAaqUgdNEXVdK5Ah3YSXQWCoz6x61Vro=
 github.com/newrelic/go-agent v3.7.0+incompatible/go.mod h1:a8Fv1b/fYhFSReoTU6HDkTYIMZeSVNffmoS726Y0LzQ=
+github.com/newrelic/go-agent v3.8.0+incompatible h1:IxJKEK7SihVTXTDIpjl2GW2x3kl47yyi7IEq/jpbgME=
+github.com/newrelic/go-agent v3.8.0+incompatible/go.mod h1:a8Fv1b/fYhFSReoTU6HDkTYIMZeSVNffmoS726Y0LzQ=
 github.com/pborman/uuid v1.2.0 h1:J7Q5mO4ysT1dv8hyrUGHb9+ooztCXu1D8MY8DZYsu3g=
 github.com/pborman/uuid v1.2.0/go.mod h1:X/NO0urCmaxf9VXbdlT7C2Yzkj2IKimNn4k+gtPdI/k=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
