@@ -28,11 +28,14 @@ RUN mkdir -p /artifacts/java && \
     platform-jetty-servlet/target/platform-jetty-servlet-*.jar \
     platform-netty/target/platform-netty-*.jar \
     platform-spring/target/platform-spring-*.jar \
-    /artifacts/java
+    /artifacts/java \
+    /artifacts/audit
+
+RUN cp go.* /artifacts/audit/
 
 # Publish Artifacts
 ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
-
+ARG BUILD_ARTIFACTS_AUDIT=/artifacts/audit/*
 
 #! STAGE - Helm Download - Helm - download helm for install in base image.
 FROM bash:5 as helm
