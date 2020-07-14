@@ -31,6 +31,8 @@ RUN mkdir -p /artifacts/java && \
     /artifacts/java
 
 # Publish Artifacts
+COPY go.* /artifacts/audit/
+ARG BUILD_ARTIFACTS_AUDIT=/artifacts/audit/*
 ARG BUILD_ARTIFACTS_JAVA=/artifacts/java/*.jar
 
 
