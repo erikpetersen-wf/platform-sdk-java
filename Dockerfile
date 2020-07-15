@@ -91,10 +91,11 @@ RUN wk --version
 # steps for consuming builds to use
 ONBUILD ARG GITHUB_USER
 ONBUILD ARG GITHUB_PASS
-ONBUILD ARG GITHUB_TOKEN_READONLY
-ONBUILD ARG HOMEBREW_GITHUB_API_TOKEN
 ONBUILD ARG GIT_HEAD_REPO
 ONBUILD ARG PIP_INDEX_URL
+# Follwing args are set locally by wk build
+ONBUILD ARG GITHUB_TOKEN_READONLY
+ONBUILD ARG HOMEBREW_GITHUB_API_TOKEN
 # If PIP_INDEX_URL is available, pull latest version of wk!
 ONBUILD RUN if [[ $PIP_INDEX_URL ]]; then rm /wheels/wk-*.whl && pip install -U --find-links=/wheels "wk!=1.0" ; fi
 ONBUILD RUN wk --version
