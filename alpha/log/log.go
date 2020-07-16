@@ -7,7 +7,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 
-	appintel "github.com/Workiva/app_intelligence_go"
+	appintel "github.com/Workiva/app_intelligence_go/v7"
 )
 
 // Common field declarations across Workiva.
