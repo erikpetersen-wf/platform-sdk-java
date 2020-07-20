@@ -3,6 +3,8 @@ git.apache.org/thrift.git v0.0.0-20161221203622-b2a4d4ae21c7/go.mod h1:fPE2ZNJGy
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Workiva/app_intelligence_go/v7 v7.2.9 h1:Y5zMPumMg1Q398PQ4+Twj+Tj5A4jeR25fymoc4yT8kg=
 github.com/Workiva/app_intelligence_go/v7 v7.2.9/go.mod h1:sFHM+Vkhwu1N8ak499SbFUEhOPB4sulvEF0ZsNEnfYI=
+github.com/Workiva/app_intelligence_go/v7 v7.2.10 h1:WhRpBr6ZtXrB5FDPvnC8OwZT2TEHg/hdgu6nfWMclFo=
+github.com/Workiva/app_intelligence_go/v7 v7.2.10/go.mod h1:rIv4tWgDLwPCHM+TynVlPRqhOyI7V3OS8ZzsGckal5g=
 github.com/Workiva/frugal v3.8.2+incompatible/go.mod h1:5Eo12QkB68cBpcncLcALRiw/RzVellNLruNFbpgJ5hs=
 github.com/Workiva/frugal/lib/go v0.0.0-20200305164018-b4086c85f30a/go.mod h1:AFu7/x1xpJdu7gG0LFUtshSTMsuYAa8dMR89O49EdQs=
 github.com/Workiva/go-auth v1.10.1/go.mod h1:teGKeOQq30HwHamUU0uc9B01ShY+y7jAAIreFPyErMg=
@@ -109,6 +111,7 @@ golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5h
 golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190422165155-953cdadca894/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190606165138-5da285871e9c/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae h1:/WDfKMnPU+m5M4xB+6x4kaepxRw6jWvR5iDRdvjHgy8=
 golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae h1:Ih9Yo4hSPImZOpfGuA4bR/ORKTAbhZo2AbWNRCnevdo=
 golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
