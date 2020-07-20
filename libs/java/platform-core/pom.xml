@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.workiva.platform</groupId>
         <artifactId>platform-parent</artifactId>
-        <version>0.0.118</version>
+        <version>0.0.119</version>
     </parent>
 
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform-core</artifactId>
-    <version>0.0.118</version>
+    <version>0.0.119</version>
     <packaging>jar</packaging>
 
     <name>Platform Core</name>
