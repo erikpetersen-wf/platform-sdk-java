@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.workiva.platform</groupId>
         <artifactId>platform-parent</artifactId>
-        <version>0.0.120</version>
+        <version>0.0.121</version>
     </parent>
 
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform-spring</artifactId>
-    <version>0.0.120</version>
+    <version>0.0.121</version>
     <packaging>jar</packaging>
 
     <name>Platform Spring</name>
