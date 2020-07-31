@@ -9,8 +9,7 @@ import (
 )
 
 func addTracing(hand http.Handler) http.Handler {
-	// NOOP if deployed with an existing methology
-	if os.Getenv("WORKIVA_DEPLOY_MODE") == "" {
+	if os.Getenv("NEW_RELIC_APP_NAME") == "" {
 		return hand
 	}
 	app, err := newrelic.NewApplication(
