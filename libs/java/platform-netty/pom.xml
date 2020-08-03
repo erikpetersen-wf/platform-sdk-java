@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.workiva.platform</groupId>
         <artifactId>platform-parent</artifactId>
-        <version>0.0.124</version>
+        <version>0.0.125</version>
     </parent>
 
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform-netty</artifactId>
-    <version>0.0.124</version>
+    <version>0.0.125</version>
     <packaging>jar</packaging>
 
     <name>Platform Netty</name>
