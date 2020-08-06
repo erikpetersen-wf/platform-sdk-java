@@ -11,8 +11,6 @@ import (
 func fakeENV(tb testing.TB) func() {
 	getenv = func(name string) string {
 		switch name {
-		case "WORKIVA_DEPLOY_MODE":
-			return "modded"
 		case "WORKIVA_SERVICE_NAME":
 			return "service"
 		case "RDS_USER":
@@ -90,7 +88,7 @@ func TestConnect(t *testing.T) {
 
 func TestBadConnect(t *testing.T) {
 	_, err := Connect(nil, "")
-	if err == nil || err.Error() != "rdb: Not deployed with workiva/platform" {
+	if err == nil || err.Error() != "rdb: Not deployed with pipeline or `wk deploy`" {
 		t.Fatalf("Unexpected connect error: %v", err)
 	}
 }

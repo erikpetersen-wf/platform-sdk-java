@@ -33,7 +33,7 @@ func New(ctx context.Context) logrus.FieldLogger {
 	// https://github.com/Workiva/platform/pull/26
 
 	// Add app-intelligence if we have are considered "safe".
-	if os.Getenv("WORKIVA_DEPLOY_MODE") != "" {
+	if os.Getenv("NEW_RELIC_APP_NAME") != "" {
 		log.AddHook(appintel.NewHook()) // Add hook from app intelligence
 		log.Out = ioutil.Discard        // Don't duplicate logs to stderr
 	}
