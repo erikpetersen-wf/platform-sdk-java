@@ -1,6 +1,9 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 git.apache.org/thrift.git v0.0.0-20161221203622-b2a4d4ae21c7/go.mod h1:fPE2ZNJGynbRyZ4dJvy6G277gSllfV2HJqblrnkyeyg=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
+github.com/Masterminds/glide v0.13.2/go.mod h1:STyF5vcenH/rUqTEv+/hBXlSTo7KYwg2oc2f4tzPWic=
+github.com/Masterminds/semver v1.4.2/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF078ddwwvV3Y=
+github.com/Masterminds/vcs v1.13.0/go.mod h1:N09YCmOQr6RLxC6UNHzuVwAdodYbbnycGHSmwVJjcKA=
 github.com/Workiva/app_intelligence_go/v7 v7.2.9 h1:Y5zMPumMg1Q398PQ4+Twj+Tj5A4jeR25fymoc4yT8kg=
 github.com/Workiva/app_intelligence_go/v7 v7.2.9/go.mod h1:sFHM+Vkhwu1N8ak499SbFUEhOPB4sulvEF0ZsNEnfYI=
 github.com/Workiva/app_intelligence_go/v7 v7.2.10 h1:WhRpBr6ZtXrB5FDPvnC8OwZT2TEHg/hdgu6nfWMclFo=
@@ -11,6 +14,8 @@ github.com/Workiva/app_intelligence_go/v7 v7.2.13 h1:Ni4IcxNie3AXwUczEJv+6gqw2EF
 github.com/Workiva/app_intelligence_go/v7 v7.2.13/go.mod h1:rIv4tWgDLwPCHM+TynVlPRqhOyI7V3OS8ZzsGckal5g=
 github.com/Workiva/app_intelligence_go/v7 v7.2.14 h1:iIOm9XSve6ojYLsPh9ODj/TjhfSWJWFFgDMoVmf5UhA=
 github.com/Workiva/app_intelligence_go/v7 v7.2.14/go.mod h1:rIv4tWgDLwPCHM+TynVlPRqhOyI7V3OS8ZzsGckal5g=
+github.com/Workiva/app_intelligence_go/v7 v7.2.17 h1:0D8ibF2A17bMNF6imXUQqn+Nxo4ZDw+/RFQmFfdeK7M=
+github.com/Workiva/app_intelligence_go/v7 v7.2.17/go.mod h1:JZVO13wLZUc5c1HFAxFkZghqxtAGz6lF7vpuf8WLRLI=
 github.com/Workiva/frugal v3.8.2+incompatible/go.mod h1:5Eo12QkB68cBpcncLcALRiw/RzVellNLruNFbpgJ5hs=
 github.com/Workiva/frugal/lib/go v0.0.0-20200305164018-b4086c85f30a/go.mod h1:AFu7/x1xpJdu7gG0LFUtshSTMsuYAa8dMR89O49EdQs=
 github.com/Workiva/go-auth v1.10.1/go.mod h1:teGKeOQq30HwHamUU0uc9B01ShY+y7jAAIreFPyErMg=
@@ -20,6 +25,8 @@ github.com/Workiva/messaging-sdk/lib/go v0.0.0-20200316165051-1da2762d5fe4/go.mo
 github.com/Workiva/vessel v4.6.28+incompatible/go.mod h1:bjAKXV6+Bh+toqi9EZqAQFIYHPFXcujnAHIzcQTx6PM=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
+github.com/codegangsta/cli v1.20.0/go.mod h1:/qJNoX69yVSKu5o4jLyXAENLRyk1uhi7zkbQ3slBdOA=
+github.com/corpix/uarand v0.1.1/go.mod h1:SFKZvkcRoLqVRFZ4u25xPmp6m9ktANfbpXZ7SJ0/FNU=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -50,10 +57,14 @@ github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/gorilla/context v1.1.1/go.mod h1:kBGZzfjB9CEq2AlWe17Uuf7NDRt0dE0s8S51q0aT7Yg=
 github.com/gorilla/mux v1.7.4/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
 github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69/go.mod h1:zdLK9ilQRSMjSeLKoZ4BqUfBT7jswTGF8zRlKEsiRXA=
+github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428/go.mod h1:uhpZMVGznybq1itEKXj6RYw9I71qK4kH+OGMjRC4KEo=
+github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1 h1:mweAR1A6xJ3oS2pRaGiHgQ4OO8tzTaLawm8vnODuwDk=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/mailru/easyjson v0.7.1/go.mod h1:KAzv3t3aY1NaHWoQz1+4F1ccyAH66Jk7yos7ldAVICs=
+github.com/mailru/easyjson v0.7.3/go.mod h1:xzfreul335JAWq5oZzymOObrkdz5UnU4kGfJJLY9Nlc=
 github.com/mattrobenolt/gocql v0.0.0-20130828033103-56c5a46b65ee/go.mod h1:RoAT++9Ocs3IA0HLzRUlOjX4xWnh0N6ifiVPAKnncx0=
+github.com/mitchellh/go-homedir v1.1.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/nats-io/gnatsd v0.9.4/go.mod h1:nqco77VO78hLCJpIcVfygDP2rPGfsEHkGTUk94uh5DQ=
 github.com/nats-io/gnatsd v1.4.1/go.mod h1:nqco77VO78hLCJpIcVfygDP2rPGfsEHkGTUk94uh5DQ=
 github.com/nats-io/go-nats v0.0.0-20161120202126-6b6bf392d34d/go.mod h1:+t7RHT5ApZebkrQdnn6AhQJmhJJiKAvJUio1PiiCtj0=
@@ -71,6 +82,7 @@ github.com/newrelic/go-agent/v3 v3.8.0/go.mod h1:1A1dssWBwzB7UemzRU6ZVaGDsI+cEn5
 github.com/newrelic/go-agent/v3 v3.8.1 h1:PzM7tOO7ojBxHxEXY/AQJ8bAKrM9vFeFbHPkTaVo8+Q=
 github.com/newrelic/go-agent/v3 v3.8.1/go.mod h1:1A1dssWBwzB7UemzRU6ZVaGDsI+cEn5/bNxI0wiYlIc=
 github.com/newrelic/newrelic-telemetry-sdk-go v0.3.0/go.mod h1:G9MqE/cHGv3Hx3qpYhfuyFUsGx2DpVcGi1iJIqTg+JQ=
+github.com/ngdinhtoan/glide-cleanup v0.2.0/go.mod h1:UQzsmiDOb8YV3nOsCxK/c9zPpCZVNoHScRE3EO9pVMM=
 github.com/opentracing/opentracing-go v1.2.0/go.mod h1:GxEUsuufX4nBwe+T+Wl9TAgYrxe9dPLANfrWvHYVTgc=
 github.com/pborman/uuid v1.2.0 h1:J7Q5mO4ysT1dv8hyrUGHb9+ooztCXu1D8MY8DZYsu3g=
 github.com/pborman/uuid v1.2.0/go.mod h1:X/NO0urCmaxf9VXbdlT7C2Yzkj2IKimNn4k+gtPdI/k=
