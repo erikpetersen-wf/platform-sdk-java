@@ -16,6 +16,8 @@ github.com/Workiva/app_intelligence_go/v7 v7.2.14 h1:iIOm9XSve6ojYLsPh9ODj/TjhfS
 github.com/Workiva/app_intelligence_go/v7 v7.2.14/go.mod h1:rIv4tWgDLwPCHM+TynVlPRqhOyI7V3OS8ZzsGckal5g=
 github.com/Workiva/app_intelligence_go/v7 v7.2.17 h1:0D8ibF2A17bMNF6imXUQqn+Nxo4ZDw+/RFQmFfdeK7M=
 github.com/Workiva/app_intelligence_go/v7 v7.2.17/go.mod h1:JZVO13wLZUc5c1HFAxFkZghqxtAGz6lF7vpuf8WLRLI=
+github.com/Workiva/app_intelligence_go/v7 v7.2.19 h1:cX/vzRT4EChyQ6J+3syjldAe3wwVFD6gIN0xJfQnI8s=
+github.com/Workiva/app_intelligence_go/v7 v7.2.19/go.mod h1:JZVO13wLZUc5c1HFAxFkZghqxtAGz6lF7vpuf8WLRLI=
 github.com/Workiva/frugal v3.8.2+incompatible/go.mod h1:5Eo12QkB68cBpcncLcALRiw/RzVellNLruNFbpgJ5hs=
 github.com/Workiva/frugal/lib/go v0.0.0-20200305164018-b4086c85f30a/go.mod h1:AFu7/x1xpJdu7gG0LFUtshSTMsuYAa8dMR89O49EdQs=
 github.com/Workiva/go-auth v1.10.1/go.mod h1:teGKeOQq30HwHamUU0uc9B01ShY+y7jAAIreFPyErMg=
