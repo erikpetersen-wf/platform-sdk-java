@@ -8,7 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.3.5 // indirect
 	github.com/google/jsonapi v0.0.0-20181016150055-d0428f63eb51
-	github.com/newrelic/go-agent v3.8.1+incompatible
+	github.com/newrelic/go-agent v3.9.0+incompatible
 	github.com/newrelic/go-agent/v3 v3.9.0
 	github.com/sirupsen/logrus v1.4.2 // indirect
 )
