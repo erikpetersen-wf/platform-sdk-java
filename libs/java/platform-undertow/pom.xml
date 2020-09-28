@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.workiva.platform</groupId>
         <artifactId>platform-parent</artifactId>
-        <version>0.0.133</version>
+        <version>0.0.134</version>
     </parent>
 
     <groupId>com.workiva.platform</groupId>
     <artifactId>platform-undertow</artifactId>
-    <version>0.0.133</version>
+    <version>0.0.134</version>
     <packaging>jar</packaging>
 
     <name>Platform Undertow</name>
