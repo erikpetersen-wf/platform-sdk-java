@@ -3,13 +3,13 @@ livenessProbe:
     path: /_wk/alive
     port: 2222
   initialDelaySeconds: 10
-  periodSeconds: 10
+  periodSeconds: 30
 readinessProbe:
   failureThreshold: 3
   httpGet:
     path: /_wk/ready
     port: 2222
   initialDelaySeconds: 10
-  periodSeconds: 10
+  periodSeconds: 30
   successThreshold: 1
-  timeoutSeconds: 10
+  timeoutSeconds: 60
