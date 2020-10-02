@@ -1,5 +1,0 @@
-apiVersion: 'v1'
-name: readiness-override
-description: Chart that has a reaniness check override.
-version: '0.1.0'
-icon: https://www.workiva.com/sites/workiva/files/favicons/favicon-96x96.png

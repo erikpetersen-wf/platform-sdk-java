@@ -1,4 +1,0 @@
-#! /bin/sh
-
-echo "Package is now handled for you! Please remove your platform layer references"
-echo "See: https://github.com/Workiva/platform#builder"

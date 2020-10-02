@@ -1,8 +1,0 @@
-livenessProbe:
-  httpGet:
-    path: /ah/ah/ah/ah/staying/alive
-    port: 8675309
-readinessProbe:
-  httpGet:
-    path: /status
-    port: 8675309

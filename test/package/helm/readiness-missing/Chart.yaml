@@ -1,5 +1,0 @@
-apiVersion: 'v1'
-name: readiness-missing
-description: Chart that doesn't contain any readiness
-version: '0.1.0'
-icon: https://www.workiva.com/sites/workiva/files/favicons/favicon-96x96.png
