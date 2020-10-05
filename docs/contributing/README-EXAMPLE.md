@@ -11,7 +11,7 @@ definition, such as text or binary data.
 
 ### Prerequisites
 
-- [Java Development Kit (JDK)][jdk] with version 8 or above
+- Java Development Kit (JDK) with version 8 or above
 
 ### Include the package
 
@@ -124,7 +124,7 @@ doesn't exist in your Storage Account, a `404` error is returned, indicating `No
 
 ### Default HTTP Client
 All client libraries by default use the Netty HTTP client. Adding the above dependency will automatically configure
-the client library to use the Netty HTTP client.\
+the client library to use the Netty HTTP client.
 
 ## Next steps
 
