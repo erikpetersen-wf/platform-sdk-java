@@ -32,7 +32,7 @@ More specific guidelines follow below:
   * [Naming Patterns](#naming-patterns)
   * [Other Java API Guidance](#other-java-api-guidance)
   * [Versioning](#versioning)
-- [Configuration](#configuration)
+- [Implementation](#implementation)
   * [Client configuration](#client-configuration)
   * [Service-specific environment variables](#service-specific-environment-variables)
   * [Parameter validation](#parameter-validation)
@@ -345,7 +345,7 @@ Using a consistent set of naming patterns across all client libraries will ensur
    
 * Use the version naming used by the service itself in naming the version values in the `enum`. The standard approach takes the form `V<year>_<month>_<day>`, such as `V2019_05_09`. Being consistent with the service naming enables easier cross-referencing between service versions and the availability of features in the client library.
 
-# Configuration
+# Implementation
 
 When configuring your client library, particular care must be taken to ensure that the consumer of your client library can properly configure the connectivity to your Workiva service both globally (along with other client libraries the consumer is using) and specifically with your client library.
 
